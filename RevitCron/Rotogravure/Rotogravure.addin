@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>RotogravureStartup</Name>
+    <Assembly>C:\ProgramData\AutoDesk\Revit\AddIns\2014\Rotogravure\Rotogravure.dll</Assembly>
+    <AddInId>eb78200e-f5ed-41e7-8436-b9bd81a7f7e1</AddInId>
+    <FullClassName>DougKlassen.Revit.Cron.Rotogravure.StartUp.StartUpApp</FullClassName>
+    <VendorId>TSRA</VendorId>
+    <VendorDescription>Doug Klassen</VendorDescription>
+  </AddIn>
+</RevitAddIns>
