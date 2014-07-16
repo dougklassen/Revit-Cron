@@ -45,9 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models.cs" />
+    <Compile Include="Models\RCronTask.cs" />
+    <Compile Include="Models\RotogravureOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories.cs" />
+    <Compile Include="Repositories\RotogravureOptionsRepo.cs" />
+    <Compile Include="Repositories\RCronTasksRepo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
