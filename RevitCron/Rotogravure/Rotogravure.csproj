@@ -43,7 +43,7 @@
       <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2014\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RevitCron, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="RevitCron, Version=14.0.1.36632, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\RevitCron.dll</HintPath>
     </Reference>

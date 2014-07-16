@@ -11,9 +11,9 @@ namespace DougKlassen.Revit.Cron.Repositories
 {
     public interface IRCronTasksRepo
     {
-        IEnumerable<RCronTask> GetRCronTasks();
+        ICollection<RCronTask> GetRCronTasks();
 
-        void PutRCronTasks(IEnumerable<RCronTask> task);
+        void PutRCronTasks(ICollection<RCronTask> task);
     }
 
     public class RCronTasksJsonRepo : IRCronTasksRepo
@@ -28,9 +28,9 @@ namespace DougKlassen.Revit.Cron.Repositories
             repoFilePath = filePath;
         }
 
-        public IEnumerable<RCronTask> GetRCronTasks()
+        public ICollection<RCronTask> GetRCronTasks()
         {
-            List<RCronTask> tasks = null;
+            ICollection<RCronTask> tasks = null;
 
             using (FileStream fs = new FileStream(repoFilePath, FileMode.Open))
             {
@@ -41,7 +41,7 @@ namespace DougKlassen.Revit.Cron.Repositories
             return tasks;
         }
 
-        public void PutRCronTasks(IEnumerable<RCronTask> tasks)
+        public void PutRCronTasks(ICollection<RCronTask> tasks)
         {
             using (FileStream fs = new FileStream(repoFilePath, FileMode.OpenOrCreate))
             {
