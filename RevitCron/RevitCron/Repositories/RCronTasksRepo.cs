@@ -43,7 +43,7 @@ namespace DougKlassen.Revit.Cron.Repositories
 
         public void PutRCronTasks(ICollection<RCronTask> tasks)
         {
-            using (FileStream fs = new FileStream(repoFilePath, FileMode.OpenOrCreate))
+            using (FileStream fs = new FileStream(repoFilePath, FileMode.Create))
             {
                 DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(List<RCronTask>));
                 s.WriteObject(fs, tasks);

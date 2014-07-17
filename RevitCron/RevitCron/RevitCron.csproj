@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dummies.cs" />
-    <Compile Include="FileLocations.cs" />
+    <Compile Include="RCronFileLocations.cs" />
     <Compile Include="Models\RCronTask.cs" />
     <Compile Include="Models\RotogravureOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

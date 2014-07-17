@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DougKlassen.Revit.Cron
 {
-    public static class RotogravureFileLocations
+    public static class RCronFileLocations
     {
         public static readonly String AddInDirectoryPath = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\";
         public static String AssemblyName = "Rotogravure";
