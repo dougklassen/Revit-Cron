@@ -17,38 +17,50 @@ namespace DougKlassen.Revit.Cron
 
         public static readonly List<RCronTask> dummyTasks = new List<RCronTask>
         {
-            new rCronPrintTask()
+            new RCronTask()
             {
                 Name = "Print Task One",
-                Task = TaskType.Print,
                 LastRun = new DateTime(),
                 Schedule = "0 0 * * *",
-                PrintSet = "test"
+                TaskInfo = new RCronTaskInfo()
+                    {
+                       Task = TaskType.Print
+                        //PrintSet = "test"
+                    }
             },
-            new rCronExportTask()
+            new RCronTask()
             {
                 Name = "Print Task One",
-                Task = TaskType.Print,
                 LastRun = new DateTime(),
                 Schedule = "0 0 * * *",
-                PrintSet = "test",
-                ExportSetup = "test"
+                TaskInfo = new RCronTaskInfo()
+                    {
+                        Task = TaskType.Export                        
+                        //PrintSet = "test",
+                        //ExportSetup = "test"
+                    }
             },
-            new rCronETransmitTask()
+            new RCronTask()
             {
                 Name = "Print Task One",
-                Task = TaskType.Print,
                 LastRun = new DateTime(),
                 Schedule = "0 0 * * *",
-                OutputDirectory = @"C:\"
+                TaskInfo = new RCronETransmitTask()
+                    {
+                        Task = TaskType.ETransmit,
+                        OutputDirectory = @"C:\"
+                    }          
             },
-            new rCronCommandTask()
+            new RCronTask()
             {
                 Name = "Print Task One",
-                Task = TaskType.Print,
                 LastRun = new DateTime(),
                 Schedule = "0 0 * * *",
-                CommandName = "DougKlassen.Revit.Perfect.Commands.RenameFamiliesCommand"
+                TaskInfo = new RCronCommandTask()
+                    {
+                        Task = TaskType.Command,
+                        CommandName = "DougKlassen.Revit.Perfect.Commands.RenameFamiliesCommand"
+                    }                
             },
         };
     }
