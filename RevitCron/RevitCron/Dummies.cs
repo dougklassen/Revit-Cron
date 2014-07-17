@@ -19,36 +19,41 @@ namespace DougKlassen.Revit.Cron
         {
             new RCronTask()
             {
-                Name = "Print Task One",
+                Name = "Test Print Task",
                 LastRun = new DateTime(),
                 Schedule = "0 0 * * *",
-                TaskInfo = new RCronTaskInfo()
+                TaskInfo = new RCronPrintTask()
                     {
-                       Task = TaskType.Print
-                        //PrintSet = "test"
+                       TaskType = TaskType.Print,               
+                       ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
+                       OutputDirectory = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
+                        PrintSet = "test"
                     }
             },
             new RCronTask()
             {
-                Name = "Print Task One",
+                Name = "Test Export Task",
                 LastRun = new DateTime(),
                 Schedule = "0 0 * * *",
-                TaskInfo = new RCronTaskInfo()
+                TaskInfo = new RCronExportTask()
                     {
-                        Task = TaskType.Export                        
-                        //PrintSet = "test",
-                        //ExportSetup = "test"
+                        TaskType = TaskType.Export,
+                        ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
+                        OutputDirectory = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
+                        PrintSet = "test",
+                        ExportSetup = "test"
                     }
             },
             new RCronTask()
             {
-                Name = "Print Task One",
+                Name = "Test eTransmit Task",
                 LastRun = new DateTime(),
                 Schedule = "0 0 * * *",
                 TaskInfo = new RCronETransmitTask()
                     {
-                        Task = TaskType.ETransmit,
-                        OutputDirectory = @"C:\"
+                        TaskType = TaskType.ETransmit,                        
+                        ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
+                        OutputDirectory = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt"
                     }          
             },
             new RCronTask()
@@ -58,7 +63,9 @@ namespace DougKlassen.Revit.Cron
                 Schedule = "0 0 * * *",
                 TaskInfo = new RCronCommandTask()
                     {
-                        Task = TaskType.Command,
+                        TaskType = TaskType.Command,
+                        ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
+                        OutputDirectory = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
                         CommandName = "DougKlassen.Revit.Perfect.Commands.RenameFamiliesCommand"
                     }                
             },

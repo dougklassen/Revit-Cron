@@ -67,7 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Rotogravure.addin">
+    <Content Include="Resources\Rotogravure.addin">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
@@ -78,14 +78,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <None Include="Resources\ini.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\tasks.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(ProjectDir)""$(OutDir)"* "C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure" /S /Y</PostBuildEvent>

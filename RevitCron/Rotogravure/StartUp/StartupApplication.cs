@@ -33,6 +33,19 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
             FileLocations.AddInDirectoryPath = application.ControlledApplication.AllUsersAddinsLocation + "\\" + FileLocations.AssemblyName + "\\";
             FileLocations.OptionsFilePath = FileLocations.AddInDirectoryPath + @"Resources\ini.json";
 
+            application.ControlledApplication.ApplicationInitialized += OnApplicationInitialized;
+
+            return Result.Succeeded;
+        }
+
+
+        Result IExternalApplication.OnShutdown(UIControlledApplication application)
+        {
+            return Result.Succeeded;
+        }
+
+        void OnApplicationInitialized(object sender, Autodesk.Revit.DB.Events.ApplicationInitializedEventArgs e)
+        {
             String msg = String.Empty;
             msg += "Rotogravure initialized\n";
             msg += FileLocations.AssemblyName + "\n" + Assembly.GetExecutingAssembly().GetName().Version + '\n';
@@ -43,23 +56,49 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
             {
                 tasks = new RCronTasksJsonRepo(opts.TasksRepoUri).GetRCronTasks();
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
                 TaskDialog.Show("Error", "Could not load " + FileLocations.OptionsFilePath);
-                throw e;
-                return Result.Failed;
+                throw exception;
             }
 
             msg += tasks.Count + " tasks found";
 
             TaskDialog.Show("Startup", msg);
 
-            return Result.Succeeded;
-        }
+            try
+            {
+                Autodesk.Revit.ApplicationServices.Application app = (Autodesk.Revit.ApplicationServices.Application)sender;
+                Document loadedDoc;
+                Boolean saveModified = false;
 
-        Result IExternalApplication.OnShutdown(UIControlledApplication application)
-        {
-            return Result.Succeeded;
+                foreach (RCronTask task in tasks)
+                {
+                    loadedDoc = new Autodesk.Revit.ApplicationServices.Application().OpenDocumentFile(task.TaskInfo.ProjectFile);
+
+                    switch (task.TaskInfo.TaskType)
+                    {
+                        case TaskType.Print:
+                            TaskDialog.Show("Print task", "Printing...");
+                            break;
+                        case TaskType.Export:
+                            break;
+                        case TaskType.ETransmit:
+                            break;
+                        case TaskType.Command:
+                            break;
+                        default:
+                            break;
+                    }
+
+                    loadedDoc.Close(saveModified);
+                }
+            }
+            catch (Exception exception)
+            {
+                TaskDialog.Show("Exception", exception.Message + "\n" + exception.StackTrace);
+                throw;
+            }
         }
     }
 }

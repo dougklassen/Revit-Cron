@@ -30,9 +30,12 @@ namespace DougKlassen.Revit.Cron.Models
     public class RCronTaskInfo
     {
         [DataMember(Order = 0)]
-        public TaskType Task;
+        public TaskType TaskType;
 
         [DataMember(Order = 1)]
+        public String ProjectFile;
+
+        [DataMember(Order = 2)]
         public String OutputDirectory;
     }
 
@@ -44,7 +47,7 @@ namespace DougKlassen.Revit.Cron.Models
 
         public RCronPrintTask()
         {
-            Task = TaskType.Print;
+            TaskType = TaskType.Print;
         }
     }
 
@@ -59,7 +62,7 @@ namespace DougKlassen.Revit.Cron.Models
 
         public RCronExportTask()
         {
-            Task = TaskType.Export;
+            TaskType = TaskType.Export;
         }
     }
 
@@ -68,7 +71,7 @@ namespace DougKlassen.Revit.Cron.Models
     {
         public RCronETransmitTask()
         {
-            Task = TaskType.ETransmit;
+            TaskType = TaskType.ETransmit;
         }
     }
 
@@ -80,7 +83,7 @@ namespace DougKlassen.Revit.Cron.Models
 
         public RCronCommandTask()
         {
-            Task = TaskType.Command;
+            TaskType = TaskType.Command;
         }
     }
 }
