@@ -13,6 +13,8 @@ using DougKlassen.Revit.Cron;
 using DougKlassen.Revit.Cron.Models;
 using DougKlassen.Revit.Cron.Repositories;
 
+using DougKlassen.Revit.Cron.Rotogravure.Interface;
+
 namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
 {
     public static class FileLocations
@@ -27,6 +29,8 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
 
     public class StartUpApp : IExternalApplication
     {
+        StringBuilder resultString;
+
         Result IExternalApplication.OnStartup(UIControlledApplication application)
         {
             //initialize AssemblyName using reflection
@@ -47,7 +51,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
 
         void OnApplicationInitialized(object sender, Autodesk.Revit.DB.Events.ApplicationInitializedEventArgs e)
         {
-            StringBuilder resultString = new StringBuilder();
+            resultString = new StringBuilder(String.Empty);
             AssemblyName asm = Assembly.GetExecutingAssembly().GetName();
             resultString.AppendLine("Rotogravure initialized");
             resultString.AppendFormat("assembly: {0}\n", asm.Name);
@@ -61,10 +65,8 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
             }
             catch (Exception exception)
             {
-                TaskDialog exceptionDlg = new TaskDialog("Couldn't Load Tasks");
-                exceptionDlg.MainContent = exception.Message;
-                exceptionDlg.ExpandedContent = exception.StackTrace;
-                exceptionDlg.Show();
+                LogException(exception);
+                LogWindow.Show(resultString.ToString());
                 throw exception;
             }
 
@@ -120,27 +122,25 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
                     }
 
                     loadedDoc.Close(saveModified);
+                    LogWindow.Show(resultString.ToString());
                 }
             }
             catch (Exception exception)
             {
-                TaskDialog exceptionDlg = new TaskDialog("Couldn't Execute Tasks");
-                exceptionDlg.MainContent = exception.Message;
-                exceptionDlg.ExpandedContent = exception.StackTrace;
-                exceptionDlg.Show();
-
-                TaskDialog dlg = new TaskDialog("Result");
-                dlg.MainContent = "Rotogravure Tasks Completed";
-                dlg.ExpandedContent = resultString.ToString();
-                dlg.Show();
-
+                LogException(exception);
+                LogWindow.Show(resultString.ToString());
                 throw exception;
             }
 
-            TaskDialog resultDlg = new TaskDialog("Result");
-            resultDlg.MainContent = "Rotogravure Tasks Completed";
-            resultDlg.ExpandedContent = resultString.ToString();
-            resultDlg.Show();
+            
+        }
+
+        void LogException(Exception exception)
+        {
+            resultString.AppendFormat("*** {0}\n", exception.GetType().ToString());
+            resultString.AppendLine(exception.Message);
+            resultString.AppendLine(exception.StackTrace);
+            resultString.AppendFormat("***\n");
         }
     }
 }
