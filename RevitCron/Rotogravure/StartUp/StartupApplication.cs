@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows.Media.Imaging;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Windows.Media.Imaging;
 
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -38,7 +40,6 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
             return Result.Succeeded;
         }
 
-
         Result IExternalApplication.OnShutdown(UIControlledApplication application)
         {
             return Result.Succeeded;
@@ -46,9 +47,11 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
 
         void OnApplicationInitialized(object sender, Autodesk.Revit.DB.Events.ApplicationInitializedEventArgs e)
         {
-            String msg = String.Empty;
-            msg += "Rotogravure initialized\n";
-            msg += FileLocations.AssemblyName + "\n" + Assembly.GetExecutingAssembly().GetName().Version + '\n';
+            StringBuilder resultString = new StringBuilder();
+            AssemblyName asm = Assembly.GetExecutingAssembly().GetName();
+            resultString.AppendLine("Rotogravure initialized");
+            resultString.AppendFormat("assembly: {0}\n", asm.Name);
+            resultString.AppendFormat("version: {0}\n", asm.Version);
 
             RotogravureOptions opts = new RotogravureOptionsJsonRepo(FileLocations.OptionsFilePath).GetRotogravureOptions();
             ICollection<RCronTask> tasks;
@@ -58,13 +61,14 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
             }
             catch (Exception exception)
             {
-                TaskDialog.Show("Error", "Could not load " + FileLocations.OptionsFilePath);
+                TaskDialog exceptionDlg = new TaskDialog("Couldn't Load Tasks");
+                exceptionDlg.MainContent = exception.Message;
+                exceptionDlg.ExpandedContent = exception.StackTrace;
+                exceptionDlg.Show();
                 throw exception;
             }
 
-            msg += tasks.Count + " tasks found";
-
-            TaskDialog.Show("Startup", msg);
+            resultString.AppendFormat("{0} tasks found\n", tasks.Count);
 
             try
             {
@@ -74,18 +78,42 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
 
                 foreach (RCronTask task in tasks)
                 {
-                    loadedDoc = new Autodesk.Revit.ApplicationServices.Application().OpenDocumentFile(task.TaskInfo.ProjectFile);
+                    loadedDoc = app.OpenDocumentFile(task.TaskInfo.ProjectFile);
+                    resultString.AppendLine("---");
 
                     switch (task.TaskInfo.TaskType)
                     {
                         case TaskType.Print:
-                            TaskDialog.Show("Print task", "Printing...");
+                            resultString.AppendFormat("print task: {0}\n", loadedDoc.PathName);
+                            RCronPrintTaskInfo printTaskInfo = (RCronPrintTaskInfo) task.TaskInfo;
+                            ViewSheetSet printSet = new FilteredElementCollector(loadedDoc)
+                                .OfClass(typeof(ViewSheetSet))
+                                .Where(s => s.Name.Equals(printTaskInfo.PrintSet))
+                                .FirstOrDefault() as ViewSheetSet;
+
+                            if (null != printSet)
+                            {
+                                resultString.AppendFormat("printing {0} views\n", printSet.Views.Size);
+                                foreach(View v in printSet.Views)
+                                {
+                                    resultString.AppendFormat("view found: {0}\n", v.Name);
+                                }
+                                loadedDoc.Print(printSet.Views);
+                            }
+                            else
+                            {
+                                resultString.AppendFormat("error: couldn't load printset {0}\n", printTaskInfo.PrintSet);
+                            }
+
                             break;
                         case TaskType.Export:
+                            resultString.AppendFormat("export task: {0}\n", loadedDoc.PathName);
                             break;
                         case TaskType.ETransmit:
+                            resultString.AppendFormat("eTransmit task: {0}\n", loadedDoc.PathName);
                             break;
                         case TaskType.Command:
+                            resultString.AppendFormat("command task: {0}\n", loadedDoc.PathName);
                             break;
                         default:
                             break;
@@ -96,9 +124,23 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
             }
             catch (Exception exception)
             {
-                TaskDialog.Show("Exception", exception.Message + "\n" + exception.StackTrace);
-                throw;
+                TaskDialog exceptionDlg = new TaskDialog("Couldn't Execute Tasks");
+                exceptionDlg.MainContent = exception.Message;
+                exceptionDlg.ExpandedContent = exception.StackTrace;
+                exceptionDlg.Show();
+
+                TaskDialog dlg = new TaskDialog("Result");
+                dlg.MainContent = "Rotogravure Tasks Completed";
+                dlg.ExpandedContent = resultString.ToString();
+                dlg.Show();
+
+                throw exception;
             }
+
+            TaskDialog resultDlg = new TaskDialog("Result");
+            resultDlg.MainContent = "Rotogravure Tasks Completed";
+            resultDlg.ExpandedContent = resultString.ToString();
+            resultDlg.Show();
         }
     }
 }

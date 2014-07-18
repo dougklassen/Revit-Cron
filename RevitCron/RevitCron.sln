@@ -4,10 +4,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rotogravure", "Rotogravure\Rotogravure.csproj", "{579F7194-30E6-4421-8588-E62AE7A55733}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0E122EEC-7AD1-40B7-8165-5ED94289D351} = {0E122EEC-7AD1-40B7-8165-5ED94289D351}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RevitCron", "RevitCron\RevitCron.csproj", "{0E122EEC-7AD1-40B7-8165-5ED94289D351}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCron", "RCron\RCron.csproj", "{D1CE21FE-6464-4F92-B972-00B3719472FD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0E122EEC-7AD1-40B7-8165-5ED94289D351} = {0E122EEC-7AD1-40B7-8165-5ED94289D351}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

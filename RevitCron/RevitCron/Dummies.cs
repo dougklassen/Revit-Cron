@@ -22,7 +22,7 @@ namespace DougKlassen.Revit.Cron
                 Name = "Test Print Task",
                 LastRun = new DateTime(),
                 Schedule = "0 0 * * *",
-                TaskInfo = new RCronPrintTask()
+                TaskInfo = new RCronPrintTaskInfo()
                     {
                        TaskType = TaskType.Print,               
                        ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
@@ -35,7 +35,7 @@ namespace DougKlassen.Revit.Cron
                 Name = "Test Export Task",
                 LastRun = new DateTime(),
                 Schedule = "0 0 * * *",
-                TaskInfo = new RCronExportTask()
+                TaskInfo = new RCronExportTaskInfo()
                     {
                         TaskType = TaskType.Export,
                         ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
@@ -49,7 +49,7 @@ namespace DougKlassen.Revit.Cron
                 Name = "Test eTransmit Task",
                 LastRun = new DateTime(),
                 Schedule = "0 0 * * *",
-                TaskInfo = new RCronETransmitTask()
+                TaskInfo = new RCronETransmitTaskInfo()
                     {
                         TaskType = TaskType.ETransmit,                        
                         ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
@@ -61,7 +61,7 @@ namespace DougKlassen.Revit.Cron
                 Name = "Print Task One",
                 LastRun = new DateTime(),
                 Schedule = "0 0 * * *",
-                TaskInfo = new RCronCommandTask()
+                TaskInfo = new RCronCommandTaskInfo()
                     {
                         TaskType = TaskType.Command,
                         ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",

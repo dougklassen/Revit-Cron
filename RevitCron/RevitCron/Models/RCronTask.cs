@@ -7,10 +7,10 @@ using System.Runtime.Serialization;
 namespace DougKlassen.Revit.Cron.Models
 {
     [DataContract]
-    [KnownType(typeof(RCronPrintTask))]
-    [KnownType(typeof(RCronExportTask))]
-    [KnownType(typeof(RCronETransmitTask))]
-    [KnownType(typeof(RCronCommandTask))]
+    [KnownType(typeof(RCronPrintTaskInfo))]
+    [KnownType(typeof(RCronExportTaskInfo))]
+    [KnownType(typeof(RCronETransmitTaskInfo))]
+    [KnownType(typeof(RCronCommandTaskInfo))]
     public class RCronTask
     {
         [DataMember(Order = 0)]
@@ -40,19 +40,19 @@ namespace DougKlassen.Revit.Cron.Models
     }
 
     [DataContract]
-    public class RCronPrintTask : RCronTaskInfo
+    public class RCronPrintTaskInfo : RCronTaskInfo
     {
         [DataMember(Order = 10)]
         public String PrintSet { get; set; }
 
-        public RCronPrintTask()
+        public RCronPrintTaskInfo()
         {
             TaskType = TaskType.Print;
         }
     }
 
     [DataContract]
-    public class RCronExportTask : RCronTaskInfo
+    public class RCronExportTaskInfo : RCronTaskInfo
     {
         [DataMember(Order = 10)]
         public String PrintSet { get; set; }
@@ -60,28 +60,28 @@ namespace DougKlassen.Revit.Cron.Models
         [DataMember(Order = 11)]
         public String ExportSetup { get; set; }
 
-        public RCronExportTask()
+        public RCronExportTaskInfo()
         {
             TaskType = TaskType.Export;
         }
     }
 
     [DataContract]
-    public class RCronETransmitTask : RCronTaskInfo
+    public class RCronETransmitTaskInfo : RCronTaskInfo
     {
-        public RCronETransmitTask()
+        public RCronETransmitTaskInfo()
         {
             TaskType = TaskType.ETransmit;
         }
     }
 
     [DataContract]
-    public class RCronCommandTask : RCronTaskInfo
+    public class RCronCommandTaskInfo : RCronTaskInfo
     {
         [DataMember(Order = 10)]
         public String CommandName { get; set; }
 
-        public RCronCommandTask()
+        public RCronCommandTaskInfo()
         {
             TaskType = TaskType.Command;
         }
