@@ -67,28 +67,28 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
             {
                 LogException(exception);
                 LogWindow.Show(resultString.ToString());
-                throw exception;
+                throw exception; //can't continue if the TasksRepo can't be loaded
             }
 
             resultString.AppendFormat("{0} tasks found\n", tasks.Count);
 
-            try
-            {
-                Autodesk.Revit.ApplicationServices.Application app = (Autodesk.Revit.ApplicationServices.Application)sender;
-                Document loadedDoc;
-                Boolean saveModified = false;
+            Autodesk.Revit.ApplicationServices.Application app = (Autodesk.Revit.ApplicationServices.Application)sender;
+            Document dbDoc;
+            Boolean saveModified = false;
 
-                foreach (RCronTask task in tasks)
+            foreach (RCronTask task in tasks)
+            {
+                try
                 {
-                    loadedDoc = app.OpenDocumentFile(task.TaskInfo.ProjectFile);
+                    dbDoc = app.OpenDocumentFile(task.TaskInfo.ProjectFile);
                     resultString.AppendLine("---");
 
                     switch (task.TaskInfo.TaskType)
                     {
                         case TaskType.Print:
-                            resultString.AppendFormat("print task: {0}\n", loadedDoc.PathName);
+                            resultString.AppendFormat("print task: {0}\n", dbDoc.PathName);
                             RCronPrintTaskInfo printTaskInfo = (RCronPrintTaskInfo) task.TaskInfo;
-                            ViewSheetSet printSet = new FilteredElementCollector(loadedDoc)
+                            ViewSheetSet printSet = new FilteredElementCollector(dbDoc)
                                 .OfClass(typeof(ViewSheetSet))
                                 .Where(s => s.Name.Equals(printTaskInfo.PrintSet))
                                 .FirstOrDefault() as ViewSheetSet;
@@ -100,7 +100,15 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
                                 {
                                     resultString.AppendFormat("view found: {0}\n", v.Name);
                                 }
-                                loadedDoc.Print(printSet.Views);
+
+                                PrintManager pm = dbDoc.PrintManager;
+                                pm.SelectNewPrintDriver("Bluebeam PDF");
+                                pm.PrintSetup.InSession.PrintParameters.PaperSize = pm.PaperSizes.Cast<PaperSize>().Where(p => "Letter" == p.Name).FirstOrDefault();
+                                pm.PrintRange = PrintRange.Select;
+                                pm.ViewSheetSetting.CurrentViewSheetSet = printSet;
+                                pm.CombinedFile = true;
+                                pm.SubmitPrint();
+                                //dbDoc.Print(printSet.Views);
                             }
                             else
                             {
@@ -109,30 +117,27 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
 
                             break;
                         case TaskType.Export:
-                            resultString.AppendFormat("export task: {0}\n", loadedDoc.PathName);
+                            resultString.AppendFormat("export task: {0}\n", dbDoc.PathName);
                             break;
                         case TaskType.ETransmit:
-                            resultString.AppendFormat("eTransmit task: {0}\n", loadedDoc.PathName);
+                            resultString.AppendFormat("eTransmit task: {0}\n", dbDoc.PathName);
                             break;
                         case TaskType.Command:
-                            resultString.AppendFormat("command task: {0}\n", loadedDoc.PathName);
+                            resultString.AppendFormat("command task: {0}\n", dbDoc.PathName);
                             break;
                         default:
                             break;
                     }
 
-                    loadedDoc.Close(saveModified);
-                    LogWindow.Show(resultString.ToString());
+                    dbDoc.Close(saveModified);
+                }
+                catch (Exception exception)
+                {
+                    LogException(exception);
                 }
             }
-            catch (Exception exception)
-            {
-                LogException(exception);
-                LogWindow.Show(resultString.ToString());
-                throw exception;
-            }
 
-            
+            LogWindow.Show(resultString.ToString());
         }
 
         void LogException(Exception exception)
