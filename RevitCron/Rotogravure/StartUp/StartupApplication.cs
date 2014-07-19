@@ -19,8 +19,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
 {
     public static class FileLocations
     {
-        //AddInDirectory is initialized at runtime
-        public static String AddInDirectoryPath;
+        public static String AddInDirectoryPath;    //AddInDirectory is initialized at runtime
         public static String AssemblyName;
         public static String OptionsFilePath;
         public static readonly String ImperialTemplateDirectoryPath = @"C:\ProgramData\Autodesk\RVT 2014\Family Templates\English_I\";
@@ -29,7 +28,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
 
     public class StartUpApp : IExternalApplication
     {
-        StringBuilder resultString;
+        StringBuilder logText = RCronLog.Instance.LogText;
 
         Result IExternalApplication.OnStartup(UIControlledApplication application)
         {
@@ -40,8 +39,15 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
             FileLocations.OptionsFilePath = FileLocations.AddInDirectoryPath + @"Resources\ini.json";
 
             application.ControlledApplication.ApplicationInitialized += OnApplicationInitialized;
+            application.DialogBoxShowing += DialogEventHandler.OnDialogShowing;
+            application.ApplicationClosing += application_ApplicationClosing;
 
             return Result.Succeeded;
+        }
+
+        void application_ApplicationClosing(object sender, Autodesk.Revit.UI.Events.ApplicationClosingEventArgs e)
+        {
+            LogWindow.Show(logText.ToString());
         }
 
         Result IExternalApplication.OnShutdown(UIControlledApplication application)
@@ -51,11 +57,10 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
 
         void OnApplicationInitialized(object sender, Autodesk.Revit.DB.Events.ApplicationInitializedEventArgs e)
         {
-            resultString = new StringBuilder(String.Empty);
             AssemblyName asm = Assembly.GetExecutingAssembly().GetName();
-            resultString.AppendLine("Rotogravure initialized");
-            resultString.AppendFormat("assembly: {0}\n", asm.Name);
-            resultString.AppendFormat("version: {0}\n", asm.Version);
+            logText.AppendLine("Rotogravure initialized");
+            logText.AppendFormat("assembly: {0}\n", asm.Name);
+            logText.AppendFormat("version: {0}\n", asm.Version);
 
             RotogravureOptions opts = new RotogravureOptionsJsonRepo(FileLocations.OptionsFilePath).GetRotogravureOptions();
             ICollection<RCronTask> tasks;
@@ -66,11 +71,11 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
             catch (Exception exception)
             {
                 LogException(exception);
-                LogWindow.Show(resultString.ToString());
+                LogWindow.Show(logText.ToString());
                 throw exception; //can't continue if the TasksRepo can't be loaded
             }
 
-            resultString.AppendFormat("{0} tasks found\n", tasks.Count);
+            logText.AppendFormat("{0} tasks found\n", tasks.Count);
 
             Autodesk.Revit.ApplicationServices.Application app = (Autodesk.Revit.ApplicationServices.Application)sender;
             Document dbDoc;
@@ -81,12 +86,12 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
                 try
                 {
                     dbDoc = app.OpenDocumentFile(task.TaskInfo.ProjectFile);
-                    resultString.AppendLine("---");
+                    logText.AppendLine("---");
 
                     switch (task.TaskInfo.TaskType)
                     {
                         case TaskType.Print:
-                            resultString.AppendFormat("print task: {0}\n", dbDoc.PathName);
+                            logText.AppendFormat("print task: {0}\n", dbDoc.PathName);
                             RCronPrintTaskInfo printTaskInfo = (RCronPrintTaskInfo) task.TaskInfo;
                             ViewSheetSet printSet = new FilteredElementCollector(dbDoc)
                                 .OfClass(typeof(ViewSheetSet))
@@ -95,10 +100,10 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
 
                             if (null != printSet)
                             {
-                                resultString.AppendFormat("printing {0} views\n", printSet.Views.Size);
+                                logText.AppendFormat("printing {0} views\n", printSet.Views.Size);
                                 foreach(View v in printSet.Views)
                                 {
-                                    resultString.AppendFormat("view found: {0}\n", v.Name);
+                                    logText.AppendFormat("view found: {0}\n", v.Name);
                                 }
 
                                 PrintManager pm = dbDoc.PrintManager;
@@ -108,22 +113,21 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
                                 pm.ViewSheetSetting.CurrentViewSheetSet = printSet;
                                 pm.CombinedFile = true;
                                 pm.SubmitPrint();
-                                //dbDoc.Print(printSet.Views);
                             }
                             else
                             {
-                                resultString.AppendFormat("error: couldn't load printset {0}\n", printTaskInfo.PrintSet);
+                                logText.AppendFormat("error: couldn't load printset {0}\n", printTaskInfo.PrintSet);
                             }
 
                             break;
                         case TaskType.Export:
-                            resultString.AppendFormat("export task: {0}\n", dbDoc.PathName);
+                            logText.AppendFormat("export task: {0}\n", dbDoc.PathName);
                             break;
                         case TaskType.ETransmit:
-                            resultString.AppendFormat("eTransmit task: {0}\n", dbDoc.PathName);
+                            logText.AppendFormat("eTransmit task: {0}\n", dbDoc.PathName);
                             break;
                         case TaskType.Command:
-                            resultString.AppendFormat("command task: {0}\n", dbDoc.PathName);
+                            logText.AppendFormat("command task: {0}\n", dbDoc.PathName);
                             break;
                         default:
                             break;
@@ -137,15 +141,15 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
                 }
             }
 
-            LogWindow.Show(resultString.ToString());
+            LogWindow.Show(logText.ToString());
         }
 
         void LogException(Exception exception)
         {
-            resultString.AppendFormat("*** {0}\n", exception.GetType().ToString());
-            resultString.AppendLine(exception.Message);
-            resultString.AppendLine(exception.StackTrace);
-            resultString.AppendFormat("***\n");
+            logText.AppendFormat("*** {0}\n", exception.GetType().ToString());
+            logText.AppendLine(exception.Message);
+            logText.AppendLine(exception.StackTrace);
+            logText.AppendFormat("***\n");
         }
     }
 }

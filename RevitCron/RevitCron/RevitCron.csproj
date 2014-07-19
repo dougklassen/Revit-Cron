@@ -50,6 +50,7 @@
     <Compile Include="Models\RCronTask.cs" />
     <Compile Include="Models\RotogravureOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RCronLog.cs" />
     <Compile Include="Repositories\RotogravureOptionsRepo.cs" />
     <Compile Include="Repositories\RCronTasksRepo.cs" />
   </ItemGroup>
