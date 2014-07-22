@@ -36,7 +36,6 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
             FileLocations.AssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
             //initialize AddInDirectory. The addin should be stored in a directory named after the assembly
             FileLocations.AddInDirectoryPath = application.ControlledApplication.AllUsersAddinsLocation + "\\" + FileLocations.AssemblyName + "\\";
-            FileLocations.OptionsFilePath = FileLocations.AddInDirectoryPath + @"Resources\ini.json";
 
             application.ControlledApplication.ApplicationInitialized += OnApplicationInitialized;
             application.DialogBoxShowing += DialogEventHandler.OnDialogShowing;
