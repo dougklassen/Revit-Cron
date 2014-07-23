@@ -6,7 +6,7 @@ using System.Text;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
-namespace DougKlassen.Revit.Cron.Rotogravure
+namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 {
     public class DialogEventHandler
     {

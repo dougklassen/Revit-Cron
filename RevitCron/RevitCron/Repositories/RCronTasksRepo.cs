@@ -22,10 +22,17 @@ namespace DougKlassen.Revit.Cron.Repositories
 
         private RCronTasksJsonRepo() { }
 
-        public RCronTasksJsonRepo(String filePath)
+        public RCronTasksJsonRepo(Uri fileUri)
             : this()
         {
-            repoFilePath = filePath;
+            if (fileUri.IsFile)
+            {
+                repoFilePath = fileUri.AbsolutePath;
+            }
+            else
+            {
+                throw new ArgumentException("Tasks file URI was not a file URI");
+            }
         }
 
         public ICollection<RCronTask> GetRCronTasks()

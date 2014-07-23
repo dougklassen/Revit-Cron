@@ -21,6 +21,8 @@ namespace RCron
             IEnumerable<String> cmds = args
                 .Where(s => cmdRegex.IsMatch(s));
 
+            RotogravureOptionsJsonRepo rotogravureOptionsRepo = new RotogravureOptionsJsonRepo(RCronFileLocations.OptionsFilePath);
+
             if (null == cmds.FirstOrDefault())
             {
                 Console.WriteLine("No command specified");
@@ -32,14 +34,14 @@ namespace RCron
                 {
                     case "newini":
                         Console.WriteLine("newIni command specified");
-                        new RotogravureOptionsJsonRepo(RCronFileLocations.OptionsFilePath).PutRotogravureOptions(Dummies.dummyOpts);
+                        rotogravureOptionsRepo.PutRotogravureOptions(Dummies.dummyOpts);
                         break;
                     case "newtasks":
                         Console.WriteLine("newTasks command specified");
-                        String tasksFileLocation = new RotogravureOptionsJsonRepo(RCronFileLocations.OptionsFilePath)
+                        Uri tasksFileUri = rotogravureOptionsRepo
                             .GetRotogravureOptions()
-                            .TasksRepoUri;
-                        new RCronTasksJsonRepo(tasksFileLocation).PutRCronTasks(Dummies.dummyTasks);
+                            .TasksFileUri;
+                        new RCronTasksJsonRepo(tasksFileUri).PutRCronTasks(Dummies.dummyTasks);
                         break;
                     default:
                         Console.WriteLine("{0} : command not recognized", cmd);

@@ -10,6 +10,8 @@ namespace DougKlassen.Revit.Cron.Models
     public class RotogravureOptions
     {
         [DataMember(Order = 0)]
-        public String TasksRepoUri { get; set; }
+        public Uri TasksFileUri { get; set; }
+        [DataMember(Order = 1)]
+        public Uri LogFileUri { get; set; }
     }
 }

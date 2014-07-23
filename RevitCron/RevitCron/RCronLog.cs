@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DougKlassen.Revit.Cron
 {
-    public sealed class RCronLog
+    public sealed class RCronLog //todo: delete
     {
         private static readonly RCronLog instance = new RCronLog();
 
