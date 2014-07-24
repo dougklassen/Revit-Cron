@@ -12,8 +12,8 @@ namespace DougKlassen.Revit.Cron
     {
         public static readonly RotogravureOptions dummyOpts = new RotogravureOptions()
         {
-            TasksFileUri = RCronFileLocations.GetUri(RCronFileLocations.AddInDirectoryPath + @"Resources\tasks.json"),
-            LogFileUri = RCronFileLocations.GetUri(RCronFileLocations.AddInDirectoryPath + @"Resources\log.txt")
+            TasksFileUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"Resources\tasks.json"),
+            LogFileUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"Resources\log.txt")
         };
 
         public static readonly List<RCronTask> dummyTasks = new List<RCronTask>
@@ -28,7 +28,7 @@ namespace DougKlassen.Revit.Cron
                        TaskType = TaskType.Print,               
                        ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
                        OutputDirectory = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
-                        PrintSet = "test"
+                       PrintSet = "test"
                     }
             },
             new RCronTask()

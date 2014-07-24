@@ -17,30 +17,39 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 {
     public static class TaskProcessingLogic
     {
-        private static StringBuilder logText = RCronLog.Instance.LogText;
+        private static RotogravureOptions options;
+        private static RCronLog log;
 
         public static void OnApplicationInitialized(object sender, Autodesk.Revit.DB.Events.ApplicationInitializedEventArgs e)
         {
-            AssemblyName asm = Assembly.GetExecutingAssembly().GetName();
-            logText.AppendLine("Rotogravure initialized");
-            logText.AppendFormat("assembly: {0}\n", asm.Name);
-            logText.AppendFormat("version: {0}\n", asm.Version);
+            options = RotogravureOptionsJsonRepo.LoadOptions(new Uri(RCronFileLocations.OptionsFilePath));
+            try
+            {
+                log = RCronLogFileRepo.LoadLog(options.LogFileUri);
+            }
+            catch (Exception)
+            {
+                log = RCronLog.Instance;    //if the log file couldn't be loaded, get a new RCronLog
+            }
 
-            RotogravureOptions opts;
+            AssemblyName asm = Assembly.GetExecutingAssembly().GetName();
+            log.AppendLine("Rotogravure initialized");
+            log.AppendLine("assembly: {0}", asm.Name);
+            log.AppendLine("version: {0}", asm.Version.ToString());
+
             ICollection<RCronTask> tasks;
             try
             {
-                opts = new RotogravureOptionsJsonRepo(RCronFileLocations.OptionsFilePath).GetRotogravureOptions();
-                tasks = new RCronTasksJsonRepo(opts.TasksFileUri).GetRCronTasks();
+                tasks = RCronTasksJsonRepo.LoadTasks(options.TasksFileUri);
             }
             catch (Exception exception)
             {
                 LogException(exception);
-                LogWindow.Show(logText.ToString());
+                LogWindow.Show(log);
                 throw exception; //can't continue if the TasksRepo can't be loaded
             }
 
-            logText.AppendFormat("{0} tasks found\n", tasks.Count);
+            log.AppendLine("{0} tasks found", tasks.Count);
 
             Autodesk.Revit.ApplicationServices.Application app = (Autodesk.Revit.ApplicationServices.Application)sender;
             Document dbDoc;
@@ -51,12 +60,12 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
                 try
                 {
                     dbDoc = app.OpenDocumentFile(task.TaskInfo.ProjectFile);
-                    logText.AppendLine("---");
+                    log.AppendLine("---");
 
                     switch (task.TaskInfo.TaskType)
                     {
                         case TaskType.Print:
-                            logText.AppendFormat("print task: {0}\n", dbDoc.PathName);
+                            log.AppendLine("print task: {0}\n", dbDoc.PathName);
                             RCronPrintTaskInfo printTaskInfo = (RCronPrintTaskInfo)task.TaskInfo;
                             ViewSheetSet printSet = new FilteredElementCollector(dbDoc)
                                 .OfClass(typeof(ViewSheetSet))
@@ -65,10 +74,10 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 
                             if (null != printSet)
                             {
-                                logText.AppendFormat("printing {0} views\n", printSet.Views.Size);
+                                log.AppendLine("printing {0} views\n", printSet.Views.Size.ToString());
                                 foreach (View v in printSet.Views)
                                 {
-                                    logText.AppendFormat("view found: {0}\n", v.Name);
+                                    log.AppendLine("view found: {0}\n", v.Name);
                                 }
 
                                 PrintManager pm = dbDoc.PrintManager;
@@ -81,18 +90,18 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
                             }
                             else
                             {
-                                logText.AppendFormat("error: couldn't load printset {0}\n", printTaskInfo.PrintSet);
+                                log.AppendLine("error: couldn't load printset {0}", printTaskInfo.PrintSet);
                             }
 
                             break;
                         case TaskType.Export:
-                            logText.AppendFormat("export task: {0}\n", dbDoc.PathName);
+                            log.AppendLine("export task: {0}", dbDoc.PathName);
                             break;
                         case TaskType.ETransmit:
-                            logText.AppendFormat("eTransmit task: {0}\n", dbDoc.PathName);
+                            log.AppendLine("eTransmit task: {0}", dbDoc.PathName);
                             break;
                         case TaskType.Command:
-                            logText.AppendFormat("command task: {0}\n", dbDoc.PathName);
+                            log.AppendLine("command task: {0}", dbDoc.PathName);
                             break;
                         default:
                             break;
@@ -106,15 +115,15 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
                 }
             }
 
-            LogWindow.Show(logText.ToString());
+            LogWindow.Show(log);
         }
 
         static private void LogException(Exception exception) //todo: move to strongly typed log object in rcron
         {
-            logText.AppendFormat("*** {0}\n", exception.GetType().ToString());
-            logText.AppendLine(exception.Message);
-            logText.AppendLine(exception.StackTrace);
-            logText.AppendFormat("***\n");
+            log.AppendLine("*** {0}", exception.GetType());
+            log.AppendLine(exception.Message);
+            log.AppendLine(exception.StackTrace);
+            log.AppendLine("***");
         }
     }
 }

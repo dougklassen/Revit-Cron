@@ -23,13 +23,14 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
         Result IExternalApplication.OnStartup(UIControlledApplication application)
         {
             application.ControlledApplication.ApplicationInitialized += TaskProcessingLogic.OnApplicationInitialized;
-            application.DialogBoxShowing += DialogEventHandler.OnDialogShowing;
 
             return Result.Succeeded;
         }
 
         Result IExternalApplication.OnShutdown(UIControlledApplication application)
         {
+            RotogravureOptions options = RotogravureOptionsJsonRepo.LoadOptions(new Uri(RCronFileLocations.OptionsFilePath));
+            RCronLogFileRepo.WriteLog(options.LogFileUri, RCronLog.Instance);   //write the log file to disk
             return Result.Succeeded;
         }        
     }

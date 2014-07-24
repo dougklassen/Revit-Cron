@@ -18,21 +18,21 @@ namespace DougKlassen.Revit.Cron.Repositories
 
     public class RotogravureOptionsJsonRepo : IRotogravureOptionsRepo
     {
-        private String repoFilePath;
+        private Uri repoFileUri;
 
         private RotogravureOptionsJsonRepo() { }
 
-        public RotogravureOptionsJsonRepo(String filePath)
+        public RotogravureOptionsJsonRepo(Uri uri)
             : this()
         {
-            repoFilePath = filePath;
+            repoFileUri = uri;
         }
 
         public RotogravureOptions GetRotogravureOptions()
         {
             RotogravureOptions options = null;
 
-            using (FileStream fs = new FileStream(repoFilePath, FileMode.Open))
+            using (FileStream fs = new FileStream(repoFileUri.LocalPath, FileMode.Open))
             {
                 DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(RotogravureOptions));
                 options = (RotogravureOptions)s.ReadObject(fs);
@@ -43,11 +43,23 @@ namespace DougKlassen.Revit.Cron.Repositories
 
         public void PutRotogravureOptions(RotogravureOptions options)
         {
-            using(FileStream fs = new FileStream(repoFilePath, FileMode.Create))
+            using(FileStream fs = new FileStream(repoFileUri.LocalPath, FileMode.Create))
             {
                 DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(RotogravureOptions));
                 s.WriteObject(fs, options);
             }
+        }
+
+        public static RotogravureOptions LoadOptions(Uri uri) //convenience method to load options from file
+        {
+            RotogravureOptionsJsonRepo repo = new RotogravureOptionsJsonRepo(uri);
+            return repo.GetRotogravureOptions();
+        }
+
+        public static void WriteOptions(Uri uri, RotogravureOptions options) //convenience method to write options to file
+        {
+            RotogravureOptionsJsonRepo repo = new RotogravureOptionsJsonRepo(uri);
+            repo.PutRotogravureOptions(options);
         }
     }
 }

@@ -11,6 +11,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+using DougKlassen.Revit.Cron.Models;
+
 namespace DougKlassen.Revit.Cron.Rotogravure.Interface
 {
     /// <summary>
@@ -23,10 +25,10 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Interface
             InitializeComponent();
         }
 
-        public LogWindow(String log)
+        public LogWindow(RCronLog log)
             : this()
         {
-            LogViewTextBox.Text = log;
+            LogViewTextBox.Text = log.Text;
         }
 
         private void OkButton_Click(object sender, RoutedEventArgs e)
@@ -34,9 +36,9 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Interface
             Close();
         }
 
-        public static void Show(String logString)
+        public static void Show(RCronLog log)
         {
-            LogWindow logDlg = new LogWindow(logString);
+            LogWindow logDlg = new LogWindow(log);
             logDlg.Show();
         }
     }

@@ -5,9 +5,24 @@ using System.Text;
 
 namespace DougKlassen.Revit.Cron.Models
 {
-    class RCronLog //todo: use singleton pattern
+    public sealed class RCronLog
     {
-        private StringBuilder logText;
+        private static readonly RCronLog instance = new RCronLog(); //singleton static initializer
+
+        private StringBuilder logText = new StringBuilder(String.Empty);
+
+        public static RCronLog Instance
+        {
+            get
+            {
+                return instance;
+            }
+        }
+
+        private RCronLog()
+        {
+            logText = new StringBuilder(String.Empty);
+        }
 
         public String Text
         {
@@ -15,11 +30,10 @@ namespace DougKlassen.Revit.Cron.Models
             {
                 return logText.ToString();
             }
-        }
-
-        public RCronLog()
-        {
-            logText = new StringBuilder(String.Empty);
+            set
+            {
+                logText = new StringBuilder(value);
+            }
         }
 
         public RCronLog(String text)
@@ -32,9 +46,9 @@ namespace DougKlassen.Revit.Cron.Models
             logText.AppendLine(text);
         }
 
-        public void AppendLine(String text, params String[] args)
+        public void AppendLine(String text, params object[] args)
         {
-            logText.AppendLine(String.Format(text, args));
+            logText.AppendLine(String.Format(text, args.Select(o => o.ToString()))); //todo: o.ToString() returns type name rather than string value
         }
     }
 }

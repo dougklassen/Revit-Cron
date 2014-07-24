@@ -27,7 +27,7 @@ namespace DougKlassen.Revit.Cron.Repositories
         {
             if (fileUri.IsFile)
             {
-                repoFilePath = fileUri.AbsolutePath;
+                repoFilePath = fileUri.LocalPath;
             }
             else
             {
@@ -55,6 +55,18 @@ namespace DougKlassen.Revit.Cron.Repositories
                 DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(List<RCronTask>));
                 s.WriteObject(fs, tasks);
             }
+        }
+
+        public static ICollection<RCronTask> LoadTasks(Uri uri) //convenience method to load tasks from a file
+        {
+            RCronTasksJsonRepo repo = new RCronTasksJsonRepo(uri);
+            return repo.GetRCronTasks();
+        }
+
+        public static void WriteTasks(Uri uri, ICollection<RCronTask> tasks)
+        {
+            RCronTasksJsonRepo repo = new RCronTasksJsonRepo(uri);
+            repo.PutRCronTasks(tasks);
         }
     }
 }

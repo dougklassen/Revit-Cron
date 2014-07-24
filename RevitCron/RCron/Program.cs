@@ -21,7 +21,7 @@ namespace RCron
             IEnumerable<String> cmds = args
                 .Where(s => cmdRegex.IsMatch(s));
 
-            RotogravureOptionsJsonRepo rotogravureOptionsRepo = new RotogravureOptionsJsonRepo(RCronFileLocations.OptionsFilePath);
+            RotogravureOptionsJsonRepo rotogravureOptionsRepo = new RotogravureOptionsJsonRepo(new Uri(RCronFileLocations.OptionsFilePath));
 
             if (null == cmds.FirstOrDefault())
             {
