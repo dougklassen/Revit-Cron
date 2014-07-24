@@ -50,7 +50,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
             }            
 
             AssemblyName asm = Assembly.GetExecutingAssembly().GetName();
-            log.AppendLine("\n+++ {0} Rotogravure initialized", new System.DateTime());
+            log.AppendLine("\n+++ {0} Rotogravure initialized", DateTime.Now);
             log.AppendLine("assembly: {0}", asm.Name);
             log.AppendLine("version: {0}", asm.Version.ToString());
 
