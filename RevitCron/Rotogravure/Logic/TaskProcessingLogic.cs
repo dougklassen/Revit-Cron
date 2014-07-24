@@ -22,18 +22,35 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 
         public static void OnApplicationInitialized(object sender, Autodesk.Revit.DB.Events.ApplicationInitializedEventArgs e)
         {
-            options = RotogravureOptionsJsonRepo.LoadOptions(new Uri(RCronFileLocations.OptionsFilePath));
-            try
             {
-                log = RCronLogFileRepo.LoadLog(options.LogFileUri);
-            }
-            catch (Exception)
-            {
-                log = RCronLog.Instance;    //if the log file couldn't be loaded, get a new RCronLog
-            }
+                Exception optionsException = null;
+                try
+                {
+                    options = RotogravureOptionsJsonRepo.LoadOptions(new Uri(RCronFileLocations.OptionsFilePath));
+                }
+                catch (Exception exc)
+                {
+                    optionsException = exc; //store the exception so it can be written to the log after the log is created
+                    return;
+                }
+                try
+                {
+                    log = RCronLogFileRepo.LoadLog(options.LogFileUri);
+                }
+                catch (Exception exc)
+                {
+                    TaskDialog.Show("Error", "Couldn't load " + options.LogFileUri.LocalPath);
+                    log = RCronLog.Instance;    //if the log file couldn't be loaded, get a new RCronLog
+                    log.LogException(exc);
+                }
+                if (null != optionsException)
+                {
+                    log.LogException(optionsException);
+                }
+            }            
 
             AssemblyName asm = Assembly.GetExecutingAssembly().GetName();
-            log.AppendLine("Rotogravure initialized");
+            log.AppendLine("\n+++ {0} Rotogravure initialized", new System.DateTime());
             log.AppendLine("assembly: {0}", asm.Name);
             log.AppendLine("version: {0}", asm.Version.ToString());
 
@@ -44,7 +61,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
             }
             catch (Exception exception)
             {
-                LogException(exception);
+                log.LogException(exception);
                 LogWindow.Show(log);
                 throw exception; //can't continue if the TasksRepo can't be loaded
             }
@@ -111,19 +128,11 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
                 }
                 catch (Exception exception)
                 {
-                    LogException(exception);
+                    log.LogException(exception);
                 }
             }
 
             LogWindow.Show(log);
-        }
-
-        static private void LogException(Exception exception) //todo: move to strongly typed log object in rcron
-        {
-            log.AppendLine("*** {0}", exception.GetType());
-            log.AppendLine(exception.Message);
-            log.AppendLine(exception.StackTrace);
-            log.AppendLine("***");
         }
     }
 }

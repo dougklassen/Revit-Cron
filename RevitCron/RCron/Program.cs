@@ -16,12 +16,28 @@ namespace RCron
     {
         static void Main(string[] args)
         {
-            Regex cmdRegex = new Regex(@"--(\S*)");
+            if (args.Length >= 2)
+            {
+                if ("-uri" == args[0])
+                {
+                    String path = Directory.GetCurrentDirectory() + '\\' + args[1];
+                    try
+                    {
+                        Console.WriteLine("Uri: " + new Uri(path).AbsoluteUri);
+                    }
+                    catch (Exception exc)
+                    {
+                        Console.WriteLine(exc.Message);
+                    }
+                }
+            }
+
+            Regex cmdRegex = new Regex(@"-(\S*)");
 
             IEnumerable<String> cmds = args
                 .Where(s => cmdRegex.IsMatch(s));
 
-            RotogravureOptionsJsonRepo rotogravureOptionsRepo = new RotogravureOptionsJsonRepo(new Uri(RCronFileLocations.OptionsFilePath));
+            RotogravureOptionsJsonRepo rotogravureOptionsRepo = new RotogravureOptionsJsonRepo(new Uri(RCronFileLocations.OptionsFilePath, UriKind.Relative));
 
             if (null == cmds.FirstOrDefault())
             {
@@ -42,6 +58,11 @@ namespace RCron
                             .GetRotogravureOptions()
                             .TasksFileUri;
                         new RCronTasksJsonRepo(tasksFileUri).PutRCronTasks(Dummies.dummyTasks);
+                        break;
+                    case "timestamp":
+                        Console.WriteLine(RCronCanon.TimeStamp);
+                        break;
+                    case "uri":
                         break;
                     default:
                         Console.WriteLine("{0} : command not recognized", cmd);

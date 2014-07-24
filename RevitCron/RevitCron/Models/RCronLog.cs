@@ -41,6 +41,11 @@ namespace DougKlassen.Revit.Cron.Models
             logText = new StringBuilder(text);
         }
 
+        public void AppendLine()
+        {
+            logText.Append('\n');
+        }
+
         public void AppendLine(String text)
         {
             logText.AppendLine(text);
@@ -48,8 +53,15 @@ namespace DougKlassen.Revit.Cron.Models
 
         public void AppendLine(String text, params object[] args)
         {
-
             logText.AppendLine(String.Format(text, args.Select(o => o.ToString()).ToArray()));
+        }
+
+        public void LogException(Exception exception) //todo: move to strongly typed log object in rcron
+        {
+            AppendLine("*** {0} {1}", DateTime.Now, exception.GetType());
+            AppendLine(exception.Message);
+            AppendLine(exception.StackTrace);
+            AppendLine("***");
         }
     }
 }

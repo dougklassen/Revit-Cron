@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 
 using Autodesk.Revit.DB;
@@ -29,9 +30,35 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
 
         Result IExternalApplication.OnShutdown(UIControlledApplication application)
         {
-            RotogravureOptions options = RotogravureOptionsJsonRepo.LoadOptions(new Uri(RCronFileLocations.OptionsFilePath));
-            RCronLogFileRepo.WriteLog(options.LogFileUri, RCronLog.Instance);   //write the log file to disk
+            RotogravureOptions options;
+            RCronLog log = RCronLog.Instance;
+            try
+            {
+                options = RotogravureOptionsJsonRepo.LoadOptions(new Uri(RCronFileLocations.OptionsFilePath));
+            }
+            catch (Exception exc)
+            {
+                if (!Directory.Exists(RCronFileLocations.LogDirectoryPath))
+                {
+                    Directory.CreateDirectory(RCronFileLocations.LogDirectoryPath);
+                }
+                String path = RCronFileLocations.LogDirectoryPath + RCronCanon.TimeStamp + @"_error.txt";
+                options = new RotogravureOptions()
+                    {
+                        LogFileUri = new Uri(path)
+                    };
+                log.LogException(exc);
+            }
+            try
+            {
+                RCronLogFileRepo.WriteLog(options.LogFileUri, log);   //write the log file to disk
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Could not write log\n\n" + exc.Message);
+                return Result.Failed;
+            }
             return Result.Succeeded;
-        }        
+        }
     }
 }
