@@ -48,7 +48,8 @@ namespace DougKlassen.Revit.Cron.Models
 
         public void AppendLine(String text, params object[] args)
         {
-            logText.AppendLine(String.Format(text, args.Select(o => o.ToString()))); //todo: o.ToString() returns type name rather than string value
+
+            logText.AppendLine(String.Format(text, args.Select(o => o.ToString()).ToArray()));
         }
     }
 }
