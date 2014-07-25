@@ -18,7 +18,7 @@ namespace RCron
         {
             if (args.Length >= 2)
             {
-                if ("-uri" == args[0])
+                if ("--uri" == args[0])
                 {
                     String path = Directory.GetCurrentDirectory() + '\\' + args[1];
                     try
@@ -32,12 +32,12 @@ namespace RCron
                 }
             }
 
-            Regex cmdRegex = new Regex(@"-(\S*)");
+            Regex cmdRegex = new Regex(@"--(\S*)");
 
             IEnumerable<String> cmds = args
                 .Where(s => cmdRegex.IsMatch(s));
 
-            RotogravureOptionsJsonRepo rotogravureOptionsRepo = new RotogravureOptionsJsonRepo(new Uri(RCronFileLocations.OptionsFilePath, UriKind.Relative));
+            RotogravureOptionsJsonRepo rotogravureOptionsRepo = new RotogravureOptionsJsonRepo(new Uri(RCronFileLocations.OptionsFilePath));
 
             if (null == cmds.FirstOrDefault())
             {

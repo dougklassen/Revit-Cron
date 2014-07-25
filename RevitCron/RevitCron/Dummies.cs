@@ -13,7 +13,7 @@ namespace DougKlassen.Revit.Cron
         public static readonly RotogravureOptions dummyOpts = new RotogravureOptions()
         {
             TasksFileUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"Resources\tasks.json"),
-            LogFileUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"Resources\log.txt")
+            LogDirectoryUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"\Logs\")
         };
 
         public static readonly List<RCronTask> dummyTasks = new List<RCronTask>

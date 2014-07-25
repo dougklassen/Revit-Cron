@@ -63,6 +63,8 @@
     <Compile Include="Interface\LogWindow.xaml.cs">
       <DependentUpon>LogWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Logic\DialogHandlers\BluebeamPrintDialogHandler.cs" />
+    <Compile Include="Logic\DialogHandlers\WinApi.cs" />
     <Compile Include="Logic\TaskProcessingLogic.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

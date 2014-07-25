@@ -12,6 +12,6 @@ namespace DougKlassen.Revit.Cron.Models
         [DataMember(Order = 0)]
         public Uri TasksFileUri { get; set; }
         [DataMember(Order = 1)]
-        public Uri LogFileUri { get; set; }
+        public Uri LogDirectoryUri { get; set; }
     }
 }

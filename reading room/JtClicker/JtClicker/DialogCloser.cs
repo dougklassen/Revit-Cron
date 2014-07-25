@@ -33,7 +33,7 @@ namespace JtClicker
       Console.WriteLine( hwnd.ToString() );
     }
 
-    private void Timer_Elapsed_jan( object sender, ElapsedEventArgs e )
+    private void Timer_Elapsed_jan( object sender, ElapsedEventArgs e )b
     {
       int ret = WinApi.User32.EnumWindows( new WinApi.User32.EnumWindowsProc( EnumWindowsProc ), 0 );
     }

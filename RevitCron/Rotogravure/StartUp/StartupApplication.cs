@@ -38,20 +38,26 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
             }
             catch (Exception exc)
             {
-                if (!Directory.Exists(RCronFileLocations.LogDirectoryPath))
+                String defaultLogDirectoryPath = RCronFileLocations.AddInDirectoryPath + @"\Logs\"; //hardcoded only if RotogravureOptions can't be loaded
+                if (!Directory.Exists(defaultLogDirectoryPath))
                 {
-                    Directory.CreateDirectory(RCronFileLocations.LogDirectoryPath);
+                    Directory.CreateDirectory(defaultLogDirectoryPath);
                 }
-                String path = RCronFileLocations.LogDirectoryPath + RCronCanon.TimeStamp + @"_error.txt";
                 options = new RotogravureOptions()
                     {
-                        LogFileUri = new Uri(path)
+                        LogDirectoryUri = new Uri(defaultLogDirectoryPath)
                     };
                 log.LogException(exc);
             }
             try
             {
-                RCronLogFileRepo.WriteLog(options.LogFileUri, log);   //write the log file to disk
+                String logDirectoryPath = options.LogDirectoryUri.LocalPath;
+                if (!Directory.Exists(logDirectoryPath))
+                {
+                    Directory.CreateDirectory(logDirectoryPath);
+                }
+                Uri logFile = new Uri(options.LogDirectoryUri, RCronCanon.TimeStamp + "_log.txt");
+                RCronLogFileRepo.WriteLog(logFile, log);   //write the log file to disk
             }
             catch (Exception exc)
             {
