@@ -8,31 +8,38 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
     {
         public class User32
         {
-            public const int BM_SETSTATE = 0x00F3;
-            public const int WM_LBUTTONDOWN = 0x0201;
-            public const int WM_LBUTTONUP = 0x0202;
+            public const Int32 BM_SETSTATE = 0x00F3;
+            public const Int32 WM_LBUTTONDOWN = 0x0201;
+            public const Int32 WM_LBUTTONUP = 0x0202;
 
-            private User32() {}
+            public const Int32 GW_CHILD = 5;
+            public const Int32 GW_HWNDNEXT = 2;
 
-            public delegate Boolean EnumWindowsProc(Int32 hWnd, int lParam);
-
-            [DllImport("user32.dll")]
-            public static extern Int32 FindWindow(String className, String windowName);
+            public delegate Boolean EnumWindowsProc(IntPtr hWnd, int lParam);
 
             [DllImport("user32.dll")]
-            public static extern Int32 EnumWindows(EnumWindowsProc callbackFunc, Int32 lparam);
-
-            [DllImport("users32.dll")]
-            public static extern Int32 EnumChildWindows(Int32 hWnd, EnumWindowsProc callbackFunc, Int32 lParam);
+            public static extern IntPtr FindWindow(String className, String windowName);
 
             [DllImport("user32.dll")]
-            public static extern Int32 GetWindowText(Int32 hWnd, StringBuilder buff, Int32 maxCount);
+            public static extern IntPtr FindWindowEx(IntPtr hWnd, IntPtr hWndChildAfter, String windowClass, String windowName);
 
             [DllImport("user32.dll")]
-            public static extern Int32 GetLastActivePopup(Int32 hWnd);
+            public static extern Boolean EnumWindows(EnumWindowsProc callbackFunc, Int32 lparam);
 
             [DllImport("user32.dll")]
-            public static extern Int32 SendMessage(Int32 hWnd, Int32 msg, Int32 wParam, Int32 lParam);
+            public static extern Boolean EnumChildWindows(IntPtr hWnd, EnumWindowsProc callbackFunc, Int32 lParam);
+
+            [DllImport("user32.dll")]
+            public static extern IntPtr GetWindow(IntPtr hWnd, Int32 uCmd);
+
+            [DllImport("user32.dll")]
+            public static extern Int32 GetWindowText(IntPtr hWnd, StringBuilder buff, Int32 maxCount);
+
+            [DllImport("user32.dll")]
+            public static extern IntPtr GetLastActivePopup(IntPtr hWnd);
+
+            [DllImport("user32.dll")]
+            public static extern Int32 SendMessage(IntPtr hWnd, Int32 msg, Int32 wParam, Int32 lParam);
         }
     }
 }

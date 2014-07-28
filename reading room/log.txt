@@ -1,0 +1,802 @@
+Rotogravure initialized
+assembly: Rotogravure
+version: 14.0.0.0
+4 tasks found
+---
+print task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+
+printing 3 views
+
+view found: floor plan
+
+view found: roof plan
+
+view found: south elevation
+
+---
+export task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+---
+eTransmit task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+---
+command task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+Rotogravure initialized
+assembly: Rotogravure
+version: 14.0.0.0
+4 tasks found
+---
+print task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+
+printing 3 views
+
+view found: floor plan
+
+view found: roof plan
+
+view found: south elevation
+
+---
+export task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+---
+eTransmit task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+---
+command task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+
++++++++
+Rotogravure initialized
+assembly: Rotogravure
+version: 14.0.0.0
+4 tasks found
+---
+print task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+
+printing 3 views
+
+view found: floor plan
+
+view found: roof plan
+
+view found: south elevation
+
+---
+export task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+---
+eTransmit task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+---
+command task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+
++++ 1/1/0001 12:00:00 AM Rotogravure initialized
+assembly: Rotogravure
+version: 14.0.0.0
+4 tasks found
+---
+print task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+
+printing 3 views
+
+view found: floor plan
+
+view found: roof plan
+
+view found: south elevation
+
+---
+export task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+---
+eTransmit task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+---
+command task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+
++++ 7/24/2014 9:13:50 AM Rotogravure initialized
+assembly: Rotogravure
+version: 14.0.0.0
+4 tasks found
+---
+print task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+
+printing 3 views
+
+view found: floor plan
+
+view found: roof plan
+
+view found: south elevation
+
+---
+export task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+---
+eTransmit task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+---
+command task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+
++++ 7/24/2014 10:06:49 AM Rotogravure initialized
+assembly: Rotogravure
+version: 14.0.0.0
+4 tasks found
+---
+print task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+
+printing 3 views
+
+view found: floor plan
+
+view found: roof plan
+
+view found: south elevation
+
+---
+export task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+---
+eTransmit task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+---
+command task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+
++++ 7/24/2014 3:53:33 PM Rotogravure initialized
+assembly: Rotogravure
+version: 14.0.0.0
+4 tasks found
+---
+print task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+
+printing 3 views
+
+view found: floor plan
+
+view found: roof plan
+
+view found: south elevation
+
+---
+export task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+---
+eTransmit task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+---
+command task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+
++++ 7/24/2014 6:59:35 PM Rotogravure initialized
+assembly: Rotogravure
+version: 14.0.0.0
+4 tasks found
+---
+print task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+
+printing 3 views
+
+view found: floor plan
+
+view found: roof plan
+
+view found: south elevation
+
+---
+export task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+---
+eTransmit task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+---
+command task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+
++++ 7/24/2014 8:41:51 PM Rotogravure initialized
+assembly: Rotogravure
+version: 14.0.1.0
+4 tasks found
+---
+-- print task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+	printing 3 views
+
+	-- view found: floor plan
+
+	-- view found: roof plan
+
+	-- view found: south elevation
+
+Starting 5000 timer
+---
+export task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+---
+eTransmit task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+---
+command task: C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt
+Timer elapsed
+Save As hWnd = 0
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Timer elapsed
+Save As hWnd = 0
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"
+Window Found: hWnd={0}, title="{1}"

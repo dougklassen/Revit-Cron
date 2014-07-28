@@ -151,7 +151,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
                 }
             }
 
-            LogWindow.Show(log);
+            //LogWindow.Show(log);
         }
     }
 }
