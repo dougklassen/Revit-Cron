@@ -13,7 +13,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
         private static RCronLog log = RCronLog.Instance;
 
         private const String SaveDialogCaption = "Save As";
-        private const String SaveBtnText = "Save";
+        private const String SaveBtnText = "&Save";
         private const Double WaitTime = 5000; //todo: read from RotogravureOptions
         private static Timer waitTimer;
 
@@ -69,13 +69,21 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
             {
                 log.AppendLine("---target window found");
                 System.IntPtr hWndChild = WinApi.User32.GetWindow(hWnd, WinApi.User32.GW_CHILD);
-                StringBuilder buttonSb = new StringBuilder();
+                StringBuilder buttonSb = new StringBuilder(256);
                 String buttonTitle;
                 do
                 {
                     WinApi.User32.GetWindowText(hWndChild, buttonSb, buttonSb.Capacity);
                     buttonTitle = buttonSb.ToString();
                     log.AppendLine("  button: hWnd={0}, title=\"{1}\"", hWndChild, buttonTitle);
+                    if (SaveBtnText == buttonTitle)
+                    {
+                        log.AppendLine("  --clicking button");
+                        WinApi.User32.SendMessage(hWndChild, WinApi.User32.BM_SETSTATE, 1, 0);
+                        WinApi.User32.SendMessage(hWndChild, WinApi.User32.WM_LBUTTONDOWN, 0, 0);
+                        WinApi.User32.SendMessage(hWndChild, WinApi.User32.WM_LBUTTONUP, 0, 0);
+                        WinApi.User32.SendMessage(hWndChild, WinApi.User32.BM_SETSTATE, 1, 0);
+                    }
                     hWndChild = WinApi.User32.GetWindow(hWndChild, WinApi.User32.GW_HWNDNEXT);
                 } while (IntPtr.Zero != hWndChild);
 
