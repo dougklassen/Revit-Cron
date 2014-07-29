@@ -21,10 +21,11 @@ namespace DougKlassen.Revit.Cron
                 StringBuilder timestamp = new StringBuilder(String.Empty);
                 DateTime now = DateTime.Now;
                 timestamp.Append(now.Year);
-                timestamp.AppendFormat("{0:D2}", now.Month);
-                timestamp.AppendFormat("{0:D2}", now.Day);
-                timestamp.Append('_');
-                timestamp.Append(now.ToFileTimeUtc().ToString());
+                timestamp.AppendFormat("{0:D2}{1:D2}_{2:D2}{3:D2}",
+                    now.Month,
+                    now.Day,
+                    now.Hour,
+                    now.Minute);
                 return timestamp.ToString();
             }
         }

@@ -23,7 +23,7 @@ namespace DougKlassen.Revit.Cron.Models
         public String Schedule { get; set; }
 
         [DataMember(Order = 3)]
-        public RCronTaskInfo TaskInfo { get; set; }
+        public RCronTaskInfo TaskInfo { get; set; } //to facilitate serialization, subclassed members belong to a member class
     }
 
     [DataContract]
@@ -44,6 +44,17 @@ namespace DougKlassen.Revit.Cron.Models
     {
         [DataMember(Order = 10)]
         public String PrintSet { get; set; }
+
+        [DataMember(Order = 11)]
+        public String OutputFileName { get; set; }
+
+        public String OutputFilePath
+        {
+            get
+            {
+                return String.Format(@"{0}{1}\{2}", OutputDirectory, RCronCanon.TimeStamp, OutputFileName);
+            }
+        }
 
         public RCronPrintTaskInfo()
         {

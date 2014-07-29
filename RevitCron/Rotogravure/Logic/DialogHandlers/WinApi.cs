@@ -11,6 +11,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
             public const Int32 BM_SETSTATE = 0x00F3;
             public const Int32 WM_LBUTTONDOWN = 0x0201;
             public const Int32 WM_LBUTTONUP = 0x0202;
+            public const Int32 WM_SETTEXT = 0x000C;
 
             public const Int32 GW_CHILD = 5;
             public const Int32 GW_HWNDNEXT = 2;
@@ -39,7 +40,11 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
             public static extern IntPtr GetLastActivePopup(IntPtr hWnd);
 
             [DllImport("user32.dll")]
+            public static extern Int32 SendMessage(IntPtr hWnd, Int32 msg, Int32 wParam, String lParam);
+
+            [DllImport("user32.dll")]
             public static extern Int32 SendMessage(IntPtr hWnd, Int32 msg, Int32 wParam, Int32 lParam);
+
         }
     }
 }

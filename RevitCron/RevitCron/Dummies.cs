@@ -26,9 +26,10 @@ namespace DougKlassen.Revit.Cron
                 TaskInfo = new RCronPrintTaskInfo()
                     {
                        TaskType = TaskType.Print,               
-                       ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
-                       OutputDirectory = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
-                       PrintSet = "test"
+                       ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",  //todo: URI
+                       OutputDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Test Output\",
+                       PrintSet = "test",
+                       OutputFileName = "test.pdf"
                     }
             },
             new RCronTask()
@@ -40,7 +41,7 @@ namespace DougKlassen.Revit.Cron
                     {
                         TaskType = TaskType.Export,
                         ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
-                        OutputDirectory = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
+                        OutputDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Test Output\",
                         PrintSet = "test",
                         ExportSetup = "test"
                     }
@@ -54,19 +55,19 @@ namespace DougKlassen.Revit.Cron
                     {
                         TaskType = TaskType.ETransmit,                        
                         ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
-                        OutputDirectory = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt"
+                        OutputDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Test Output\"
                     }          
             },
             new RCronTask()
             {
-                Name = "Print Task One",
+                Name = "Test Command Task",
                 LastRun = new DateTime(),
                 Schedule = "0 0 * * *",
                 TaskInfo = new RCronCommandTaskInfo()
                     {
                         TaskType = TaskType.Command,
                         ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
-                        OutputDirectory = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
+                        OutputDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Test Output\",
                         CommandName = "DougKlassen.Revit.Perfect.Commands.RenameFamiliesCommand"
                     }                
             },

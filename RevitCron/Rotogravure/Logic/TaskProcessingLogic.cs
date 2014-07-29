@@ -122,7 +122,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
                                 pm.CombinedFile = true;
                                 pm.SubmitPrint();
 
-                                BluebeamPrintDialogHandler.Save();
+                                new BluebeamPrintDialogHandler(task).Save();
                             }
                             else
                             {
