@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Shapes;
 
 namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 {
+    public struct RECT
+    {
+        public int Left, Top, Right, Botton;
+    }
+
     public class WinApi
     {
         public class User32
@@ -31,10 +37,16 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
             public static extern Boolean EnumChildWindows(IntPtr hWnd, EnumWindowsProc callbackFunc, Int32 lParam);
 
             [DllImport("user32.dll")]
+            public static extern Int32 GetClassName(IntPtr hWnd, StringBuilder sb, Int32 maxCount);
+
+            [DllImport("user32.dll")]
             public static extern IntPtr GetWindow(IntPtr hWnd, Int32 uCmd);
 
             [DllImport("user32.dll")]
-            public static extern Int32 GetWindowText(IntPtr hWnd, StringBuilder buff, Int32 maxCount);
+            public static extern Boolean GetWindowRect(IntPtr hWnd, ref RECT rect);
+
+            [DllImport("user32.dll")]
+            public static extern Int32 GetWindowText(IntPtr hWnd, StringBuilder sb, Int32 maxCount);
 
             [DllImport("user32.dll")]
             public static extern IntPtr GetLastActivePopup(IntPtr hWnd);
@@ -44,7 +56,6 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 
             [DllImport("user32.dll")]
             public static extern Int32 SendMessage(IntPtr hWnd, Int32 msg, Int32 wParam, Int32 lParam);
-
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -102,10 +104,10 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 
                             if (null != printSet)
                             {
-                                log.AppendLine("--- printing {0} views\n", printSet.Views.Size.ToString());
+                                log.AppendLine("--printing {0} views", printSet.Views.Size.ToString());
                                 foreach (View v in printSet.Views)
                                 {
-                                    log.AppendLine("--- view found: {0}\n", v.Name);
+                                    log.AppendLine("  view: \"{0}\"", v.Name);
                                 }
 
                                 PrintManager pm = dbDoc.PrintManager;
@@ -122,7 +124,33 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
                                 pm.CombinedFile = true;
                                 pm.SubmitPrint();
 
-                                new BluebeamPrintDialogHandler(task).Save();
+                                String outputDirectoryPath = printTaskInfo.OutputDirectory + RCronCanon.TimeStamp + '\\';
+                                if (!Directory.Exists(outputDirectoryPath))
+                                {
+                                    Directory.CreateDirectory(outputDirectoryPath);
+                                }
+                                else
+                                {
+                                    if (File.Exists(outputDirectoryPath + printTaskInfo.OutputFileName)) //if the filename already exists, append an auto-incremented suffix to it
+                                    {   //todo: move this stuff to RCronCanon
+                                        Int32 version, highestVersion = 0;
+                                        Regex suffixRegex = new Regex(@"(?<=\.)\d\d\d$");
+                                        foreach (String f in Directory.GetFiles(outputDirectoryPath))
+                                        {
+                                            Match suffixMatch = suffixRegex.Match(f);
+                                            if (suffixMatch.Success)
+                                            {
+                                                version = Int32.Parse(suffixMatch.Value);
+                                                highestVersion = version > highestVersion ? version : highestVersion;
+                                            }
+                                        }
+                                        highestVersion++;
+                                        printTaskInfo.OutputFileName = suffixRegex.Replace(
+                                            printTaskInfo.OutputFileName,
+                                            String.Format("{0:D3}", highestVersion));                                        
+                                    }
+                                }
+                                BluebeamPrintDialogHandler.Save(outputDirectoryPath + printTaskInfo.OutputFileName);
                             }
                             else
                             {
