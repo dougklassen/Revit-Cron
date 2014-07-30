@@ -35,31 +35,6 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
                     options = new RotogravureOptions();
                     log.LogException(exc);
                 }
-                //Exception optionsException = null;
-                //try
-                //{
-                //    options = RotogravureOptionsJsonRepo.LoadOptions(new Uri(RCronFileLocations.OptionsFilePath));
-                //}
-                //catch (Exception exc)
-                //{
-                //    optionsException = exc; //store the exception so it can be written to the log after the log is created
-                //    return;
-                //}
-                //try
-                //{
-                //    Uri logFileUri = new Uri(options.LogDirectoryUri, "log.txt");
-                //    log = RCronLogFileRepo.LoadLog(logFileUri);
-                //}
-                //catch (Exception exc)
-                //{
-                //    TaskDialog.Show("Error", "Couldn't load Log.txt from " + options.LogDirectoryUri.LocalPath);
-                //    log = RCronLog.Instance;    //if the log file couldn't be loaded, get a new RCronLog
-                //    log.LogException(exc);
-                //}
-                //if (null != optionsException)
-                //{
-                //    log.LogException(optionsException);
-                //}
             }            
 
             AssemblyName asm = Assembly.GetExecutingAssembly().GetName();
@@ -178,8 +153,6 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
                     log.LogException(exception);
                 }
             }
-
-            //LogWindow.Show(log);
         }
     }
 }
