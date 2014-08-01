@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("RCron")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Command line tools for RevitCron")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("BCRA Design, Inc.")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("RCron")]
-[assembly: AssemblyCopyright("Copyright © BCRA Design, Inc. 2014")]
+[assembly: AssemblyCopyright("Copyright © Doug Klasen 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

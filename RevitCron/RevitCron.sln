@@ -15,6 +15,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCron", "RCron\RCron.csproj
 		{0E122EEC-7AD1-40B7-8165-5ED94289D351} = {0E122EEC-7AD1-40B7-8165-5ED94289D351}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCronD", "RCronD\RCronD.csproj", "{4CA3CD4B-9F88-4743-BC11-543226359DD8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0E122EEC-7AD1-40B7-8165-5ED94289D351} = {0E122EEC-7AD1-40B7-8165-5ED94289D351}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +38,10 @@ Global
 		{D1CE21FE-6464-4F92-B972-00B3719472FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1CE21FE-6464-4F92-B972-00B3719472FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1CE21FE-6464-4F92-B972-00B3719472FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CA3CD4B-9F88-4743-BC11-543226359DD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CA3CD4B-9F88-4743-BC11-543226359DD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CA3CD4B-9F88-4743-BC11-543226359DD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CA3CD4B-9F88-4743-BC11-543226359DD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

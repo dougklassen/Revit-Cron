@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("RevitCron")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("BCRA Design, Inc.")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("RevitCron")]
-[assembly: AssemblyCopyright("Copyright © BCRA Design, Inc. 2014")]
+[assembly: AssemblyCopyright("Copyright © Doug Klasen 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
