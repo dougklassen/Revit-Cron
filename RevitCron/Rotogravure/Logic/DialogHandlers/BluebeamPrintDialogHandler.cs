@@ -20,21 +20,15 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 
 		public static void Save(AutoResetEvent handle, String filePath)
 		{
-			Thread currThrd = Thread.CurrentThread;
-			System.Windows.Forms.MessageBox.Show(String.Format(
-				"In Save method\nthread: {0}\nId: {1}\napplication context: {2}",
-				currThrd.Name,
-				currThrd.ManagedThreadId.ToString(),
-				AppDomain.CurrentDomain.FriendlyName));
-
 			taskProcessingWaitHandle = handle;
 			saveFilePath = filePath;
 			Thread.Sleep(3000); //give the window time to display
+			log.AppendLine("  ** looking for save as dialog");
 			WinApi.User32.EnumWindows(EnumWindowsProcSaveAction, 0);
 			Stopwatch rt = new Stopwatch();
 			rt.Start();
 			TimeSpan timeOut = new TimeSpan(0, 0, 30);
-			while(IntPtr.Zero == hWndSaveDialog)
+			while (IntPtr.Zero == hWndSaveDialog)	//wait while EnumWindowsProcSaveAction looks for window
 			{
 				Thread.Sleep(500);
 				if (rt.Elapsed > timeOut)
@@ -48,6 +42,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			String winText;
 
 			//set save location
+			log.AppendLine("  ** looking for file location text box");
 			List<IntPtr> hWndComboBoxes = new List<IntPtr>();
 			hWndChild = WinApi.User32.GetWindow(hWndSaveDialog, WinApi.User32.GW_CHILD);
 			do
@@ -72,11 +67,12 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 					minRect = rect.Top;
 				}
 			}
-			log.AppendLine("  --File Name textbox found: hWnd={0}");
-			log.AppendLine("    setting text to \"{0}\"", saveFilePath);
+			log.AppendLine("  -- file name textbox found: hWnd={0}");
+			log.AppendLine("  ** setting text to \"{0}\"", saveFilePath);
 			WinApi.User32.SendMessage(hWndFileName, WinApi.User32.WM_SETTEXT, 0, saveFilePath);
 
 			//click Save As button
+			log.AppendLine("  ** looking for Save As Button");
 			winTextSb = new StringBuilder(256);
 			hWndChild = WinApi.User32.GetWindow(hWndSaveDialog, WinApi.User32.GW_CHILD);
 			do
@@ -85,17 +81,21 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 				winText = winTextSb.ToString();
 				if (SaveBtnText == winText)
 				{
-					log.AppendLine("  --Save button found: hWnd={0}, title=\"{1}\"", hWndChild, winText);
-					log.AppendLine("    clicking button");
+					log.AppendLine("  -- save button found: hWnd={0}, title=\"{1}\"", hWndChild, winText);
+					log.AppendLine("  ** clicking button");
 					WinApi.User32.SendMessage(hWndChild, WinApi.User32.BM_SETSTATE, 1, 0);
 					WinApi.User32.SendMessage(hWndChild, WinApi.User32.WM_LBUTTONDOWN, 0, 0);
 					WinApi.User32.SendMessage(hWndChild, WinApi.User32.WM_LBUTTONUP, 0, 0);
 					WinApi.User32.SendMessage(hWndChild, WinApi.User32.BM_SETSTATE, 1, 0);
-					System.Windows.Forms.MessageBox.Show("Releasing TaskProcessing");
-					taskProcessingWaitHandle.Set(); //allow TaskProcessingLogic to continue with other tasks
+					//todo: prevent bluebeam from opening
+					break;	//done with loop
 				}
 				hWndChild = WinApi.User32.GetWindow(hWndChild, WinApi.User32.GW_HWNDNEXT);
 			} while (IntPtr.Zero != hWndChild);
+
+			log.AppendLine("  ** print dialog handeled, releasing TaskProcessing to continue");
+			log.LogThreadInfo();
+			taskProcessingWaitHandle.Set(); //free TaskProcessingLogic to continue with other tasks
 		}
 
 		private static Boolean EnumWindowsProcSaveAction(IntPtr hWnd, Int32 lParam)
@@ -103,24 +103,17 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			StringBuilder titleSb = new StringBuilder(256);
 			WinApi.User32.GetWindowText(hWnd, titleSb, titleSb.Capacity);
 			String title = titleSb.ToString();
-			log.AppendLine("Window: hWnd={0}, title=\"{1}\"", hWnd, title);
 
 			if (SaveDialogCaption == title)
 			{
-				Thread currThrd = Thread.CurrentThread;
-				System.Windows.Forms.MessageBox.Show(String.Format(
-					"In EnumWindows callback\nthread: {0}\nId: {1}\napplication context: {2}",
-					currThrd.Name,
-					currThrd.ManagedThreadId.ToString(),
-					AppDomain.CurrentDomain.FriendlyName));
-				log.AppendLine("--target window found");
+				log.AppendLine("  -- target window found: hWnd={0}, title=\"{1}\"", hWnd, title);
 				hWndSaveDialog = hWnd;
 				return false;
 			}
-
-			return true;
+			else
+			{
+				return true;
+			}
 		}
-
-		//todo: prevent Bluebeam from opening
 	}
 }

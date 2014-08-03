@@ -35,9 +35,9 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			}
 
 			AssemblyName asm = Assembly.GetExecutingAssembly().GetName();
-			log.AppendLine("+++ {0} Rotogravure initialized", DateTime.Now);
-			log.AppendLine("assembly: {0}", asm.Name);
-			log.AppendLine("version: {0}", asm.Version.ToString());
+			log.AppendLine("**{0} Rotogravure initialized", DateTime.Now);
+			log.AppendLine("  -- assembly: {0}", asm.Name);
+			log.AppendLine("  -- version: {0}", asm.Version.ToString());
 
 			ICollection<RCronTask> tasks;
 			try
@@ -51,7 +51,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 				throw exception; //can't continue if the TasksRepo can't be loaded
 			}
 
-			log.AppendLine("+++ {0} tasks found", tasks.Count);
+			log.AppendLine("  -- number of tasks found: {0}", tasks.Count);
 
 			Autodesk.Revit.ApplicationServices.Application app = (Autodesk.Revit.ApplicationServices.Application)sender;
 			Document dbDoc;
@@ -62,12 +62,11 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 				try
 				{
 					dbDoc = app.OpenDocumentFile(task.TaskInfo.ProjectFile);
-					log.AppendLine("---");
 
 					switch (task.TaskInfo.TaskType)
 					{
 						case TaskType.Print:
-							log.AppendLine("print task: {0}", dbDoc.PathName);
+							log.AppendLine("\n** running print task: {0}", dbDoc.PathName);
 							RCronPrintTaskInfo printTaskInfo = (RCronPrintTaskInfo)task.TaskInfo;
 							ViewSheetSet printSet = new FilteredElementCollector(dbDoc)
 									.OfClass(typeof(ViewSheetSet))
@@ -76,10 +75,10 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 
 							if (null != printSet)
 							{
-								log.AppendLine("--printing {0} views", printSet.Views.Size.ToString());
+								log.AppendLine("  ** printing {0} views", printSet.Views.Size.ToString());
 								foreach (View v in printSet.Views)
 								{
-									log.AppendLine("  view: \"{0}\"", v.Name);
+									log.AppendLine("  -- view: \"{0}\"", v.Name);
 								}
 
 								PrintManager pm = dbDoc.PrintManager;
@@ -123,40 +122,45 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 									}
 								}
 
-								Thread.CurrentThread.Name = "RotoGravure thread";
+								Thread.CurrentThread.Name = "RotoGravure";
 								AutoResetEvent externalTaskWaitHandle = new AutoResetEvent(false);
-								BluebeamPrintDialogHandler.Save(
-									externalTaskWaitHandle,
-									outputDirectoryPath + printTaskInfo.OutputFileName);
-								////launch the dialog handler in a new thread and wait until it completes work
-								//AutoResetEvent externalTaskWaitHandle = new AutoResetEvent(false);
-								//ThreadStart ts = new ThreadStart(() =>
-								//	{
-								//		BluebeamPrintDialogHandler.Save(
-								//				externalTaskWaitHandle,
-								//				outputDirectoryPath + printTaskInfo.OutputFileName);
-								//	});
-								//Thread dialogHandlerThread = new Thread(ts)
-								//	{
-								//		Name = "BluebeamDialogHandler"
-								//	};
-								//dialogHandlerThread.Start();
-								////externalTaskWaitHandle.WaitOne();
+
+								//BluebeamPrintDialogHandler.Save(
+								//	externalTaskWaitHandle,
+								//	outputDirectoryPath + printTaskInfo.OutputFileName);
+
+								ThreadStart ts = new ThreadStart(() =>
+									{
+										BluebeamPrintDialogHandler.Save(
+												externalTaskWaitHandle,
+												outputDirectoryPath + printTaskInfo.OutputFileName);
+									});
+								Thread dialogHandlerThread = new Thread(ts);
+								dialogHandlerThread.Name = "BluebeamDialogHandler";
+								dialogHandlerThread.Start();
+								try
+								{
+									externalTaskWaitHandle.WaitOne(10000); //give the handler 10 seconds to complete
+								}
+								catch (Exception)
+								{
+									log.AppendLine("  ++ error: dialog handler timed out");
+								}
 							}
 							else
 							{
-								log.AppendLine("error: couldn't load printset {0}", printTaskInfo.PrintSet);
+								log.AppendLine("  !! error: couldn't load printset {0}", printTaskInfo.PrintSet);
 							}
 
 							break;
 						case TaskType.Export:
-							log.AppendLine("export task: {0}", dbDoc.PathName);
+							log.AppendLine("\n** running export task: {0}", dbDoc.PathName);
 							break;
 						case TaskType.ETransmit:
-							log.AppendLine("eTransmit task: {0}", dbDoc.PathName);
+							log.AppendLine("\n** running eTransmit task: {0}", dbDoc.PathName);
 							break;
 						case TaskType.Command:
-							log.AppendLine("command task: {0}", dbDoc.PathName);
+							log.AppendLine("\n** running command task: {0}", dbDoc.PathName);
 							break;
 						default:
 							break;
