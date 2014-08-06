@@ -16,7 +16,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 {
 	public static class TaskProcessingLogic
 	{
-		private static RotogravureOptions options;
+		private static RCronOptions options;
 		private static RCronLog log;
 
 		public static void OnApplicationInitialized(object sender, Autodesk.Revit.DB.Events.ApplicationInitializedEventArgs e)
@@ -25,11 +25,11 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 				log = RCronLog.Instance;
 				try
 				{
-					options = RotogravureOptionsJsonRepo.LoadOptions(new Uri(RCronFileLocations.OptionsFilePath));
+					options = RCronOptionsJsonRepo.LoadOptions(new Uri(RCronFileLocations.OptionsFilePath));
 				}
 				catch (Exception exc)
 				{
-					options = new RotogravureOptions();
+					options = new RCronOptions();
 					log.LogException(exc);
 				}
 			}
@@ -39,10 +39,10 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			log.AppendLine("  -- assembly: {0}", asm.Name);
 			log.AppendLine("  -- version: {0}", asm.Version.ToString());
 
-			ICollection<RCronTask> tasks;
+			RCronBatch batch;
 			try
 			{
-				tasks = RCronTasksJsonRepo.LoadTasks(options.TasksFileUri);
+				batch = RCronBatchJsonRepo.LoadBatch(options.BatchFileUri);
 			}
 			catch (Exception exception)
 			{
@@ -51,13 +51,13 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 				throw exception; //can't continue if the TasksRepo can't be loaded
 			}
 
-			log.AppendLine("  -- number of tasks found: {0}", tasks.Count);
+			log.AppendLine("  -- number of tasks found: {0}", batch.Tasks.Count());
 
 			Autodesk.Revit.ApplicationServices.Application app = (Autodesk.Revit.ApplicationServices.Application)sender;
 			Document dbDoc;
 			Boolean saveModified = false;
 
-			foreach (RCronTask task in tasks)
+			foreach (RCronTask task in batch.Tasks)
 			{
 				try
 				{
@@ -82,13 +82,13 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 								}
 
 								PrintManager pm = dbDoc.PrintManager;
-								pm.SelectNewPrintDriver("Bluebeam PDF"); //todo: read from RotogravureOptions
+								pm.SelectNewPrintDriver("Bluebeam PDF"); //todo: read from RCronOptions
 								pm.PrintSetup
 										.InSession
 										.PrintParameters
 										.PaperSize = pm.PaperSizes
 												.Cast<PaperSize>()
-												.Where(p => "Letter" == p.Name) //todo: read from RotogravureOptions
+												.Where(p => "Letter" == p.Name) //todo: read from RCronOptions
 												.FirstOrDefault();
 								pm.PrintRange = PrintRange.Select;
 								pm.ViewSheetSetting.CurrentViewSheetSet = printSet;
@@ -167,6 +167,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 					}
 
 					dbDoc.Close(saveModified);
+					//todo: update last run time for task
 				}
 				catch (Exception exception)
 				{

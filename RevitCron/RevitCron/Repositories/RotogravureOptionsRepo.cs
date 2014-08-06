@@ -6,26 +6,26 @@ using System.Runtime.Serialization.Json;
 
 namespace DougKlassen.Revit.Cron.Repositories
 {
-	public interface IRotogravureOptionsRepo
+	public interface IRCronOptionsRepo
 	{
-		RCronOptions GetRotogravureOptions();
+		RCronOptions GetRCronOptions();
 
-		void PutRotogravureOptions(RCronOptions options);
+		void PutRCronOptions(RCronOptions options);
 	}
 
-	public class RotogravureOptionsJsonRepo : IRotogravureOptionsRepo
+	public class RCronOptionsJsonRepo : IRCronOptionsRepo
 	{
 		private Uri repoFileUri;
 
-		private RotogravureOptionsJsonRepo() { }
+		private RCronOptionsJsonRepo() { }
 
-		public RotogravureOptionsJsonRepo(Uri uri)
+		public RCronOptionsJsonRepo(Uri uri)
 			: this()
 		{
 			repoFileUri = uri;
 		}
 
-		public RCronOptions GetRotogravureOptions()
+		public RCronOptions GetRCronOptions()
 		{
 			RCronOptions options = null;
 
@@ -38,7 +38,7 @@ namespace DougKlassen.Revit.Cron.Repositories
 			return options;
 		}
 
-		public void PutRotogravureOptions(RCronOptions options)
+		public void PutRCronOptions(RCronOptions options)
 		{
 			using (FileStream fs = new FileStream(repoFileUri.LocalPath, FileMode.Create))
 			{
@@ -49,14 +49,14 @@ namespace DougKlassen.Revit.Cron.Repositories
 
 		public static RCronOptions LoadOptions(Uri uri) //convenience method to load options from file
 		{
-			RotogravureOptionsJsonRepo repo = new RotogravureOptionsJsonRepo(uri);
-			return repo.GetRotogravureOptions();
+			RCronOptionsJsonRepo repo = new RCronOptionsJsonRepo(uri);
+			return repo.GetRCronOptions();
 		}
 
 		public static void WriteOptions(Uri uri, RCronOptions options) //convenience method to write options to file
 		{
-			RotogravureOptionsJsonRepo repo = new RotogravureOptionsJsonRepo(uri);
-			repo.PutRotogravureOptions(options);
+			RCronOptionsJsonRepo repo = new RCronOptionsJsonRepo(uri);
+			repo.PutRCronOptions(options);
 		}
 	}
 }

@@ -21,20 +21,20 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
 
 		Result IExternalApplication.OnShutdown(UIControlledApplication application)
 		{
-			RotogravureOptions options;
+			RCronOptions options;
 			RCronLog log = RCronLog.Instance;
 			try
 			{
-				options = RotogravureOptionsJsonRepo.LoadOptions(new Uri(RCronFileLocations.OptionsFilePath));
+				options = RCronOptionsJsonRepo.LoadOptions(new Uri(RCronFileLocations.OptionsFilePath));
 			}
 			catch (Exception exc)
 			{
-				String defaultLogDirectoryPath = RCronFileLocations.AddInDirectoryPath + @"\Logs\"; //hardcoded only if RotogravureOptions can't be loaded
+				String defaultLogDirectoryPath = RCronFileLocations.AddInDirectoryPath + @"\Logs\"; //hardcoded only if RCronOptions can't be loaded
 				if (!Directory.Exists(defaultLogDirectoryPath))
 				{
 					Directory.CreateDirectory(defaultLogDirectoryPath);
 				}
-				options = new RotogravureOptions()
+				options = new RCronOptions()
 						{
 							LogDirectoryUri = new Uri(defaultLogDirectoryPath)
 						};

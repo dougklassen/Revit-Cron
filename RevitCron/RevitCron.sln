@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.30110.0
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rotogravure", "Rotogravure\Rotogravure.csproj", "{579F7194-30E6-4421-8588-E62AE7A55733}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -16,6 +16,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCron", "RCron\RCron.csproj
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCronD", "RCronD\RCronD.csproj", "{89F05105-9A05-4311-BC63-313E54BD8574}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCronTest", "RCronTest\RCronTest.csproj", "{8904430D-094A-4109-BB4D-C702991055DD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{89F05105-9A05-4311-BC63-313E54BD8574} = {89F05105-9A05-4311-BC63-313E54BD8574}
+		{579F7194-30E6-4421-8588-E62AE7A55733} = {579F7194-30E6-4421-8588-E62AE7A55733}
+		{0E122EEC-7AD1-40B7-8165-5ED94289D351} = {0E122EEC-7AD1-40B7-8165-5ED94289D351}
+		{D1CE21FE-6464-4F92-B972-00B3719472FD} = {D1CE21FE-6464-4F92-B972-00B3719472FD}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +47,10 @@ Global
 		{89F05105-9A05-4311-BC63-313E54BD8574}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89F05105-9A05-4311-BC63-313E54BD8574}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89F05105-9A05-4311-BC63-313E54BD8574}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8904430D-094A-4109-BB4D-C702991055DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8904430D-094A-4109-BB4D-C702991055DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8904430D-094A-4109-BB4D-C702991055DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8904430D-094A-4109-BB4D-C702991055DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

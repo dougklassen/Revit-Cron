@@ -29,4 +29,13 @@ namespace DougKlassen.Revit.Cron
 
 		static RCronCanon() { }
 	}
+
+  //todo: use string keys for enum
+	/// <summary>
+	/// Recognized task types in Rotogravure
+	/// </summary>
+	public enum TaskType
+	{
+		Print, Export, ETransmit, Command
+	}
 }

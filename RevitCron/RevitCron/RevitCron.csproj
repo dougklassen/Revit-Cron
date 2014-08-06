@@ -31,10 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RevitCron, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\RevitCron.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -46,14 +42,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dummies.cs" />
+    <Compile Include="Models\RCronBatch.cs" />
     <Compile Include="Models\RCronLog.cs" />
+    <Compile Include="Models\RCronSchedule.cs" />
     <Compile Include="RCronCanon.cs" />
     <Compile Include="Models\RCronTask.cs" />
     <Compile Include="Models\RCronOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\RCronLogRepo.cs" />
     <Compile Include="Repositories\RotogravureOptionsRepo.cs" />
-    <Compile Include="Repositories\RCronTasksRepo.cs" />
+    <Compile Include="Repositories\RCronBatchRepo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -34,7 +34,7 @@ namespace RCron
 			IEnumerable<String> cmds = args
 					.Where(s => cmdRegex.IsMatch(s));
 
-			RotogravureOptionsJsonRepo rotogravureOptionsRepo = new RotogravureOptionsJsonRepo(new Uri(RCronFileLocations.OptionsFilePath));
+			RCronOptionsJsonRepo RCronOptionsRepo = new RCronOptionsJsonRepo(new Uri(RCronFileLocations.OptionsFilePath));
 
 			if (null == cmds.FirstOrDefault())
 			{
@@ -47,14 +47,17 @@ namespace RCron
 				{
 					case "newini":
 						Console.WriteLine("newIni command specified");
-						rotogravureOptionsRepo.PutRotogravureOptions(Dummies.dummyOpts);
+						RCronOptionsRepo.PutRCronOptions(Dummies.dummyOpts);
 						break;
-					case "newtasks":
+					case "newbatch":
 						Console.WriteLine("newTasks command specified");
-						Uri tasksFileUri = rotogravureOptionsRepo
-								.GetRotogravureOptions()
-								.TasksFileUri;
-						new RCronTasksJsonRepo(tasksFileUri).PutRCronTasks(Dummies.dummyTasks);
+						Uri tasksFileUri = RCronOptionsRepo
+								.GetRCronOptions()
+								.BatchFileUri;
+						new RCronBatchJsonRepo(tasksFileUri).PutRCronBatch(Dummies.dummyBatch);
+						break;
+					case "newschedule":
+						throw new NotImplementedException();
 						break;
 					case "timestamp":
 						Console.WriteLine(RCronCanon.TimeStamp);

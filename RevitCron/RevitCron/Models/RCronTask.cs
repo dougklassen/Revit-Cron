@@ -1,4 +1,4 @@
-﻿using System;
+﻿	using System;
 using System.Runtime.Serialization;
 
 namespace DougKlassen.Revit.Cron.Models
@@ -20,10 +20,25 @@ namespace DougKlassen.Revit.Cron.Models
 		public String Schedule { get; set; }
 
 		[DataMember(Order = 3)]
-		public RCronTaskInfo TaskInfo { get; set; } //to facilitate serialization, subclassed members belong to a member class
+		public Int32 Priority { get; set; }	//to control where the task fall in the queue when multiple tasks are added
 
 		[DataMember(Order = 4)]
-		public Int32 Priority { get; set; }	//to control where the task fall in the queue when multiple tasks are added
+		public RCronTaskInfo TaskInfo { get; set; } //to facilitate serialization, subclassed members belong to a member class
+
+		/// <summary>
+		/// Returns a sanitized version of a task for use in serialization to a batch file
+		/// </summary>
+		/// <returns>An abbreviated version of the task</returns>
+		public RCronTask GetBatchVersion()
+		{
+			RCronTask bv = new RCronTask();
+			bv.Name = this.Name + "-run";
+			bv.LastRun = DateTime.MinValue;
+			bv.Schedule = null;
+			bv.TaskInfo = this.TaskInfo;
+
+			return bv;
+		}
 	}
 
 	[DataContract]
@@ -96,14 +111,5 @@ namespace DougKlassen.Revit.Cron.Models
 		{
 			TaskType = TaskType.Command;
 		}
-	}
-}
-
-//todo: use string keys for enum
-namespace DougKlassen.Revit.Cron
-{
-	public enum TaskType
-	{
-		Print, Export, ETransmit, Command
 	}
 }

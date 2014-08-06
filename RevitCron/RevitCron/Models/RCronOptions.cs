@@ -7,9 +7,12 @@ namespace DougKlassen.Revit.Cron.Models
 	public class RCronOptions
 	{
 		[DataMember(Order = 0)]
-		public Uri TasksFileUri { get; set; }
+		public Uri BatchFileUri { get; set; }
 
 		[DataMember(Order = 1)]
+		public Uri ScheduleFileUri { get; set; }
+
+		[DataMember(Order = 2)]
 		public Uri LogDirectoryUri { get; set; }
 	}
 }

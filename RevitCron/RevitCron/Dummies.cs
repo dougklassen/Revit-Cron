@@ -9,7 +9,8 @@ namespace DougKlassen.Revit.Cron
 	{
 		public static readonly RCronOptions dummyOpts = new RCronOptions()
 		{
-			TasksFileUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"Resources\tasks.json"),
+			BatchFileUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"Resources\tasks.json"),
+			ScheduleFileUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"\Resources\schedule.json"),
 			LogDirectoryUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"\Logs\")
 		};
 
@@ -17,7 +18,7 @@ namespace DougKlassen.Revit.Cron
 		{
       new RCronTask()
       {
-        Name = "Test Print Task",
+        Name = "Test Print Task 1",
         LastRun = new DateTime(),
         Schedule = "0 0 * * *",
 				Priority = 2,
@@ -26,7 +27,22 @@ namespace DougKlassen.Revit.Cron
           TaskType = TaskType.Print,
           ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",  //todo: URI
           OutputDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Test Output\",
-          PrintSet = "test",
+          PrintSet = "test1",
+          OutputFileName = "test.pdf"
+        }
+      },
+			new RCronTask()
+      {
+        Name = "Test Print Task 2",
+        LastRun = new DateTime(),
+        Schedule = "0 0 * * *",
+				Priority = 2,
+        TaskInfo = new RCronPrintTaskInfo()
+        {
+          TaskType = TaskType.Print,
+          ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",  //todo: URI
+          OutputDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Test Output\",
+          PrintSet = "test2",
           OutputFileName = "test.pdf"
         }
       },
@@ -71,7 +87,19 @@ namespace DougKlassen.Revit.Cron
           OutputDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Test Output\",
           CommandName = "DougKlassen.Revit.Perfect.Commands.RenameFamiliesCommand"
         }                
-      },
+      }
     };
+
+		public static RCronSchedule dummySchedule = new RCronSchedule();
+
+		public static RCronBatch dummyBatch = new RCronBatch();
+
+		static Dummies()
+		{
+			foreach (RCronTask t in dummyTasks)
+			{
+				dummyBatch.Add(t);
+			}
+		}
 	}
 }
