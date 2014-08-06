@@ -56,11 +56,11 @@ namespace DougKlassen.Revit.Cron.Models
 			logText.AppendLine(String.Format(text, args.Select(o => o.ToString()).ToArray()));
 		}
 
-		public void LogException(Exception exception) //todo: move to strongly typed log object in rcron
+		public void LogException(Exception exception)
 		{
 			AppendLine("\n!! {0} {1}", DateTime.Now, exception.GetType());
-			AppendLine(exception.Message);
-			AppendLine(exception.StackTrace);
+			AppendLine("  {0}", exception.Message);
+			AppendLine("  {0}", exception.StackTrace);
 		}
 
 		public void LogThreadInfo()

@@ -46,6 +46,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			}
 			catch (Exception exception)
 			{
+				log.AppendLine("!! Couldn't load batch from {0}", options.BatchFileUri.LocalPath);
 				log.LogException(exception);
 				LogWindow.Show(log);
 				throw exception; //can't continue if the TasksRepo can't be loaded
@@ -81,19 +82,24 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 									log.AppendLine("  -- view: \"{0}\"", v.Name);
 								}
 
-								PrintManager pm = dbDoc.PrintManager;
-								pm.SelectNewPrintDriver("Bluebeam PDF"); //todo: read from RCronOptions
-								pm.PrintSetup
-										.InSession
-										.PrintParameters
-										.PaperSize = pm.PaperSizes
-												.Cast<PaperSize>()
-												.Where(p => "Letter" == p.Name) //todo: read from RCronOptions
-												.FirstOrDefault();
-								pm.PrintRange = PrintRange.Select;
-								pm.ViewSheetSetting.CurrentViewSheetSet = printSet;
-								pm.CombinedFile = true;
-								pm.SubmitPrint();
+								using (Transaction t = new Transaction(dbDoc, "Set printset"))
+								{
+									t.Start();
+									PrintManager pm = dbDoc.PrintManager;
+									pm.SelectNewPrintDriver("Bluebeam PDF"); //todo: read from RCronOptions
+									pm.PrintSetup
+											.InSession
+											.PrintParameters
+											.PaperSize = pm.PaperSizes
+													.Cast<PaperSize>()
+													.Where(p => "Letter" == p.Name) //todo: read from RCronOptions
+													.FirstOrDefault();
+									pm.PrintRange = PrintRange.Select;
+									pm.ViewSheetSetting.CurrentViewSheetSet = printSet;
+									pm.CombinedFile = true;
+									pm.SubmitPrint();
+									t.Commit();
+								}
 
 								String outputDirectoryPath = printTaskInfo.OutputDirectory + RCronCanon.TimeStamp + '\\';
 								if (!Directory.Exists(outputDirectoryPath))

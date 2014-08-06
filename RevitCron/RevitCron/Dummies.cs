@@ -9,9 +9,9 @@ namespace DougKlassen.Revit.Cron
 	{
 		public static readonly RCronOptions dummyOpts = new RCronOptions()
 		{
-			BatchFileUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"Resources\tasks.json"),
-			ScheduleFileUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"\Resources\schedule.json"),
-			LogDirectoryUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"\Logs\")
+			BatchFileUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"Resources\batch.json"),
+			ScheduleFileUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"Resources\schedule.json"),
+			LogDirectoryUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"Logs\")
 		};
 
 		public static readonly List<RCronTask> dummyTasks = new List<RCronTask>
@@ -28,7 +28,7 @@ namespace DougKlassen.Revit.Cron
           ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",  //todo: URI
           OutputDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Test Output\",
           PrintSet = "test1",
-          OutputFileName = "test.pdf"
+          OutputFileName = "test1.pdf"
         }
       },
 			new RCronTask()
@@ -43,7 +43,7 @@ namespace DougKlassen.Revit.Cron
           ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",  //todo: URI
           OutputDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Test Output\",
           PrintSet = "test2",
-          OutputFileName = "test.pdf"
+          OutputFileName = "test2.pdf"
         }
       },
       new RCronTask()
