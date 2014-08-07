@@ -60,6 +60,24 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RCronD\RCronD.csproj">
+      <Project>{89f05105-9a05-4311-bc63-313e54bd8574}</Project>
+      <Name>RCronD</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RCron\RCron.csproj">
+      <Project>{d1ce21fe-6464-4f92-b972-00b3719472fd}</Project>
+      <Name>RCron</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RevitCron\RevitCron.csproj">
+      <Project>{0e122eec-7ad1-40b7-8165-5ed94289d351}</Project>
+      <Name>RevitCron</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rotogravure\Rotogravure.csproj">
+      <Project>{579f7194-30e6-4421-8588-e62ae7a55733}</Project>
+      <Name>Rotogravure</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

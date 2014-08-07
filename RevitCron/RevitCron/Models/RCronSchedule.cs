@@ -12,7 +12,7 @@ namespace DougKlassen.Revit.Cron.Models
 	public class RCronSchedule
 	{
 		[DataMember(Order = 0)]
-		public IEnumerable<RCronTask> Tasks	//todo: enforce unique names
+		public ICollection<RCronTask> Tasks	//todo: enforce unique names
 		{
 			get;
 			set;

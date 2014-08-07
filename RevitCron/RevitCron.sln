@@ -16,6 +16,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCron", "RCron\RCron.csproj
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCronD", "RCronD\RCronD.csproj", "{89F05105-9A05-4311-BC63-313E54BD8574}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0E122EEC-7AD1-40B7-8165-5ED94289D351} = {0E122EEC-7AD1-40B7-8165-5ED94289D351}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RCronTest", "RCronTest\RCronTest.csproj", "{8904430D-094A-4109-BB4D-C702991055DD}"
 	ProjectSection(ProjectDependencies) = postProject
