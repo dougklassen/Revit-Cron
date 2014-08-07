@@ -40,9 +40,17 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			log.AppendLine("  -- version: {0}", asm.Version.ToString());
 
 			RCronBatch batch;
+			RCronBatchJsonRepo batchRepo;
 			try
 			{
-				batch = RCronBatchJsonRepo.LoadBatch(options.BatchFileUri);
+				if (!File.Exists(options.BatchFileUri.LocalPath))
+				{
+					log.AppendLine("** no batch file found, processing complete");
+					return;
+				}
+
+				batchRepo = new RCronBatchJsonRepo(options.BatchFileUri);
+				batch = batchRepo.GetRCronBatch();
 			}
 			catch (Exception exception)
 			{
@@ -175,13 +183,29 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 							break;
 					}
 
-					dbDoc.Close(saveModified);
-					//todo: update last run time for task
+					dbDoc.Close(saveModified);	//todo: keep project open if running multiple tasks on it
+
+					task.LastRun = DateTime.Now;
 				}
 				catch (Exception exception)
 				{
 					log.LogException(exception);
 				}
+
+				try
+				{
+					RCronSchedule schedule = RCronScheduleJsonRepo.LoadSchedule(options.ScheduleFileUri);
+					Int32 numUpdates = schedule.UpdateLastRunFromBatch(batch);
+					RCronScheduleJsonRepo.WriteSchedule(options.ScheduleFileUri, schedule);
+					log.AppendLine("  ** updated {0} tasks in {1}", numUpdates, options.ScheduleFileUri.LocalPath);
+				}
+				catch (Exception exc)
+				{
+					log.AppendLine("!! couldn't update schedule with last run times of task");
+					log.LogException(exc);
+				}
+				log.AppendLine("** deleting {0}", RCronFileLocations.BatchFilePath);
+				batchRepo.Delete();
 			}
 		}
 	}

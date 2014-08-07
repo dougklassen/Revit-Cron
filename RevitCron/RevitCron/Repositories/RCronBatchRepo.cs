@@ -12,6 +12,8 @@ namespace DougKlassen.Revit.Cron.Repositories
 		RCronBatch GetRCronBatch();
 
 		void PutRCronBatch(RCronBatch batch);
+
+		void Delete();
 	}
 
 	public class RCronBatchJsonRepo : IRCronBatchRepo
@@ -29,7 +31,7 @@ namespace DougKlassen.Revit.Cron.Repositories
 			}
 			else
 			{
-				throw new ArgumentException("Batch file URI was not a file URI");
+				throw new ArgumentException("Batch URI was not a file URI");
 			}
 		}
 
@@ -53,6 +55,15 @@ namespace DougKlassen.Revit.Cron.Repositories
 				DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(RCronBatch));
 				s.WriteObject(fs, batch);
 			}
+		}
+
+		/// <summary>
+		/// Cleanup method to remove the JSON file once the batch has run
+		/// </summary>
+		public void Delete()
+		{
+			File.Delete(repoFilePath);
+			repoFilePath = null;
 		}
 
 		public static RCronBatch LoadBatch(Uri uri) //convenience method to load tasks from a file

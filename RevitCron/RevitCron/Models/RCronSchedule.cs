@@ -12,7 +12,7 @@ namespace DougKlassen.Revit.Cron.Models
 	public class RCronSchedule
 	{
 		[DataMember(Order = 0)]
-		public IEnumerable<RCronTask> Tasks
+		public IEnumerable<RCronTask> Tasks	//todo: enforce unique names
 		{
 			get;
 			set;
@@ -33,9 +33,22 @@ namespace DougKlassen.Revit.Cron.Models
 		/// Read last run time values from a batch
 		/// </summary>
 		/// <param name="batch">A batch with updated run times</param>
-		public void	UpdateLastRunFromBatch(RCronBatch batch)
+		/// <returns>The number of schedule tasks updated</returns>
+		public Int32 UpdateLastRunFromBatch(RCronBatch batch)
 		{
-			throw new NotImplementedException();
+			Int32 numUpdates = 0;
+
+			foreach (RCronTask t in batch.Tasks)
+			{
+				IEnumerable<RCronTask> tasksToUpdate = Tasks.Where(u => u.Name == t.Name);
+				foreach (RCronTask u in tasksToUpdate)
+				{
+					u.LastRun = t.LastRun;
+					numUpdates++;
+				}
+			}
+
+			return numUpdates;
 		}
 	}
 }
