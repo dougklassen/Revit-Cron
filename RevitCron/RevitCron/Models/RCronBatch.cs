@@ -11,6 +11,11 @@ namespace DougKlassen.Revit.Cron.Models
 	{
 		[DataMember(Order = 0)]
 		public ICollection<RCronTask> Tasks;	//todo: need to be reworked with a backing field but compatible with serialization
+		
+		public RCronBatch()
+		{
+			Tasks = new List<RCronTask>();
+		}
 
 		public void Add(RCronTask task)
 		{

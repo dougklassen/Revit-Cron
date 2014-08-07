@@ -14,5 +14,11 @@ namespace DougKlassen.Revit.Cron.Models
 
 		[DataMember(Order = 2)]
 		public Uri LogDirectoryUri { get; set; }
+
+		/// <summary>
+		/// Polling period for RCronD
+		/// </summary>
+		[DataMember(Order = 3)]
+		public TimeSpan PollingPeriod { get; set; }
 	}
 }

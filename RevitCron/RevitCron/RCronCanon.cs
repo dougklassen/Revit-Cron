@@ -7,9 +7,9 @@ namespace DougKlassen.Revit.Cron
 	{
 		public static readonly String AddInDirectoryPath = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\";
 		public static readonly String OptionsFilePath = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Resources\ini.json";
-		//BatchFileUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"Resources\batch.json"),
-		//ScheduleFileUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"\Resources\schedule.json"),
-		//LogDirectoryUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"\Logs\")
+		public static readonly String BatchFilePath = AddInDirectoryPath + @"Resources\batch.json";
+		public static readonly String ScheduleFilePath = AddInDirectoryPath + @"Resources\schedule.json";
+		public static readonly String LogDirectoryPath = AddInDirectoryPath + @"\Logs\";
 	}
 
 	public static class RCronCanon

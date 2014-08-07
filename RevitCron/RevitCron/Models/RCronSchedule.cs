@@ -28,5 +28,14 @@ namespace DougKlassen.Revit.Cron.Models
 
 			return batch;
 		}
+
+		/// <summary>
+		/// Read last run time values from a batch
+		/// </summary>
+		/// <param name="batch">A batch with updated run times</param>
+		public void	UpdateLastRunFromBatch(RCronBatch batch)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

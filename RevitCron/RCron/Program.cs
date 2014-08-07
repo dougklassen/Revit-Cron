@@ -46,11 +46,11 @@ namespace RCron
 				switch (cmd)
 				{
 					case "newini":
-						Console.WriteLine("newIni command specified");
+						Console.WriteLine("created new options.json");
 						RCronOptionsRepo.PutRCronOptions(Dummies.dummyOpts);
 						break;
 					case "newbatch":
-						Console.WriteLine("newTasks command specified");
+						Console.WriteLine("created new batch.json");
 						Uri tasksFileUri = RCronOptionsRepo
 								.GetRCronOptions()
 								.BatchFileUri;

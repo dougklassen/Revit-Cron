@@ -128,7 +128,10 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 									}
 								}
 
-								Thread.CurrentThread.Name = "RotoGravure";
+								if (null == Thread.CurrentThread.Name)
+								{
+									Thread.CurrentThread.Name = "RotoGravure"; 
+								}
 								AutoResetEvent externalTaskWaitHandle = new AutoResetEvent(false);
 
 								//BluebeamPrintDialogHandler.Save(

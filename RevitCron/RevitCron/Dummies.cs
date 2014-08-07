@@ -9,9 +9,10 @@ namespace DougKlassen.Revit.Cron
 	{
 		public static readonly RCronOptions dummyOpts = new RCronOptions()
 		{
-			BatchFileUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"Resources\batch.json"),
-			ScheduleFileUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"Resources\schedule.json"),
-			LogDirectoryUri = new Uri(RCronFileLocations.AddInDirectoryPath + @"Logs\")
+			BatchFileUri = new Uri(RCronFileLocations.BatchFilePath),
+			ScheduleFileUri = new Uri(RCronFileLocations.ScheduleFilePath),
+			LogDirectoryUri = new Uri(RCronFileLocations.LogDirectoryPath),
+			PollingPeriod = new TimeSpan(0, 0, 30)
 		};
 
 		public static readonly List<RCronTask> dummyTasks = new List<RCronTask>
@@ -90,12 +91,14 @@ namespace DougKlassen.Revit.Cron
       }
     };
 
-		public static RCronSchedule dummySchedule = new RCronSchedule();
+		public static RCronSchedule dummySchedule;
 
-		public static RCronBatch dummyBatch = new RCronBatch();
+		public static RCronBatch dummyBatch;
 
 		static Dummies()
 		{
+			dummySchedule = new RCronSchedule();
+			dummyBatch = new RCronBatch();
 			foreach (RCronTask t in dummyTasks)
 			{
 				dummyBatch.Add(t);
