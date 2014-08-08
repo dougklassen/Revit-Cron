@@ -1,4 +1,4 @@
-﻿	using System;
+﻿using System;
 using System.Runtime.Serialization;
 
 namespace DougKlassen.Revit.Cron.Models
@@ -24,6 +24,16 @@ namespace DougKlassen.Revit.Cron.Models
 
 		[DataMember(Order = 4)]
 		public RCronTaskInfo TaskInfo { get; set; } //to facilitate serialization, subclassed members belong to a member class
+
+		public Boolean IsDueToRun
+		{
+			get
+			{
+				Boolean runNow = false;
+				//todo: determine if task should run
+				return runNow;
+			}
+		}
 
 		/// <summary>
 		/// Returns a sanitized version of a task for use in serialization to a batch file

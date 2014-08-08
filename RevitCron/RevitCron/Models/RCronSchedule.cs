@@ -25,6 +25,13 @@ namespace DougKlassen.Revit.Cron.Models
 		public RCronBatch GetRCronBatch()
 		{
 			RCronBatch batch = new RCronBatch();
+			foreach (RCronTask task in Tasks)
+			{
+				if (task.IsDueToRun)
+				{
+					batch.Add(task);
+				}
+			}
 
 			return batch;
 		}
