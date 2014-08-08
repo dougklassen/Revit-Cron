@@ -24,6 +24,8 @@ namespace DougKlassen.Revit.Cron.Models
 
 		//todo: add next scheduled run time as nullable DateTime
 
+		//todo: add RunIfMissed option
+
 		[DataMember(Order = 4)]
 		public RCronTaskInfo TaskInfo { get; set; } //to facilitate serialization, subclassed members belong to a member class
 
@@ -76,6 +78,8 @@ namespace DougKlassen.Revit.Cron.Models
 
 		[DataMember(Order = 11)]
 		public String OutputFileName { get; set; }
+
+		//todo: add RunDiff option
 
 		public String OutputFilePath
 		{
