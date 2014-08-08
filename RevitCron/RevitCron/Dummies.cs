@@ -12,7 +12,7 @@ namespace DougKlassen.Revit.Cron
 			BatchFileUri = new Uri(RCronFileLocations.BatchFilePath),
 			ScheduleFileUri = new Uri(RCronFileLocations.ScheduleFilePath),
 			LogDirectoryUri = new Uri(RCronFileLocations.LogDirectoryPath),
-			PollingPeriod = new TimeSpan(0, 0, 30)
+			PollingPeriod = new TimeSpan(0, 0, 7)
 		};
 
 		public static readonly List<RCronTask> dummyTasks = new List<RCronTask>

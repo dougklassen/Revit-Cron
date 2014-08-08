@@ -22,6 +22,8 @@ namespace DougKlassen.Revit.Cron.Models
 		[DataMember(Order = 3)]
 		public Int32 Priority { get; set; }	//to control where the task fall in the queue when multiple tasks are added
 
+		//todo: add next scheduled run time as nullable DateTime
+
 		[DataMember(Order = 4)]
 		public RCronTaskInfo TaskInfo { get; set; } //to facilitate serialization, subclassed members belong to a member class
 
@@ -31,6 +33,8 @@ namespace DougKlassen.Revit.Cron.Models
 			{
 				Boolean runNow = false;
 				//todo: determine if task should run
+
+				//if there's a star, add a grace period to next smallest increment
 				return runNow;
 			}
 		}

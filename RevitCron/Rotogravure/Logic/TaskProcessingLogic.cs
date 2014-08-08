@@ -185,7 +185,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 
 					dbDoc.Close(saveModified);	//todo: keep project open if running multiple tasks on it
 
-					task.LastRun = DateTime.Now;
+					task.LastRun = DateTime.Now; //todo: set this to scheduled run time rather than completion time
 				}
 				catch (Exception exception)
 				{
