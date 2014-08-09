@@ -63,7 +63,7 @@ namespace DougKlassen.Revit.Cron.Daemon
 	
 		private void notifyIcon_DoubleClick(object sender, EventArgs e)
 		{
-			MessageBox.Show("RCronD is running");
+			MessageBox.Show("Double-clicked icon");
 		}
 
 		protected override void Dispose(Boolean disposing)
@@ -91,6 +91,9 @@ namespace DougKlassen.Revit.Cron.Daemon
 			return new Icon(mrs);
 		}
 
+		/// <summary>
+		/// Load options and schedule from file repo
+		/// </summary>
 		private void LoadRCronSettings()
 		{
 			try
@@ -99,29 +102,30 @@ namespace DougKlassen.Revit.Cron.Daemon
 			}
 			catch (Exception exc)	//if options couldn't be loaded, quit
 			{
-				Console.WriteLine("Couldn't load options from {0}", RCronFileLocations.OptionsFilePath);
-				Console.WriteLine(exc.Message);
-				Console.Write(exc.StackTrace);
-				ExitThread();
+				MessageBox.Show("Exception during options load");
+				//ExitThread();
 			}
 
-			try //todo: why isn't an exception thrown here
+			try
 			{
 				schedule = RCronScheduleJsonRepo.LoadSchedule(options.ScheduleFileUri);
 				if (null == schedule)
 				{
-					Console.WriteLine("Schedule is null");
+					MessageBox.Show("Schedule is null");
 				}
 			}
-			catch (Exception exc)	//if options couldn't be loaded, quit
+			catch (Exception exc)
 			{
-				Console.WriteLine("Couldn't load schedule from {0}", options.ScheduleFileUri.LocalPath);
-				Console.WriteLine(exc.Message);
-				Console.Write(exc.StackTrace);
-				ExitThread();
+				MessageBox.Show("Exception during schedule load");
+
+				//ExitThread();	//todo: what does this do, program doesn't end
+				//possibly exiting wrong thread
 			}
 		}
 
+		/// <summary>
+		/// create the NotifyIcon and set interface event handlers
+		/// </summary>
 		private void CreateNotifyIcon()
 		{
 			components = new Container();

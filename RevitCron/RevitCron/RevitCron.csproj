@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\RevitCron.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -43,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dummies.cs" />
+    <Compile Include="Models\CronExpression.cs" />
     <Compile Include="Models\RCronBatch.cs" />
     <Compile Include="Models\RCronLog.cs" />
     <Compile Include="Models\RCronSchedule.cs" />

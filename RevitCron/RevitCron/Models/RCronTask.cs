@@ -10,35 +10,65 @@ namespace DougKlassen.Revit.Cron.Models
 	[KnownType(typeof(RCronCommandTaskInfo))]
 	public class RCronTask
 	{
+		#region Properties
+		/// <summary>
+		/// The unique name of the task
+		/// </summary>
 		[DataMember(Order = 0)]
 		public String Name { get; set; }
 
-		[DataMember(Order = 1)]
-		public DateTime LastRun { get; set; }
+		/// <summary>
+		/// The priority of a task in a batch when queued in a batch, highest first
+		/// </summary>
+		[DataMember(Order = 10)]
+		public Int32 Priority { get; set; }	//to control where the task falls in the batch when queued with other tasks
 
-		[DataMember(Order = 2)]
+		/// <summary>
+		/// Whether to run the task immediately if it wasn't run at the last scheduled run time
+		/// </summary>
+		[DataMember(Order = 11)]
+		public Boolean RunIfMissed { get; set; }
+
+		/// <summary>
+		/// A statement of when the task should be run, in Cron format
+		/// </summary>
+		[DataMember(Order = 30)]
 		public String Schedule { get; set; }
 
-		[DataMember(Order = 3)]
-		public Int32 Priority { get; set; }	//to control where the task fall in the queue when multiple tasks are added
+		/// <summary>
+		/// The last time the task was run, or null if it hasn't been run
+		/// </summary>
+		[DataMember(Order = 20)]
+		public DateTime? LastRun { get; set; }
 
-		//todo: add next scheduled run time as nullable DateTime
+		/// <summary>
+		/// The next scheduled run time for the task, or null if not scheduled
+		/// </summary>
+		[DataMember]
+		public DateTime? NextRun {get;set;}
 
-		//todo: add RunIfMissed option
 
-		[DataMember(Order = 4)]
+		[DataMember(Order = 10)]
 		public RCronTaskInfo TaskInfo { get; set; } //to facilitate serialization, subclassed members belong to a member class
+		#endregion Properties
 
 		public Boolean IsDueToRun
 		{
 			get
 			{
-				Boolean runNow = false;
+				Boolean dueToRun = false;
 				//todo: determine if task should run
 
 				//if there's a star, add a grace period to next smallest increment
-				return runNow;
+				return dueToRun;
 			}
+		}
+
+		public DateTime NextRunTime()
+		{
+			DateTime nextRun = DateTime.MinValue;
+
+			return nextRun;
 		}
 
 		/// <summary>
@@ -58,7 +88,7 @@ namespace DougKlassen.Revit.Cron.Models
 	}
 
 	[DataContract]
-	public class RCronTaskInfo
+	public abstract class RCronTaskInfo
 	{
 		[DataMember(Order = 0)]
 		public TaskType TaskType;
