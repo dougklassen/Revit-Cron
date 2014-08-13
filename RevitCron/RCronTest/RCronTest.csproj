@@ -55,6 +55,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="CronUtilsTests.cs" />
     <Compile Include="SchedulingTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CronExpressionsTest.cs" />

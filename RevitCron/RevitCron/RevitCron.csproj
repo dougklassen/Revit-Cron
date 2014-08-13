@@ -44,7 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dummies.cs" />
-    <Compile Include="Models\CronExpression.cs" />
+    <Compile Include="CronExpression\CronSubExpressions.cs" />
+    <Compile Include="CronExpression\CronExpression.cs" />
+    <Compile Include="CronExpression\CronUtils.cs" />
     <Compile Include="Models\RCronBatch.cs" />
     <Compile Include="Models\RCronLog.cs" />
     <Compile Include="Models\RCronSchedule.cs" />
