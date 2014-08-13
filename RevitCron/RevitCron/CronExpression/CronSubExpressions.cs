@@ -14,7 +14,7 @@ namespace DougKlassen.Revit.Cron
 		/// <summary>
 		/// Minutes of the hour on which to run from 0 to 59. Null indicates a wildcard value.
 		/// </summary>
-		private UInt16[] runMinutes;
+		private UInt16[] runTimes;
 		/// <summary>
 		/// Denominator of minutes. Null indicates the minutes term is not denominated
 		/// </summary>
@@ -23,7 +23,11 @@ namespace DougKlassen.Revit.Cron
 		/// <summary>
 		/// match a list of 1 to 60 minute values in the range 0 to 59
 		/// </summary>
-		public Regex minutesRegex = new Regex(@"^([1-5][\d]|[\d])(,([1-5][\d]|[\d])){0,59}$");	//todo: prevent duplicates
+		public Regex seriesRegex = new Regex(@"^([1-5][\d]|[\d])(,([1-5][\d]|[\d])){0,59}$");	//todo: prevent duplicates
+		/// <summary>
+		/// match a range of minutes in the form 0-59
+		/// </summary>
+		public Regex rangeRegex = new Regex(@"^(?<s>[1-5][\d]|[\d])-(?<e>[1-5][\d]|[\d])");
 		/// <summary>
 		/// match an expression denominated by a number in the range 1 to 60
 		/// </summary>
@@ -33,20 +37,37 @@ namespace DougKlassen.Revit.Cron
 		{
 			if ("*" == expr)
 			{
-				runMinutes = null;
+				runTimes = null;
 				denominator = null;
 			}
-			else if (minutesRegex.IsMatch(expr))
+			else if (seriesRegex.IsMatch(expr))
 			{
 				//todo: check for duplicate values
-				runMinutes = Regex.Split(expr, ",")
+				runTimes = Regex.Split(expr, ",")
 					.Select(e => UInt16.Parse(e))
 					.ToArray();
 				denominator = null;
 			}
+			else if (rangeRegex.IsMatch(expr))
+			{
+				Match m = rangeRegex.Match(expr);
+				UInt16 start = UInt16.Parse(m.Groups["s"].Value);
+				UInt16 end = UInt16.Parse(m.Groups["e"].Value);
+				if (start >= end)
+				{
+					throw new ArgumentException(expr + " is an invalid range");
+				}
+				List<UInt16> vals = new List<UInt16>();
+				for (UInt16 i = start; i <= end; i++)
+				{
+					vals.Add(i);
+				}
+				runTimes = vals.ToArray();
+				denominator = null;
+			}
 			else if (denominatedMinutesRegex.IsMatch(expr))
 			{
-				runMinutes = null;
+				runTimes = null;
 				String dString = denominatedMinutesRegex.Match(expr).Groups["d"].Value;
 				denominator = UInt16.Parse(dString);
 			}
@@ -69,24 +90,32 @@ namespace DougKlassen.Revit.Cron
 
 		public override String ToString()
 		{
-			if (null == runMinutes && null == denominator)
+			if (null == runTimes && null == denominator)
 			{
 				return "*";
 			}
-			else if (runMinutes != null && denominator == null)
+			else if (runTimes != null && denominator == null)
 			{
 				StringBuilder exprBuilder = new StringBuilder(String.Empty);
-				exprBuilder.Append(runMinutes[0]);
-				if (runMinutes.Count() > 1)
+				if (runTimes.IsContiguous())
 				{
-					for (int i = 1; i < runMinutes.Count(); i++)
+					exprBuilder.AppendFormat("{0}-{1}", runTimes.Min(), runTimes.Max());
+				}
+				else
+				{
+					exprBuilder.Append(runTimes[0]);
+					if (runTimes.Count() > 1)
 					{
-						exprBuilder.AppendFormat(",{0}", runMinutes[i]);
+						for (int i = 1; i < runTimes.Count(); i++)
+						{
+							exprBuilder.AppendFormat(",{0}", runTimes[i]);
+						}
 					}
+					
 				}
 				return exprBuilder.ToString();
 			}
-			else if (runMinutes == null && denominator != null)
+			else if (runTimes == null && denominator != null)
 			{
 				return "*/" + denominator;
 			}

@@ -12,16 +12,25 @@ namespace DougKlassen.Revit.Cron.Test
 		public void CanParseMinutesExpression()
 		{
 			#region arrange
-			CronMinutes expr;
-			String testExpr = "0,1,10,59";
+			CronMinutes expr1, expr2, expr3, expr4;
+			String testExpr1 = "*";
+			String testExpr2 = "0,1,10,59";
+			String testExpr3 = "*/10";
+			String testExpr4 = "0-59";
 			#endregion arrange
 
 			#region act
-			expr = new CronMinutes(testExpr);
+			expr1 = new CronMinutes(testExpr1);
+			expr2 = new CronMinutes(testExpr2);
+			expr3 = new CronMinutes(testExpr3);
+			expr4 = new CronMinutes(testExpr4);
 			#endregion act
 
 			#region assert
-			Assert.AreEqual(testExpr, expr.ToString());
+			Assert.AreEqual(testExpr1, expr1.ToString());
+			Assert.AreEqual(testExpr2, expr2.ToString());
+			Assert.AreEqual(testExpr3, expr3.ToString());
+			Assert.AreEqual(testExpr4, expr4.ToString());
 			#endregion assert
 		}
 
