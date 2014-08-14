@@ -63,9 +63,15 @@ namespace DougKlassen.Revit.Cron
 
 		public IEnumerable<DateTime> GetAnnualRunTimes()
 		{
-			List<DateTime> runTimes = new List<DateTime>();
+			IEnumerable<TimeSpan> runIntervals = new List<TimeSpan>();
+			runIntervals = CronUtils.GetCartesianProduct(Months.GetRunTimes(), Days.GetRunTimes());
+			runIntervals = CronUtils.GetCartesianProduct(runIntervals, Hours.GetRunTimes());
+			runIntervals = CronUtils.GetCartesianProduct(runIntervals, Minutes.GetRunTimes());
 
-			return runTimes;
+			DateTime yearBeginning = new DateTime(DateTime.Now.Year, 1, 1);
+			IEnumerable<DateTime> annualRunTimes = runIntervals
+				.Select(i => yearBeginning.Add(i)); //Turns the timespan into a DateTime for this year
+			return annualRunTimes;
 		}
 
 		public String ToString()

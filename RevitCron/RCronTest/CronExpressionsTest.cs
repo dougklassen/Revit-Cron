@@ -1,6 +1,8 @@
 ﻿using DougKlassen.Revit.Cron.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DougKlassen.Revit.Cron.Test
@@ -162,15 +164,15 @@ namespace DougKlassen.Revit.Cron.Test
 		{
 			#region arrange
 			CronExpression exprMonthly = new CronExpression("0 0 * * *");	//run at midnite on the first day of the month
-			ICollection<DateTime> monthlyRunTimes;
+			ICollection<DateTime> monthlyRunTimesEnum;
 			#endregion arrange
 
 			#region act
-			monthlyRunTimes = (ICollection<DateTime>)exprMonthly.GetAnnualRunTimes();
+			monthlyRunTimesEnum = exprMonthly.GetAnnualRunTimes().ToList();
 			#endregion act
 
 			#region assert
-			Assert.AreEqual(12, monthlyRunTimes.Count);
+			Assert.AreEqual(12, monthlyRunTimesEnum.Count);
 			#endregion
 		}
 	}
