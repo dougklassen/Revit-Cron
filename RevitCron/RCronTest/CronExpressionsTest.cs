@@ -163,7 +163,7 @@ namespace DougKlassen.Revit.Cron.Test
 		public void CanGetRunTimes()
 		{
 			#region arrange
-			CronExpression exprMonthly = new CronExpression("0 0 * * *");	//run at midnite on the first day of the month
+			CronExpression exprMonthly = new CronExpression("0 0 1 * *");	//run at midnite on the first day of the month
 			ICollection<DateTime> monthlyRunTimesEnum;
 			#endregion arrange
 
