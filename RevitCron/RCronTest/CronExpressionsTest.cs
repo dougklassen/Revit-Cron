@@ -15,7 +15,7 @@ namespace DougKlassen.Revit.Cron.Test
 			CronMinutes expr1, expr2, expr3, expr4;
 			String testExpr1 = "*";
 			String testExpr2 = "0,1,10,59";
-			String testExpr3 = "*/10";
+			String testExpr3 = "*/60";
 			String testExpr4 = "0-59";
 			#endregion arrange
 
@@ -38,16 +38,25 @@ namespace DougKlassen.Revit.Cron.Test
 		public void CanParseHoursExpression()
 		{
 			#region arrange
-			CronHours expr;
-			String testExpr = "0,1,10,23";
+			CronHours expr1, expr2, expr3, expr4;
+			String testExpr1 = "*";
+			String testExpr2 = "0,1,10,23";
+			String testExpr3 = "*/24";
+			String testExpr4 = "0-23";
 			#endregion arrange
 
 			#region act
-			expr = new CronHours(testExpr);
+			expr1 = new CronHours(testExpr1);
+			expr2 = new CronHours(testExpr2);
+			expr3 = new CronHours(testExpr3);
+			expr4 = new CronHours(testExpr4);
 			#endregion act
 
 			#region assert
-			Assert.AreEqual(testExpr, expr.ToString());
+			Assert.AreEqual(testExpr1, expr1.ToString());
+			Assert.AreEqual(testExpr2, expr2.ToString());
+			Assert.AreEqual(testExpr3, expr3.ToString());
+			Assert.AreEqual(testExpr4, expr4.ToString());
 			#endregion assert
 		}
 
@@ -55,16 +64,25 @@ namespace DougKlassen.Revit.Cron.Test
 		public void CanParseDaysExpression()
 		{
 			#region arrange
-			CronDays expr;
-			String testExpr = "1,2,31";
+			CronDays expr1, expr2, expr3, expr4;
+			String testExpr1 = "*";
+			String testExpr2 = "1,10,31";
+			String testExpr3 = "*/31";
+			String testExpr4 = "1-31";
 			#endregion arrange
 
 			#region act
-			expr = new CronDays(testExpr);
+			expr1 = new CronDays(testExpr1);
+			expr2 = new CronDays(testExpr2);
+			expr3 = new CronDays(testExpr3);
+			expr4 = new CronDays(testExpr4);
 			#endregion act
 
 			#region assert
-			Assert.AreEqual(testExpr, expr.ToString());
+			Assert.AreEqual(testExpr1, expr1.ToString());
+			Assert.AreEqual(testExpr2, expr2.ToString());
+			Assert.AreEqual(testExpr3, expr3.ToString());
+			Assert.AreEqual(testExpr4, expr4.ToString());
 			#endregion assert
 		}
 
@@ -72,16 +90,25 @@ namespace DougKlassen.Revit.Cron.Test
 		public void CanParseMonthsExpression()
 		{
 			#region arrange
-			CronMonths expr;
-			String testExpr = "1,2,12";
+			CronMonths expr1, expr2, expr3, expr4;
+			String testExpr1 = "*";
+			String testExpr2 = "1,6,12";
+			String testExpr3 = "*/12";
+			String testExpr4 = "1-12";
 			#endregion arrange
 
 			#region act
-			expr = new CronMonths(testExpr);
+			expr1 = new CronMonths(testExpr1);
+			expr2 = new CronMonths(testExpr2);
+			expr3 = new CronMonths(testExpr3);
+			expr4 = new CronMonths(testExpr4);
 			#endregion act
 
 			#region assert
-			Assert.AreEqual(testExpr, expr.ToString());
+			Assert.AreEqual(testExpr1, expr1.ToString());
+			Assert.AreEqual(testExpr2, expr2.ToString());
+			Assert.AreEqual(testExpr3, expr3.ToString());
+			Assert.AreEqual(testExpr4, expr4.ToString());
 			#endregion assert
 		}
 
@@ -89,16 +116,22 @@ namespace DougKlassen.Revit.Cron.Test
 		public void CanParseWeekdaysExpression()
 		{
 			#region arrange
-			CronWeekDays expr;
-			String testExpr = "0,1,6";
+			CronWeekDays expr1, expr2, expr3, expr4;
+			String testExpr1 = "*";
+			String testExpr2 = "0,1,6";
+			String testExpr3 = "0-6";
 			#endregion arrange
 
 			#region act
-			expr = new CronWeekDays(testExpr);
+			expr1 = new CronWeekDays(testExpr1);
+			expr2 = new CronWeekDays(testExpr2);
+			expr3 = new CronWeekDays(testExpr3);
 			#endregion act
 
 			#region assert
-			Assert.AreEqual(testExpr, expr.ToString());
+			Assert.AreEqual(testExpr1, expr1.ToString());
+			Assert.AreEqual(testExpr2, expr2.ToString());
+			Assert.AreEqual(testExpr3, expr3.ToString());
 			#endregion assert
 		}
 

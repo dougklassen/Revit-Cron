@@ -31,7 +31,7 @@ namespace DougKlassen.Revit.Cron
 		/// <summary>
 		/// match an expression denominated by a number in the range 1 to 60
 		/// </summary>
-		public Regex denominatedMinutesRegex = new Regex(@"^\*\/(?<d>60|[1-5][0-9]|[1-9])$");
+		public Regex denominatedRegex = new Regex(@"^\*\/(?<d>60|[1-5][0-9]|[1-9])$");
 
 		public CronMinutes(String expr)
 		{
@@ -65,10 +65,10 @@ namespace DougKlassen.Revit.Cron
 				runTimes = vals.ToArray();
 				denominator = null;
 			}
-			else if (denominatedMinutesRegex.IsMatch(expr))
+			else if (denominatedRegex.IsMatch(expr))
 			{
 				runTimes = null;
-				String dString = denominatedMinutesRegex.Match(expr).Groups["d"].Value;
+				String dString = denominatedRegex.Match(expr).Groups["d"].Value;
 				denominator = UInt16.Parse(dString);
 			}
 			else
@@ -83,11 +83,43 @@ namespace DougKlassen.Revit.Cron
 		/// <returns></returns>
 		public IEnumerable<TimeSpan> GetRunTimes()
 		{
-			List<TimeSpan> runTimes = new List<TimeSpan>();
+			List<TimeSpan> runIntervals = new List<TimeSpan>();
 
-			return runTimes;
+			if (runTimes == null && denominator == null)
+			{
+				for (int i = 0; i < 60; i++)
+				{
+					runIntervals.Add(TimeSpan.FromMinutes(i));
+				}
+			}
+			else if (runTimes != null && denominator == null)
+			{
+				foreach (UInt16 time in runTimes)
+				{
+					runIntervals.Add(TimeSpan.FromMinutes(time));
+				}
+			}
+			else if (runTimes == null && denominator != null)
+			{
+				Double denominatedInterval = 60 / (Double)denominator;
+				for (int i = 0; i < denominator; i++)
+				{
+					runIntervals.Add(TimeSpan.FromMinutes(Math.Floor(denominatedInterval * i)));
+				}
+			}
+			else
+			{
+				throw new InvalidOperationException("CronMinutes object is corrupted");
+			}
+
+			return runIntervals;
 		}
 
+		/// <summary>
+		/// Get a string in canonical Cron format. Round trip calls through the constructor are't
+		/// idempotent because contiguous series may be reduced to dash notation
+		/// </summary>
+		/// <returns>The Cron string</returns>
 		public override String ToString()
 		{
 			if (null == runTimes && null == denominator)
@@ -96,24 +128,7 @@ namespace DougKlassen.Revit.Cron
 			}
 			else if (runTimes != null && denominator == null)
 			{
-				StringBuilder exprBuilder = new StringBuilder(String.Empty);
-				if (runTimes.IsContiguous())
-				{
-					exprBuilder.AppendFormat("{0}-{1}", runTimes.Min(), runTimes.Max());
-				}
-				else
-				{
-					exprBuilder.Append(runTimes[0]);
-					if (runTimes.Count() > 1)
-					{
-						for (int i = 1; i < runTimes.Count(); i++)
-						{
-							exprBuilder.AppendFormat(",{0}", runTimes[i]);
-						}
-					}
-					
-				}
-				return exprBuilder.ToString();
+				return runTimes.GetSeriesCronString();
 			}
 			else if (runTimes == null && denominator != null)
 			{
@@ -131,36 +146,57 @@ namespace DougKlassen.Revit.Cron
 	/// </summary>
 	public class CronHours
 	{
-		private UInt16[] runHours;
+		private UInt16[] runTimes;
 		private UInt16? denominator;
 
 		/// <summary>
 		/// match a list of 1 to 24 hour values in the range of 0 to 23
 		/// </summary>
-		public Regex hourRegex = new Regex(@"^((2[0-3])|(1[\d])|([\d]))(,((2[0-3])|(1[\d])|([\d]))){0,23}$");
+		public Regex seriesRegex = new Regex(@"^(2[0-3]|1[\d]|[\d])(,(2[0-3]|1[\d]|[\d])){0,23}$");
+		/// <summary>
+		/// match a range of hours in the form 0-23
+		/// </summary>
+		public Regex rangeRegex = new Regex(@"^(?<s>2[0-3]|1[\d]|[\d])-(?<e>2[0-3]|1[\d]|[\d])");
 		/// <summary>
 		/// match an expression denominated by a number between 1 and 24
 		/// </summary>
-		public Regex denominatedHoursRegex = new Regex(@"^\*\/((2[0-4])|(1[0-9])|[1-9])$");
+		public Regex denominatedRegex = new Regex(@"^\*\/(?<d>2[0-4]|1[\d]|[1-9])$");
 
 		public CronHours(String expr)
 		{
 			if ("*" == expr)
 			{
-				runHours = null;
+				runTimes = null;
 				denominator = null;
 			}
-			else if (hourRegex.IsMatch(expr))
+			else if (seriesRegex.IsMatch(expr))
 			{
-				runHours = Regex.Split(expr, ",")
+				runTimes = Regex.Split(expr, ",")
 					.Select(e => UInt16.Parse(e))
 					.ToArray();
 				denominator = null;
 			}
-			else if (hourRegex.IsMatch(expr))
+			else if (rangeRegex.IsMatch(expr))
 			{
-				runHours = null;
-				String dString = denominatedHoursRegex.Match(expr).Groups['d'].Value;
+				Match m = rangeRegex.Match(expr);
+				UInt16 start = UInt16.Parse(m.Groups["s"].Value);
+				UInt16 end = UInt16.Parse(m.Groups["e"].Value);
+				if (start >= end)
+				{
+					throw new ArgumentException(expr + " is an invalid range");
+				}
+				List<UInt16> vals = new List<UInt16>();
+				for (UInt16 i = start; i <= end; i++)
+				{
+					vals.Add(i);
+				}
+				runTimes = vals.ToArray();
+				denominator = null;
+			}
+			else if (denominatedRegex.IsMatch(expr))
+			{
+				runTimes = null;
+				String dString = denominatedRegex.Match(expr).Groups["d"].Value;
 				denominator = UInt16.Parse(dString);
 			}
 			else
@@ -175,35 +211,54 @@ namespace DougKlassen.Revit.Cron
 		/// <returns></returns>
 		public IEnumerable<TimeSpan> GetRunTimes()
 		{
-			List<TimeSpan> runTimes = new List<TimeSpan>();
+			List<TimeSpan> runIntervals = new List<TimeSpan>();
 
-			return runTimes;
+			if (runTimes == null && denominator == null)
+			{
+				for (int i = 0; i < 24; i++)
+				{
+					runIntervals.Add(TimeSpan.FromHours(i));
+				}
+			}
+			else if (runTimes != null && denominator == null)
+			{
+				foreach (UInt16 time in runTimes)
+				{
+					runIntervals.Add(TimeSpan.FromHours(time));
+				}
+			}
+			else if (runTimes == null && denominator != null)
+			{
+				Double denominatedInterval = 60 / (Double)denominator;
+				for (int i = 0; i < denominator; i++)
+				{
+					runIntervals.Add(TimeSpan.FromHours(Math.Floor(denominatedInterval * i)));
+				}
+			}
+			else
+			{
+				throw new InvalidOperationException("CronMinutes object is corrupted");
+			}
+
+			return runIntervals;
 		}
 
 		/// <summary>
-		/// Return the hours expression in Cron format
+		/// Get a string in canonical Cron format. Round trip calls through the constructor are't
+		/// idempotent because contiguous series may be reduced to dash notation
 		/// </summary>
-		/// <returns>The Cron String</returns>
+		/// <returns>The Cron string</returns>
 		public override String ToString()
 		{
-			if (runHours == null && denominator == null)
+			if (runTimes == null && denominator == null)
 			{
 				return "*";
 			}
-			else if (runHours != null && denominator == null)
+			else if (runTimes != null && denominator == null)
 			{
-				StringBuilder exprBuilder = new StringBuilder(String.Empty);
-				exprBuilder.Append(runHours[0]);
-				if (runHours.Count() > 1)
-				{
-					for (int i = 1; i < runHours.Count(); i++)
-					{
-						exprBuilder.AppendFormat(",{0}", runHours[i]);
-					}
-				}
-				return exprBuilder.ToString();
+				return runTimes.GetSeriesCronString();
 			}
-			else if (runHours == null && denominator != null)
+			else if (runTimes == null && denominator != null)
 			{
 				return "*/" + denominator;
 			}
@@ -219,36 +274,57 @@ namespace DougKlassen.Revit.Cron
 	/// </summary>
 	public class CronDays
 	{
-		private UInt16[] runDays;
+		private UInt16[] runTimes;
 		private UInt16? denominator;
 
 		/// <summary>
 		/// match a list of 1 to 31 days of the month between 1 and 31
 		/// </summary>
-		public Regex daysRegex = new Regex(@"^(3[01]|[12][\d]|[1-9])(,(3[01]|[12][\d]|[1-9])){0,30}$");
+		public Regex seriesRegex = new Regex(@"^(3[01]|[12][\d]|[1-9])(,(3[01]|[12][\d]|[1-9])){0,30}$");
+		/// <summary>
+		/// match a range of days in the form 1-31
+		/// </summary>
+		public Regex rangeRegex = new Regex(@"^(?<s>3[01]|[12][\d]|[1-9])-(?<e>3[01]|[12][\d]|[1-9])");
 		/// <summary>
 		/// match an expression denominated by a number between 1 and 31
 		/// </summary>
-		public Regex denominatedDaysRegex = new Regex(@"^\*\/(3[01]|[12][\d]|[1-9])$");
+		public Regex denominatedRegex = new Regex(@"^\*\/(?<d>3[01]|[12][\d]|[1-9])$");
 
 		public CronDays(String expr)
 		{
 			if ("*" == expr)
 			{
-				runDays = null;
+				runTimes = null;
 				denominator = null;
 			}
-			else if (daysRegex.IsMatch(expr))
+			else if (seriesRegex.IsMatch(expr))
 			{
-				runDays = Regex.Split(expr, ",")
+				runTimes = Regex.Split(expr, ",")
 					.Select(e => UInt16.Parse(e))
 					.ToArray();
 				denominator = null;
 			}
-			else if (daysRegex.IsMatch(expr))
+			else if (rangeRegex.IsMatch(expr))
 			{
-				runDays = null;
-				String dString = denominatedDaysRegex.Match(expr).Groups['d'].Value;
+				Match m = rangeRegex.Match(expr);
+				UInt16 start = UInt16.Parse(m.Groups["s"].Value);
+				UInt16 end = UInt16.Parse(m.Groups["e"].Value);
+				if (start >= end)
+				{
+					throw new ArgumentException(expr + " is an invalid range");
+				}
+				List<UInt16> vals = new List<UInt16>();
+				for (UInt16 i = start; i <= end; i++)
+				{
+					vals.Add(i);
+				}
+				runTimes = vals.ToArray();
+				denominator = null;
+			}
+			else if (denominatedRegex.IsMatch(expr))
+			{
+				runTimes = null;
+				String dString = denominatedRegex.Match(expr).Groups["d"].Value;
 				denominator = UInt16.Parse(dString);
 			}
 			else
@@ -263,31 +339,54 @@ namespace DougKlassen.Revit.Cron
 		/// <returns></returns>
 		public IEnumerable<TimeSpan> GetRunTimes()
 		{
-			List<TimeSpan> runTimes = new List<TimeSpan>();
+			List<TimeSpan> runIntervals = new List<TimeSpan>();
 
-			return runTimes;
+			if (runTimes == null && denominator == null)
+			{
+				for (int i = 0; i < 31; i++)
+				{
+					runIntervals.Add(TimeSpan.FromHours(24 * i));
+				}
+			}
+			else if (runTimes != null && denominator == null)
+			{
+				foreach (UInt16 time in runTimes)
+				{
+					runIntervals.Add(TimeSpan.FromHours(24 * time));
+				}
+			}
+			else if (runTimes == null && denominator != null)
+			{
+				Double denominatedInterval = 60 / (Double)denominator;
+				for (int i = 0; i < denominator; i++)
+				{
+					runIntervals.Add(TimeSpan.FromHours(24 * Math.Floor(denominatedInterval * i)));
+				}
+			}
+			else
+			{
+				throw new InvalidOperationException("CronMinutes object is corrupted");
+			}
+
+			return runIntervals;
 		}
 
+		/// <summary>
+		/// Get a string in canonical Cron format. Round trip calls through the constructor are't
+		/// idempotent because contiguous series may be reduced to dash notation
+		/// </summary>
+		/// <returns>The Cron string</returns>
 		public override String ToString()
 		{
-			if (runDays == null && denominator == null)
+			if (runTimes == null && denominator == null)
 			{
 				return "*";
 			}
-			else if (runDays != null && denominator == null)
+			else if (runTimes != null && denominator == null)
 			{
-				StringBuilder exprBuilder = new StringBuilder(String.Empty);
-				exprBuilder.Append(runDays[0]);
-				if (runDays.Count() > 1)
-				{
-					for (int i = 1; i < runDays.Count(); i++)
-					{
-						exprBuilder.AppendFormat(",{0}", runDays[i]);
-					}
-				}
-				return exprBuilder.ToString();
+				return runTimes.GetSeriesCronString();
 			}
-			else if (runDays == null && denominator != null)
+			else if (runTimes == null && denominator != null)
 			{
 				return "*/" + denominator;
 			}
@@ -303,36 +402,57 @@ namespace DougKlassen.Revit.Cron
 	/// </summary>
 	public class CronMonths
 	{
-		private UInt16[] runMonths;
+		private UInt16[] runTimes;
 		private UInt16? denominator;
 
 		/// <summary>
 		/// match a list of 1 to 12 days of the month between 1 and 12
 		/// </summary>
-		public Regex monthsRegex = new Regex(@"^(1[0-2]|[1-9])(,(1[0-2]|[1-9])){0,11}$");
+		public Regex seriesRegex = new Regex(@"^(1[0-2]|[1-9])(,(1[0-2]|[1-9])){0,11}$");
+		/// <summary>
+		/// match a range of months in the form 1-12
+		/// </summary>
+		public Regex rangeRegex = new Regex(@"^(?<s>1[0-2]|[1-9])-(?<e>1[0-2]|[1-9])");
 		/// <summary>
 		/// match an expression denominated by a number between 1 and 12
 		/// </summary>
-		public Regex denominatedDaysRegex = new Regex(@"^\*\/(1[0-2]|[1-9])$");
+		public Regex denominatedRegex = new Regex(@"^\*\/(?<d>1[0-2]|[1-9])$");
 
 		public CronMonths(String expr)
 		{
 			if ("*" == expr)
 			{
-				runMonths = null;
+				runTimes = null;
 				denominator = null;
 			}
-			else if (monthsRegex.IsMatch(expr))
+			else if (seriesRegex.IsMatch(expr))
 			{
-				runMonths = Regex.Split(expr, ",")
+				runTimes = Regex.Split(expr, ",")
 					.Select(e => UInt16.Parse(e))
 					.ToArray();
 				denominator = null;
 			}
-			else if (monthsRegex.IsMatch(expr))
+			else if (rangeRegex.IsMatch(expr))
 			{
-				runMonths = null;
-				String dString = denominatedDaysRegex.Match(expr).Groups['d'].Value;
+				Match m = rangeRegex.Match(expr);
+				UInt16 start = UInt16.Parse(m.Groups["s"].Value);
+				UInt16 end = UInt16.Parse(m.Groups["e"].Value);
+				if (start >= end)
+				{
+					throw new ArgumentException(expr + " is an invalid range");
+				}
+				List<UInt16> vals = new List<UInt16>();
+				for (UInt16 i = start; i <= end; i++)
+				{
+					vals.Add(i);
+				}
+				runTimes = vals.ToArray();
+				denominator = null;
+			}
+			else if (denominatedRegex.IsMatch(expr))
+			{
+				runTimes = null;
+				String dString = denominatedRegex.Match(expr).Groups["d"].Value;
 				denominator = UInt16.Parse(dString);
 			}
 			else
@@ -347,31 +467,54 @@ namespace DougKlassen.Revit.Cron
 		/// <returns></returns>
 		public IEnumerable<TimeSpan> GetRunTimes()
 		{
-			List<TimeSpan> runTimes = new List<TimeSpan>();
+			List<TimeSpan> runIntervals = new List<TimeSpan>();
 
-			return runTimes;
+			if (runTimes == null && denominator == null)
+			{
+				for (int i = 0; i < 12; i++)
+				{
+					runIntervals.Add(TimeSpan.FromHours(31 * 24 * i));
+				}
+			}
+			else if (runTimes != null && denominator == null)
+			{
+				foreach (UInt16 time in runTimes)
+				{
+					runIntervals.Add(TimeSpan.FromHours(31 * 24 * time));
+				}
+			}
+			else if (runTimes == null && denominator != null)
+			{
+				Double denominatedInterval = 60 / (Double)denominator;
+				for (int i = 0; i < denominator; i++)
+				{
+					runIntervals.Add(TimeSpan.FromHours(31 * 24 * Math.Floor(denominatedInterval * i)));
+				}
+			}
+			else
+			{
+				throw new InvalidOperationException("CronMinutes object is corrupted");
+			}
+
+			return runIntervals;
 		}
 
+		/// <summary>
+		/// Get a string in canonical Cron format. Round trip calls through the constructor are't
+		/// idempotent because contiguous series may be reduced to dash notation
+		/// </summary>
+		/// <returns>The Cron string</returns>
 		public override String ToString()
 		{
-			if (runMonths == null && denominator == null)
+			if (runTimes == null && denominator == null)
 			{
 				return "*";
 			}
-			else if (runMonths != null && denominator == null)
+			else if (runTimes != null && denominator == null)
 			{
-				StringBuilder exprBuilder = new StringBuilder(String.Empty);
-				exprBuilder.Append(runMonths[0]);
-				if (runMonths.Count() > 1)
-				{
-					for (int i = 1; i < runMonths.Count(); i++)
-					{
-						exprBuilder.AppendFormat(",{0}", runMonths[i]);
-					}
-				}
-				return exprBuilder.ToString();
+				return runTimes.GetSeriesCronString();
 			}
-			else if (runMonths == null && denominator != null)
+			else if (runTimes == null && denominator != null)
 			{
 				return "*/" + denominator;
 			}
@@ -387,24 +530,44 @@ namespace DougKlassen.Revit.Cron
 	/// </summary>
 	public class CronWeekDays
 	{
-		private UInt16[] runDays;
+		private UInt16[] runTimes;
 
 		/// <summary>
-		/// match a list of 1 to 7 days of the week between 0 and 6, 0 equals Sunday
+		/// match a list of 1 to 7 days of the week between 0 and 6, with 0 equal to Sunday
 		/// </summary>
-		public Regex daysRegex = new Regex(@"^[0-6](,[0-6]){0,6}$");
+		public Regex seriesRegex = new Regex(@"^[0-6](,[0-6]){0,6}$");
+		/// <summary>
+		/// match a range of week days in the form 0-6
+		/// </summary>
+		public Regex rangeRegex = new Regex(@"^(?<s>[0-6])-(?<e>[0-6])");
 
 		public CronWeekDays(String expr)
 		{
 			if ("*" == expr)
 			{
-				runDays = null;
+				runTimes = null;
 			}
-			else if (daysRegex.IsMatch(expr))
+			else if (seriesRegex.IsMatch(expr))
 			{
-				runDays = Regex.Split(expr, ",")
+				runTimes = Regex.Split(expr, ",")
 					.Select(e => UInt16.Parse(e))
 					.ToArray();
+			}
+			else if (rangeRegex.IsMatch(expr))
+			{
+				Match m = rangeRegex.Match(expr);
+				UInt16 start = UInt16.Parse(m.Groups["s"].Value);
+				UInt16 end = UInt16.Parse(m.Groups["e"].Value);
+				if (start >= end)
+				{
+					throw new ArgumentException(expr + " is an invalid range");
+				}
+				List<UInt16> vals = new List<UInt16>();
+				for (UInt16 i = start; i <= end; i++)
+				{
+					vals.Add(i);
+				}
+				runTimes = vals.ToArray();
 			}
 			else
 			{
@@ -423,24 +586,20 @@ namespace DougKlassen.Revit.Cron
 			return runTimes;
 		}
 
+		/// <summary>
+		/// Get a string in canonical Cron format. Round trip calls through the constructor are't
+		/// idempotent because contiguous series may be reduced to dash notation
+		/// </summary>
+		/// <returns>The Cron string</returns>
 		public override String ToString()
 		{
-			if (runDays == null)
+			if (runTimes == null)
 			{
 				return "*";
 			}
 			else
 			{
-				StringBuilder exprBuilder = new StringBuilder(String.Empty);
-				exprBuilder.Append(runDays[0]);
-				if (runDays.Count() > 1)
-				{
-					for (int i = 1; i < runDays.Count(); i++)
-					{
-						exprBuilder.AppendFormat(",{0}", runDays[i]);
-					}
-				}
-				return exprBuilder.ToString();
+				return runTimes.GetSeriesCronString();
 			}
 		}
 	}

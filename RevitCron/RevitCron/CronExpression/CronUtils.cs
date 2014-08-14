@@ -14,6 +14,10 @@ namespace DougKlassen.Revit.Cron
 		{
 			Boolean contig = true;
 			Int64[] array = set.ToArray();
+			if (array.Count() < 2)
+			{
+				return false;	//the loop below won't execute for a set with only one value, so this must be checked first
+			}
 
 			Array.Sort(array);
 
@@ -53,6 +57,43 @@ namespace DougKlassen.Revit.Cron
 				}
 			}
 			return product;
+		}
+
+		/// <summary>
+		/// Generates a Cron string representation of a series of integer values
+		/// </summary>
+		/// <param name="runTimes">A list of values representing run times</param>
+		/// <returns>A Cron expression representing the values</returns>
+		public static String GetSeriesCronString(this IList<Int64> runTimes)
+		{
+			StringBuilder exprBuilder = new StringBuilder(String.Empty);
+			if (runTimes.IsContiguous())
+			{
+				exprBuilder.AppendFormat("{0}-{1}", runTimes.Min(), runTimes.Max());
+			}
+			else
+			{
+				exprBuilder.Append(runTimes[0]);
+				if (runTimes.Count() > 1)
+				{
+					for (int i = 1; i < runTimes.Count(); i++)
+					{
+						exprBuilder.AppendFormat(",{0}", runTimes[i]);
+					}
+				}
+			}
+			return exprBuilder.ToString();
+		}
+
+		/// <summary>
+		/// Generates a Cron string representation of a series of integer values
+		/// </summary>
+		/// <param name="runTimes">A list of values representing run times</param>
+		/// <returns>A Cron expression representing the values</returns>
+		public static String GetSeriesCronString(this UInt16[] runTimes)
+		{
+			IList<Int64> list = Array.ConvertAll<UInt16, Int64>(runTimes, s => (Int64)s).ToList();
+			return list.GetSeriesCronString();
 		}
 	}
 }
