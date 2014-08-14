@@ -6,10 +6,15 @@ using System.Text;
 namespace DougKlassen.Revit.Cron
 {
 	/// <summary>
-	/// Evaluators used for Cron expressions
+	/// Methods used for parsing and calculating Cron expressions
 	/// </summary>
 	public static class CronUtils
 	{
+		/// <summary>
+		/// Determines whether a collection of unsorted integers is contiguous, seperated by a value of 1 from minimum to maximum
+		/// </summary>
+		/// <param name="set">The collection to evaluate</param>
+		/// <returns>Whether the collection is contiguous</returns>
 		public static Boolean IsContiguous(this IEnumerable<Int64> set)
 		{
 			Boolean contig = true;
@@ -32,6 +37,11 @@ namespace DougKlassen.Revit.Cron
 			return contig;
 		}
 
+		/// <summary>
+		/// Determines whether an array of unsorted integers is contiguous, seperated by a value of 1 from minimum to maximum
+		/// </summary>
+		/// <param name="set">The collection to evaluate</param>
+		/// <returns>Whether the collection is contiguous</returns>
 		public static Boolean IsContiguous(this UInt16[] set)
 		{
 			Int64[] array = Array.ConvertAll<UInt16, Int64>(set, n => (Int64)n);

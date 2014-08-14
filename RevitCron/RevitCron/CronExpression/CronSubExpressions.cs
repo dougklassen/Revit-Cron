@@ -21,18 +21,22 @@ namespace DougKlassen.Revit.Cron
 		private UInt16? denominator;
 
 		/// <summary>
-		/// match a list of 1 to 60 minute values in the range 0 to 59
+		/// Match a list of 1 to 60 minute values in the range 0 to 59
 		/// </summary>
 		public Regex seriesRegex = new Regex(@"^([1-5][\d]|[\d])(,([1-5][\d]|[\d])){0,59}$");	//todo: prevent duplicates
 		/// <summary>
-		/// match a range of minutes in the form 0-59
+		/// Match a range of minutes in the form 0-59
 		/// </summary>
 		public Regex rangeRegex = new Regex(@"^(?<s>[1-5][\d]|[\d])-(?<e>[1-5][\d]|[\d])");
 		/// <summary>
-		/// match an expression denominated by a number in the range 1 to 60
+		/// Match an expression denominated by a number in the range 1 to 60
 		/// </summary>
 		public Regex denominatedRegex = new Regex(@"^\*\/(?<d>60|[1-5][0-9]|[1-9])$");
 
+		/// <summary>
+		/// Ctor based on parsing a string representing the minutes term of a Cron expression
+		/// </summary>
+		/// <param name="expr">A string representing the minutes term of a Cron expression</param>
 		public CronMinutes(String expr)
 		{
 			if ("*" == expr)
@@ -116,7 +120,7 @@ namespace DougKlassen.Revit.Cron
 		}
 
 		/// <summary>
-		/// Get a string in canonical Cron format. Round trip calls through the constructor are't
+		/// Get a string in canonical Cron format. Round trip calls through the constructor aren't
 		/// idempotent because contiguous series may be reduced to dash notation
 		/// </summary>
 		/// <returns>The Cron string</returns>
@@ -150,18 +154,22 @@ namespace DougKlassen.Revit.Cron
 		private UInt16? denominator;
 
 		/// <summary>
-		/// match a list of 1 to 24 hour values in the range of 0 to 23
+		/// Match a list of 1 to 24 hour values in the range of 0 to 23
 		/// </summary>
 		public Regex seriesRegex = new Regex(@"^(2[0-3]|1[\d]|[\d])(,(2[0-3]|1[\d]|[\d])){0,23}$");
 		/// <summary>
-		/// match a range of hours in the form 0-23
+		/// Match a range of hours in the form 0-23
 		/// </summary>
 		public Regex rangeRegex = new Regex(@"^(?<s>2[0-3]|1[\d]|[\d])-(?<e>2[0-3]|1[\d]|[\d])");
 		/// <summary>
-		/// match an expression denominated by a number between 1 and 24
+		/// Match an expression denominated by a number between 1 and 24
 		/// </summary>
 		public Regex denominatedRegex = new Regex(@"^\*\/(?<d>2[0-4]|1[\d]|[1-9])$");
 
+		/// <summary>
+		/// Ctor based on parsing a string representing the hours term of a Cron expression
+		/// </summary>
+		/// <param name="expr">A string representing the hours term of a Cron expression</param>
 		public CronHours(String expr)
 		{
 			if ("*" == expr)
@@ -270,7 +278,7 @@ namespace DougKlassen.Revit.Cron
 	}
 
 	/// <summary>
-	/// A class encapsulating the days of the month term of a CronExpression. Days are expressed from 1 to 31.
+	/// A class encapsulating the days of the month term of a CronExpression. Days are expressed from 1 to 31, with 1 representing the 1st of the month.
 	/// </summary>
 	public class CronDays
 	{
@@ -278,18 +286,22 @@ namespace DougKlassen.Revit.Cron
 		private UInt16? denominator;
 
 		/// <summary>
-		/// match a list of 1 to 31 days of the month between 1 and 31
+		/// Match a list of 1 to 31 days of the month between 1 and 31
 		/// </summary>
 		public Regex seriesRegex = new Regex(@"^(3[01]|[12][\d]|[1-9])(,(3[01]|[12][\d]|[1-9])){0,30}$");
 		/// <summary>
-		/// match a range of days in the form 1-31
+		/// Match a range of days in the form 1-31
 		/// </summary>
 		public Regex rangeRegex = new Regex(@"^(?<s>3[01]|[12][\d]|[1-9])-(?<e>3[01]|[12][\d]|[1-9])");
 		/// <summary>
-		/// match an expression denominated by a number between 1 and 31
+		/// Match an expression denominated by a number between 1 and 31
 		/// </summary>
 		public Regex denominatedRegex = new Regex(@"^\*\/(?<d>3[01]|[12][\d]|[1-9])$");
 
+		/// <summary>
+		/// Ctor based on parsing a string representing the days term of a Cron expression
+		/// </summary>
+		/// <param name="expr">A string representing the days term of a Cron expression</param>
 		public CronDays(String expr)
 		{
 			if ("*" == expr)
@@ -398,7 +410,7 @@ namespace DougKlassen.Revit.Cron
 	}
 
 	/// <summary>
-	/// A class encapsulating the months term of a CronExpression. Months are expressed from 1 to 12.
+	/// A class encapsulating the months term of a CronExpression. Months are expressed from 1 to 12, with 1 representing January.
 	/// </summary>
 	public class CronMonths
 	{
@@ -418,6 +430,10 @@ namespace DougKlassen.Revit.Cron
 		/// </summary>
 		public Regex denominatedRegex = new Regex(@"^\*\/(?<d>1[0-2]|[1-9])$");
 
+		/// <summary>
+		/// Ctor based on parsing a string representing the months term of a Cron expression
+		/// </summary>
+		/// <param name="expr">A string representing the months term of a Cron expression</param>
 		public CronMonths(String expr)
 		{
 			if ("*" == expr)
@@ -541,6 +557,10 @@ namespace DougKlassen.Revit.Cron
 		/// </summary>
 		public Regex rangeRegex = new Regex(@"^(?<s>[0-6])-(?<e>[0-6])");
 
+		/// <summary>
+		/// Ctor based on parsing a string representing the minutes term of a Cron expression
+		/// </summary>
+		/// <param name="expr">A string representing the minutes term of a Cron expression</param>
 		public CronWeekDays(String expr)
 		{
 			if ("*" == expr)

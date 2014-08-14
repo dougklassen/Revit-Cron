@@ -61,6 +61,10 @@ namespace DougKlassen.Revit.Cron
 			//todo: check for disallowed day/month combinations
 		}
 
+		/// <summary>
+		/// Get all run times during the current year
+		/// </summary>
+		/// <returns>A collection of all run times from January 1st to December 31st of the current year</returns>
 		public IEnumerable<DateTime> GetAnnualRunTimes()
 		{
 			IEnumerable<TimeSpan> runIntervals = new List<TimeSpan>();
