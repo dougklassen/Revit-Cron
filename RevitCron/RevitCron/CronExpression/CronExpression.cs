@@ -67,18 +67,19 @@ namespace DougKlassen.Revit.Cron
 		/// <returns>A collection of all run times from January 1st to December 31st of the current year</returns>
 		public IEnumerable<DateTime> GetAnnualRunTimes()
 		{
-			IEnumerable<TimeSpan> runIntervals = new List<TimeSpan>();
+			List<TimeSpan> runIntervals = new List<TimeSpan>();
 			if (!Days.IsWildCard() && WeekDays.IsWildCard())
 			{
 				runIntervals = CronUtils.GetCartesianProduct(Months.GetRunTimes(), Days.GetRunTimes());
 			}
 			else if (Days.IsWildCard() && !WeekDays.IsWildCard())
 			{
-				
+				runIntervals = CronUtils.GetCartesianProduct(Months.GetRunTimes(), WeekDays.GetRunTimes());
 			}
 			else	//neither is a wildcard so use both
 			{
 				runIntervals = CronUtils.GetCartesianProduct(Months.GetRunTimes(), Days.GetRunTimes());
+				runIntervals.AddRange(Months * WeekDays);
 			}
 			runIntervals = CronUtils.GetCartesianProduct(runIntervals, Hours.GetRunTimes());
 			runIntervals = CronUtils.GetCartesianProduct(runIntervals, Minutes.GetRunTimes()); 

@@ -12,17 +12,30 @@ namespace DougKlassen.Revit.Cron
 		/// Get the runtimes represented by the task, represented as a timespan past the next largest increment of time
 		/// </summary>
 		/// <returns>A collection of run times</returns>
-		public abstract IEnumerable<TimeSpan> GetRunTimes();
+		public abstract IList<TimeSpan> GetRunTimes();
+
 		/// <summary>
 		/// Returns whether the sub-expression is assigned a wildcard value
 		/// </summary>
 		/// <returns>Whether the expression is a wildcard</returns>
 		public abstract Boolean IsWildCard();
+
 		/// <summary>
-		/// Get all values as a list of integers
+		/// Expands a term into the set of all run times it represents within the the next largest unit of time
 		/// </summary>
-		/// <returns>An array of integers</returns>
+		/// <returns>An array of integers representing run times</returns>
 		public abstract IEnumerable<UInt16> Expand();
+
+		/// <summary>
+		/// Overload for calculating the Cartesian product of two terms
+		/// </summary>
+		/// <param name="larger">The term representing the larger interval</param>
+		/// <param name="smaller">The term representing the smaller term</param>
+		/// <returns>The product of the two terms</returns>
+		public static IEnumerable<TimeSpan> operator *(CronSubExpression larger, CronSubExpression smaller)
+		{
+			return CronUtils.GetCartesianProduct(larger.GetRunTimes(), smaller.GetRunTimes());
+		}
 	}
 
 	/// <summary>
@@ -43,10 +56,12 @@ namespace DougKlassen.Revit.Cron
 		/// Match a list of 1 to 60 minute values in the range 0 to 59
 		/// </summary>
 		public static readonly Regex seriesRegex = new Regex(@"^([1-5][\d]|[\d])(,([1-5][\d]|[\d])){0,59}$");	//todo: prevent duplicates
+
 		/// <summary>
 		/// Match a range of minutes in the form 0-59
 		/// </summary>
 		public static readonly Regex rangeRegex = new Regex(@"^(?<s>[1-5][\d]|[\d])-(?<e>[1-5][\d]|[\d])");
+
 		/// <summary>
 		/// Match an expression denominated by a number in the range 1 to 60
 		/// </summary>
@@ -104,7 +119,7 @@ namespace DougKlassen.Revit.Cron
 		/// Get the runtimes represented by the task, represented as minutes past every hour
 		/// </summary>
 		/// <returns>A collection of run times</returns>
-		public override IEnumerable<TimeSpan> GetRunTimes()
+		public override IList<TimeSpan> GetRunTimes()
 		{
 			List<TimeSpan> runIntervals = new List<TimeSpan>();
 
@@ -125,6 +140,10 @@ namespace DougKlassen.Revit.Cron
 			return (runTimes == null && denominator == null);
 		}
 
+		/// <summary>
+		/// Expands an expression into a complete set of run times, expressed as minutes past the beginning of the hour
+		/// </summary>
+		/// <returns>An array of integers representing run times</returns>
 		public override IEnumerable<UInt16> Expand()
 		{
 			List<UInt16> runIntervals = new List<UInt16>();
@@ -196,15 +215,17 @@ namespace DougKlassen.Revit.Cron
 		/// <summary>
 		/// Match a list of 1 to 24 hour values in the range of 0 to 23
 		/// </summary>
-		public Regex seriesRegex = new Regex(@"^(2[0-3]|1[\d]|[\d])(,(2[0-3]|1[\d]|[\d])){0,23}$");
+		public static readonly Regex seriesRegex = new Regex(@"^(2[0-3]|1[\d]|[\d])(,(2[0-3]|1[\d]|[\d])){0,23}$");
+
 		/// <summary>
 		/// Match a range of hours in the form 0-23
 		/// </summary>
-		public Regex rangeRegex = new Regex(@"^(?<s>2[0-3]|1[\d]|[\d])-(?<e>2[0-3]|1[\d]|[\d])");
+		public static readonly Regex rangeRegex = new Regex(@"^(?<s>2[0-3]|1[\d]|[\d])-(?<e>2[0-3]|1[\d]|[\d])");
+
 		/// <summary>
 		/// Match an expression denominated by a number between 1 and 24
 		/// </summary>
-		public Regex denominatedRegex = new Regex(@"^\*\/(?<d>2[0-4]|1[\d]|[1-9])$");
+		public static readonly Regex denominatedRegex = new Regex(@"^\*\/(?<d>2[0-4]|1[\d]|[1-9])$");
 
 		/// <summary>
 		/// Ctor based on parsing a string representing the hours term of a Cron expression
@@ -257,11 +278,11 @@ namespace DougKlassen.Revit.Cron
 		/// Get the runtimes represented by the task, represented as hours past midnite
 		/// </summary>
 		/// <returns></returns>
-		public override IEnumerable<TimeSpan> GetRunTimes()
+		public override IList<TimeSpan> GetRunTimes()
 		{
 			List<TimeSpan> runIntervals = new List<TimeSpan>();
 
-			foreach (UInt16 time in runTimes)
+			foreach (UInt16 time in this.Expand())
 			{
 				runIntervals.Add(TimeSpan.FromHours(time));
 			}
@@ -278,6 +299,10 @@ namespace DougKlassen.Revit.Cron
 			return (runTimes == null && denominator == null);
 		}
 
+		/// <summary>
+		/// Expands an expression into a complete set of run times, expressed as hours past midnite
+		/// </summary>
+		/// <returns>An array of integers representing run times</returns>
 		public override IEnumerable<UInt16> Expand()
 		{
 			List<UInt16> runIntervals = new List<UInt16>();
@@ -349,15 +374,17 @@ namespace DougKlassen.Revit.Cron
 		/// <summary>
 		/// Match a list of 1 to 31 days of the month between 1 and 31
 		/// </summary>
-		public Regex seriesRegex = new Regex(@"^(3[01]|[12][\d]|[1-9])(,(3[01]|[12][\d]|[1-9])){0,30}$");
+		public static readonly Regex seriesRegex = new Regex(@"^(3[01]|[12][\d]|[1-9])(,(3[01]|[12][\d]|[1-9])){0,30}$");
+
 		/// <summary>
 		/// Match a range of days in the form 1-31
 		/// </summary>
-		public Regex rangeRegex = new Regex(@"^(?<s>3[01]|[12][\d]|[1-9])-(?<e>3[01]|[12][\d]|[1-9])");
+		public static readonly Regex rangeRegex = new Regex(@"^(?<s>3[01]|[12][\d]|[1-9])-(?<e>3[01]|[12][\d]|[1-9])");
+
 		/// <summary>
 		/// Match an expression denominated by a number between 1 and 31
 		/// </summary>
-		public Regex denominatedRegex = new Regex(@"^\*\/(?<d>3[01]|[12][\d]|[1-9])$");
+		public static readonly Regex denominatedRegex = new Regex(@"^\*\/(?<d>3[01]|[12][\d]|[1-9])$");
 
 		/// <summary>
 		/// Ctor based on parsing a string representing the days term of a Cron expression
@@ -410,11 +437,11 @@ namespace DougKlassen.Revit.Cron
 		/// Get the runtimes represented by the task, represented as days past the first of the month
 		/// </summary>
 		/// <returns></returns>
-		public override IEnumerable<TimeSpan> GetRunTimes()
+		public override IList<TimeSpan> GetRunTimes()
 		{
 			List<TimeSpan> runIntervals = new List<TimeSpan>();
 
-			foreach (UInt16 time in runTimes)
+			foreach (UInt16 time in Expand())
 			{
 				runIntervals.Add(TimeSpan.FromDays(time));
 			}
@@ -422,6 +449,10 @@ namespace DougKlassen.Revit.Cron
 			return runIntervals;
 		}
 
+		/// <summary>
+		/// Expands an expression into a complete set of run times, expressed as days past the first of the month
+		/// </summary>
+		/// <returns>An array of integers representing run times</returns>
 		public override IEnumerable<ushort> Expand()
 		{
 			List<UInt16> runIntervals = new List<UInt16>();
@@ -502,15 +533,17 @@ namespace DougKlassen.Revit.Cron
 		/// <summary>
 		/// match a list of 1 to 12 days of the month between 1 and 12
 		/// </summary>
-		public Regex seriesRegex = new Regex(@"^(1[0-2]|[1-9])(,(1[0-2]|[1-9])){0,11}$");
+		public static readonly Regex seriesRegex = new Regex(@"^(1[0-2]|[1-9])(,(1[0-2]|[1-9])){0,11}$");
+
 		/// <summary>
 		/// match a range of months in the form 1-12
 		/// </summary>
-		public Regex rangeRegex = new Regex(@"^(?<s>1[0-2]|[1-9])-(?<e>1[0-2]|[1-9])");
+		public static readonly Regex rangeRegex = new Regex(@"^(?<s>1[0-2]|[1-9])-(?<e>1[0-2]|[1-9])");
+
 		/// <summary>
 		/// match an expression denominated by a number between 1 and 12
 		/// </summary>
-		public Regex denominatedRegex = new Regex(@"^\*\/(?<d>1[0-2]|[1-9])$");
+		public static readonly Regex denominatedRegex = new Regex(@"^\*\/(?<d>1[0-2]|[1-9])$");
 
 		/// <summary>
 		/// Ctor based on parsing a string representing the months term of a Cron expression
@@ -563,11 +596,11 @@ namespace DougKlassen.Revit.Cron
 		/// Get the runtimes represented by the task, represented as months past every new year
 		/// </summary>
 		/// <returns></returns>
-		public override IEnumerable<TimeSpan> GetRunTimes()
+		public override IList<TimeSpan> GetRunTimes()
 		{
 			List<TimeSpan> runIntervals = new List<TimeSpan>();
 
-			foreach (UInt16 time in runTimes)
+			foreach (UInt16 time in this.Expand())
 			{
 				runIntervals.Add(TimeSpan.FromDays(31 * time));
 			}
@@ -575,6 +608,10 @@ namespace DougKlassen.Revit.Cron
 			return runIntervals;
 		}
 
+		/// <summary>
+		/// Expands an expression into a complete set of run times, expressed as months of the year
+		/// </summary>
+		/// <returns>An array of integers representing run times</returns>
 		public override IEnumerable<ushort> Expand()
 		{
 			List<UInt16> runIntervals = new List<UInt16>();
@@ -608,6 +645,7 @@ namespace DougKlassen.Revit.Cron
 
 			return runIntervals;
 		}
+
 		/// <summary>
 		/// Indicates whether the term is expressed as a wild card in the CronExpressiob
 		/// </summary>
@@ -653,11 +691,12 @@ namespace DougKlassen.Revit.Cron
 		/// <summary>
 		/// match a list of 1 to 7 days of the week between 0 and 6, with 0 equal to Sunday
 		/// </summary>
-		public Regex seriesRegex = new Regex(@"^[0-6](,[0-6]){0,6}$");
+		public static readonly Regex seriesRegex = new Regex(@"^[0-6](,[0-6]){0,6}$");
+
 		/// <summary>
 		/// match a range of week days in the form 0-6
 		/// </summary>
-		public Regex rangeRegex = new Regex(@"^(?<s>[0-6])-(?<e>[0-6])");
+		public static readonly Regex rangeRegex = new Regex(@"^(?<s>[0-6])-(?<e>[0-6])");
 
 		/// <summary>
 		/// Ctor based on parsing a string representing the minutes term of a Cron expression
@@ -701,9 +740,9 @@ namespace DougKlassen.Revit.Cron
 		/// Get the runtimes represented by the task, represented as days past the first of the month for a the current month
 		/// </summary>
 		/// <returns></returns>
-		public override IEnumerable<TimeSpan> GetRunTimes()
+		public override IList<TimeSpan> GetRunTimes()
 		{
-			return GetRunTimes(DateTime.Now.Year, DateTime.Now.Month);
+			return GetRunTimes(DateTime.Now.Year, DateTime.Now.Month).ToList();
 		}
 
 		/// <summary>
@@ -716,11 +755,11 @@ namespace DougKlassen.Revit.Cron
 			for (int i = 1; i < DateTime.DaysInMonth(year, month); i++)
 			{
 				DateTime dayToCheck = new DateTime(year, month, i);
-				if (this.Expand().AsParallel().Contains(dayToCheck.DayOfWeek))
+				if (this.Expand().Contains((UInt16)dayToCheck.DayOfWeek))
 				{
+					runTimes.Add(TimeSpan.FromDays(i));
 				}
 			}
-
 			return runTimes;
 		}
 
