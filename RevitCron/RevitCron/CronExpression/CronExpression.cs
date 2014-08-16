@@ -68,9 +68,20 @@ namespace DougKlassen.Revit.Cron
 		public IEnumerable<DateTime> GetAnnualRunTimes()
 		{
 			IEnumerable<TimeSpan> runIntervals = new List<TimeSpan>();
-			runIntervals = CronUtils.GetCartesianProduct(Months.GetRunTimes(), Days.GetRunTimes());
+			if (!Days.IsWildCard() && WeekDays.IsWildCard())
+			{
+				runIntervals = CronUtils.GetCartesianProduct(Months.GetRunTimes(), Days.GetRunTimes());
+			}
+			else if (Days.IsWildCard() && !WeekDays.IsWildCard())
+			{
+				
+			}
+			else	//neither is a wildcard so use both
+			{
+				runIntervals = CronUtils.GetCartesianProduct(Months.GetRunTimes(), Days.GetRunTimes());
+			}
 			runIntervals = CronUtils.GetCartesianProduct(runIntervals, Hours.GetRunTimes());
-			runIntervals = CronUtils.GetCartesianProduct(runIntervals, Minutes.GetRunTimes());
+			runIntervals = CronUtils.GetCartesianProduct(runIntervals, Minutes.GetRunTimes()); 
 
 			DateTime yearBeginning = new DateTime(DateTime.Now.Year, 1, 1);
 			IEnumerable<DateTime> annualRunTimes = runIntervals

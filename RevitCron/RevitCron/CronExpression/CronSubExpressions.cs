@@ -6,10 +6,29 @@ using System.Text.RegularExpressions;
 
 namespace DougKlassen.Revit.Cron
 {
+	public abstract class CronSubExpression
+	{
+		/// <summary>
+		/// Get the runtimes represented by the task, represented as a timespan past the next largest increment of time
+		/// </summary>
+		/// <returns>A collection of run times</returns>
+		public abstract IEnumerable<TimeSpan> GetRunTimes();
+		/// <summary>
+		/// Returns whether the sub-expression is assigned a wildcard value
+		/// </summary>
+		/// <returns>Whether the expression is a wildcard</returns>
+		public abstract Boolean IsWildCard();
+		/// <summary>
+		/// Get all values as a list of integers
+		/// </summary>
+		/// <returns>An array of integers</returns>
+		public abstract IEnumerable<UInt16> Expand();
+	}
+
 	/// <summary>
 	/// A class encapsulating the minutes term of a CronExpression. Minutes are expressed from 0 to 59.
 	/// </summary>
-	public class CronMinutes
+	public class CronMinutes : CronSubExpression
 	{
 		/// <summary>
 		/// Minutes of the hour on which to run from 0 to 59. Null indicates a wildcard value.
@@ -23,15 +42,15 @@ namespace DougKlassen.Revit.Cron
 		/// <summary>
 		/// Match a list of 1 to 60 minute values in the range 0 to 59
 		/// </summary>
-		public Regex seriesRegex = new Regex(@"^([1-5][\d]|[\d])(,([1-5][\d]|[\d])){0,59}$");	//todo: prevent duplicates
+		public static readonly Regex seriesRegex = new Regex(@"^([1-5][\d]|[\d])(,([1-5][\d]|[\d])){0,59}$");	//todo: prevent duplicates
 		/// <summary>
 		/// Match a range of minutes in the form 0-59
 		/// </summary>
-		public Regex rangeRegex = new Regex(@"^(?<s>[1-5][\d]|[\d])-(?<e>[1-5][\d]|[\d])");
+		public static readonly Regex rangeRegex = new Regex(@"^(?<s>[1-5][\d]|[\d])-(?<e>[1-5][\d]|[\d])");
 		/// <summary>
 		/// Match an expression denominated by a number in the range 1 to 60
 		/// </summary>
-		public Regex denominatedRegex = new Regex(@"^\*\/(?<d>60|[1-5][0-9]|[1-9])$");
+		public static readonly Regex denominatedRegex = new Regex(@"^\*\/(?<d>60|[1-5][0-9]|[1-9])$");
 
 		/// <summary>
 		/// Ctor based on parsing a string representing the minutes term of a Cron expression
@@ -84,31 +103,52 @@ namespace DougKlassen.Revit.Cron
 		/// <summary>
 		/// Get the runtimes represented by the task, represented as minutes past every hour
 		/// </summary>
-		/// <returns></returns>
-		public IEnumerable<TimeSpan> GetRunTimes()
+		/// <returns>A collection of run times</returns>
+		public override IEnumerable<TimeSpan> GetRunTimes()
 		{
 			List<TimeSpan> runIntervals = new List<TimeSpan>();
 
+			foreach (UInt16 time in this.Expand())
+			{
+				runIntervals.Add(TimeSpan.FromMinutes(time));
+			}
+
+			return runIntervals;
+		}
+
+		/// <summary>
+		/// Indicates whether the term is expressed as a wild card in the CronExpressiob
+		/// </summary>
+		/// <returns>Whether the expression is a wildcard</returns>
+		public override Boolean IsWildCard()
+		{
+			return (runTimes == null && denominator == null);
+		}
+
+		public override IEnumerable<UInt16> Expand()
+		{
+			List<UInt16> runIntervals = new List<UInt16>();
+
 			if (runTimes == null && denominator == null)
 			{
-				for (int i = 0; i < 60; i++)
+				for (UInt16 i = 0; i < 60; i++)
 				{
-					runIntervals.Add(TimeSpan.FromMinutes(i));
+					runIntervals.Add(i);
 				}
 			}
 			else if (runTimes != null && denominator == null)
 			{
 				foreach (UInt16 time in runTimes)
 				{
-					runIntervals.Add(TimeSpan.FromMinutes(time));
+					runIntervals.Add(time);
 				}
 			}
 			else if (runTimes == null && denominator != null)
 			{
 				Double denominatedInterval = 60 / (Double)denominator;
-				for (int i = 0; i < denominator; i++)
+				for (Int32 i = 0; i < denominator; i++)
 				{
-					runIntervals.Add(TimeSpan.FromMinutes(Math.Floor(denominatedInterval * i)));
+					runIntervals.Add((UInt16)Math.Floor(denominatedInterval * i));
 				}
 			}
 			else
@@ -148,7 +188,7 @@ namespace DougKlassen.Revit.Cron
 	/// <summary>
 	/// A class encapsulating the hours term of a CronExpression. Hours are expressed from 0 to 23, with 0 representing midnite.
 	/// </summary>
-	public class CronHours
+	public class CronHours : CronSubExpression
 	{
 		private UInt16[] runTimes;
 		private UInt16? denominator;
@@ -217,22 +257,43 @@ namespace DougKlassen.Revit.Cron
 		/// Get the runtimes represented by the task, represented as hours past midnite
 		/// </summary>
 		/// <returns></returns>
-		public IEnumerable<TimeSpan> GetRunTimes()
+		public override IEnumerable<TimeSpan> GetRunTimes()
 		{
 			List<TimeSpan> runIntervals = new List<TimeSpan>();
 
+			foreach (UInt16 time in runTimes)
+			{
+				runIntervals.Add(TimeSpan.FromHours(time));
+			}
+
+			return runIntervals;
+		}
+
+		/// <summary>
+		/// Indicates whether the term is expressed as a wild card in the CronExpressiob
+		/// </summary>
+		/// <returns>Whether the expression is a wildcard</returns>
+		public override Boolean IsWildCard()
+		{
+			return (runTimes == null && denominator == null);
+		}
+
+		public override IEnumerable<UInt16> Expand()
+		{
+			List<UInt16> runIntervals = new List<UInt16>();
+
 			if (runTimes == null && denominator == null)
 			{
-				for (int i = 0; i < 24; i++)
+				for (UInt16 i = 0; i < 24; i++)
 				{
-					runIntervals.Add(TimeSpan.FromHours(i));
+					runIntervals.Add(i);
 				}
 			}
 			else if (runTimes != null && denominator == null)
 			{
 				foreach (UInt16 time in runTimes)
 				{
-					runIntervals.Add(TimeSpan.FromHours(time));
+					runIntervals.Add(time);
 				}
 			}
 			else if (runTimes == null && denominator != null)
@@ -240,7 +301,7 @@ namespace DougKlassen.Revit.Cron
 				Double denominatedInterval = 60 / (Double)denominator;
 				for (int i = 0; i < denominator; i++)
 				{
-					runIntervals.Add(TimeSpan.FromHours(Math.Floor(denominatedInterval * i)));
+					runIntervals.Add((UInt16)Math.Floor(denominatedInterval * i));
 				}
 			}
 			else
@@ -280,7 +341,7 @@ namespace DougKlassen.Revit.Cron
 	/// <summary>
 	/// A class encapsulating the days of the month term of a CronExpression. Days are expressed from 1 to 31, with 1 representing the 1st of the month.
 	/// </summary>
-	public class CronDays
+	public class CronDays : CronSubExpression
 	{
 		private UInt16[] runTimes;
 		private UInt16? denominator;
@@ -349,22 +410,34 @@ namespace DougKlassen.Revit.Cron
 		/// Get the runtimes represented by the task, represented as days past the first of the month
 		/// </summary>
 		/// <returns></returns>
-		public IEnumerable<TimeSpan> GetRunTimes()
+		public override IEnumerable<TimeSpan> GetRunTimes()
 		{
 			List<TimeSpan> runIntervals = new List<TimeSpan>();
 
+			foreach (UInt16 time in runTimes)
+			{
+				runIntervals.Add(TimeSpan.FromDays(time));
+			}
+
+			return runIntervals;
+		}
+
+		public override IEnumerable<ushort> Expand()
+		{
+			List<UInt16> runIntervals = new List<UInt16>();
+
 			if (runTimes == null && denominator == null)
 			{
-				for (int i = 0; i < 31; i++)
+				for (UInt16 i = 0; i < 31; i++)
 				{
-					runIntervals.Add(TimeSpan.FromHours(24 * i));
+					runIntervals.Add(i);
 				}
 			}
 			else if (runTimes != null && denominator == null)
 			{
 				foreach (UInt16 time in runTimes)
 				{
-					runIntervals.Add(TimeSpan.FromHours(24 * time));
+					runIntervals.Add(time);
 				}
 			}
 			else if (runTimes == null && denominator != null)
@@ -372,15 +445,24 @@ namespace DougKlassen.Revit.Cron
 				Double denominatedInterval = 60 / (Double)denominator;
 				for (int i = 0; i < denominator; i++)
 				{
-					runIntervals.Add(TimeSpan.FromHours(24 * Math.Floor(denominatedInterval * i)));
+					runIntervals.Add((UInt16)Math.Floor(denominatedInterval * i));
 				}
 			}
 			else
 			{
-				throw new InvalidOperationException("CronMinutes object is corrupted");
+				throw new InvalidOperationException("CronDays object is corrupted");
 			}
 
 			return runIntervals;
+		}
+
+		/// <summary>
+		/// Indicates whether the term is expressed as a wild card in the CronExpressiob
+		/// </summary>
+		/// <returns>Whether the expression is a wildcard</returns>
+		public override Boolean IsWildCard()
+		{
+			return (runTimes == null && denominator == null);
 		}
 
 		/// <summary>
@@ -412,7 +494,7 @@ namespace DougKlassen.Revit.Cron
 	/// <summary>
 	/// A class encapsulating the months term of a CronExpression. Months are expressed from 1 to 12, with 1 representing January.
 	/// </summary>
-	public class CronMonths
+	public class CronMonths : CronSubExpression
 	{
 		private UInt16[] runTimes;
 		private UInt16? denominator;
@@ -481,22 +563,34 @@ namespace DougKlassen.Revit.Cron
 		/// Get the runtimes represented by the task, represented as months past every new year
 		/// </summary>
 		/// <returns></returns>
-		public IEnumerable<TimeSpan> GetRunTimes()
+		public override IEnumerable<TimeSpan> GetRunTimes()
 		{
 			List<TimeSpan> runIntervals = new List<TimeSpan>();
 
+			foreach (UInt16 time in runTimes)
+			{
+				runIntervals.Add(TimeSpan.FromDays(31 * time));
+			}
+
+			return runIntervals;
+		}
+
+		public override IEnumerable<ushort> Expand()
+		{
+			List<UInt16> runIntervals = new List<UInt16>();
+
 			if (runTimes == null && denominator == null)
 			{
-				for (int i = 0; i < 12; i++)
+				for (UInt16 i = 0; i < 12; i++)
 				{
-					runIntervals.Add(TimeSpan.FromHours(31 * 24 * i));
+					runIntervals.Add(i);
 				}
 			}
 			else if (runTimes != null && denominator == null)
 			{
 				foreach (UInt16 time in runTimes)
 				{
-					runIntervals.Add(TimeSpan.FromHours(31 * 24 * time));
+					runIntervals.Add(time);
 				}
 			}
 			else if (runTimes == null && denominator != null)
@@ -504,15 +598,23 @@ namespace DougKlassen.Revit.Cron
 				Double denominatedInterval = 60 / (Double)denominator;
 				for (int i = 0; i < denominator; i++)
 				{
-					runIntervals.Add(TimeSpan.FromHours(31 * 24 * Math.Floor(denominatedInterval * i)));
+					runIntervals.Add((UInt16)Math.Floor(denominatedInterval * i));
 				}
 			}
 			else
 			{
-				throw new InvalidOperationException("CronMinutes object is corrupted");
+				throw new InvalidOperationException("CronMonts object is corrupted");
 			}
 
 			return runIntervals;
+		}
+		/// <summary>
+		/// Indicates whether the term is expressed as a wild card in the CronExpressiob
+		/// </summary>
+		/// <returns>Whether the expression is a wildcard</returns>
+		public override Boolean IsWildCard()
+		{
+			return (runTimes == null && denominator == null);
 		}
 
 		/// <summary>
@@ -544,7 +646,7 @@ namespace DougKlassen.Revit.Cron
 	/// <summary>
 	/// A class encapsulating the day of the week term of a CronExpression. Weekdays are expressed from 0 to 6, with 0 representing Sunday.
 	/// </summary>
-	public class CronWeekDays
+	public class CronWeekDays : CronSubExpression
 	{
 		private UInt16[] runTimes;
 
@@ -596,13 +698,47 @@ namespace DougKlassen.Revit.Cron
 		}
 
 		/// <summary>
-		/// Get the runtimes represented by the task, represented as days past every Sunday
+		/// Get the runtimes represented by the task, represented as days past the first of the month for a the current month
 		/// </summary>
 		/// <returns></returns>
-		public IEnumerable<TimeSpan> GetRunTimes()
+		public override IEnumerable<TimeSpan> GetRunTimes()
+		{
+			return GetRunTimes(DateTime.Now.Year, DateTime.Now.Month);
+		}
+
+		/// <summary>
+		/// Get the runtimes represented by the task, represented as days past the first of the month for a specific month
+		/// </summary>
+		/// <returns></returns>
+		public IEnumerable<TimeSpan> GetRunTimes(Int32 year, Int32 month)
 		{
 			List<TimeSpan> runTimes = new List<TimeSpan>();
+			for (int i = 1; i < DateTime.DaysInMonth(year, month); i++)
+			{
+				DateTime dayToCheck = new DateTime(year, month, i);
+				if (this.Expand().AsParallel().Contains(dayToCheck.DayOfWeek))
+				{
+				}
+			}
 
+			return runTimes;
+		}
+
+		/// <summary>
+		/// Indicates whether the term is expressed as a wild card in the CronExpressiob
+		/// </summary>
+		/// <returns>Whether the expression is a wildcard</returns>
+		public override Boolean IsWildCard()
+		{
+			return (runTimes == null);
+		}
+
+		/// <summary>
+		/// An expanded list of days of the week represented by the WeekDays expression
+		/// </summary>
+		/// <returns>An array of integers representing days of the week, with 0 equals Sunday</returns>
+		public override IEnumerable<ushort> Expand()
+		{
 			return runTimes;
 		}
 
