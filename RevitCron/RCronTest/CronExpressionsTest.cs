@@ -159,20 +159,40 @@ namespace DougKlassen.Revit.Cron.Test
 			#endregion assert
 		}
 
+		internal struct TestExpr
+		{
+			internal CronExpression expr;
+			internal Int32 expectedCount;
+			internal ICollection<DateTime> calculatedRuntimes;
+		}
+
 		[TestMethod]
 		public void CanGetRunTimes()
 		{
 			#region arrange
-			CronExpression exprMonthly = new CronExpression("0 0 1 * *");	//run at midnite on the first day of the month
-			ICollection<DateTime> monthlyRunTimesEnum;
+			TestExpr[] expressions = new TestExpr[]
+			{
+				new TestExpr() {expr = new CronExpression("0 0 * 1 1"), expectedCount = 4},	//run every Monday in January 
+				new TestExpr() {expr = new CronExpression("0 0 1 1 1"), expectedCount = 5},	//run every Monday and on the 1st of January
+				new TestExpr() {expr = new CronExpression("0 0 1 1 *"), expectedCount = 1},	//run on January 1st
+				new TestExpr() {expr = new CronExpression("0 0 1 1-3 *"), expectedCount = 3},	//run on the 1st of the month from January to March
+				new TestExpr() {expr = new CronExpression("0 0 1-3 1-3 *"), expectedCount = 9},	//run on the 1st through the 3rd of the month from January to March
+				new TestExpr() {expr = new CronExpression("0 0 1 * *"), expectedCount = 12}	//run at midnite on the first day of the month
+			};
 			#endregion arrange
 
 			#region act
-			monthlyRunTimesEnum = exprMonthly.GetAnnualRunTimes().ToList();
+			for (Int32 i = 0; i < expressions.Length; i++ )
+			{
+				expressions[i].calculatedRuntimes = expressions[i].expr.GetAnnualRunTimes().ToList();
+			}
 			#endregion act
 
 			#region assert
-			Assert.AreEqual(12, monthlyRunTimesEnum.Count);
+			for (Int32 i = 0; i < expressions.Length; i++)
+			{
+				Assert.AreEqual(expressions[i].expectedCount, expressions[i].calculatedRuntimes.Count(), expressions[i].expr.ToString());
+			}
 			#endregion
 		}
 	}
