@@ -45,7 +45,7 @@ namespace DougKlassen.Revit.Cron.Models
 		{
 			Int32 numUpdates = 0;
 
-			foreach (RCronTask t in batch.Tasks)
+			foreach (RCronTask t in batch.batchTasks)
 			{
 				IEnumerable<RCronTask> tasksToUpdate = Tasks.Where(u => u.Name == t.Name);
 				foreach (RCronTask u in tasksToUpdate)

@@ -45,7 +45,7 @@ namespace RCronTest
 			#endregion act
 
 			#region assert
-			Assert.AreEqual(dumSchedule.Tasks.Count, batch.Tasks.Count);
+			Assert.AreEqual(dumSchedule.Tasks.Count, batch.batchTasks.Count);
 			#endregion assert
 		}
 
@@ -92,7 +92,7 @@ namespace RCronTest
 			#endregion arrange
 
 			#region act
-			dumBatch.Tasks = dumTasks;
+			dumBatch.batchTasks = dumTasks;
 			#endregion act
 		}
 

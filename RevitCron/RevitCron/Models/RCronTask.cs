@@ -70,21 +70,6 @@ namespace DougKlassen.Revit.Cron.Models
 
 			return nextRun;
 		}
-
-		/// <summary>
-		/// Returns a sanitized version of a task for use in serialization to a batch file
-		/// </summary>
-		/// <returns>An abbreviated version of the task</returns>
-		public RCronTask GetBatchVersion()
-		{
-			RCronTask bv = new RCronTask();
-			bv.Name = this.Name + "-run";
-			bv.LastRun = DateTime.MinValue;
-			bv.Schedule = null;
-			bv.TaskInfo = this.TaskInfo;
-
-			return bv;
-		}
 	}
 
 	[DataContract]
