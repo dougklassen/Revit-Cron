@@ -2,6 +2,8 @@
 using DougKlassen.Revit.Cron;
 using DougKlassen.Revit.Cron.Models;
 using System;
+using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -45,7 +47,7 @@ namespace RCronTest
 			#endregion act
 
 			#region assert
-			Assert.AreEqual(dumSchedule.Tasks.Count, batch.batchTasks.Count);
+			Assert.AreEqual(dumSchedule.Tasks.Count, batch.TaskSpecs.Count());
 			#endregion assert
 		}
 
@@ -92,7 +94,7 @@ namespace RCronTest
 			#endregion arrange
 
 			#region act
-			dumBatch.batchTasks = dumTasks;
+			dumBatch.AddRange(dumTasks);
 			#endregion act
 		}
 

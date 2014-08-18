@@ -15,6 +15,14 @@ namespace DougKlassen.Revit.Cron.Models
 		[DataMember(Order = 0)]
 		private Dictionary<String, BatchTask> batchTasks;
 		
+		public IEnumerable<RCronTaskSpec> TaskSpecs
+		{
+			get
+			{
+				return batchTasks.Values.Select(s => s.taskSpec);
+			}
+		}
+
 		public RCronBatch()
 		{
 			batchTasks = new Dictionary<String, BatchTask>();
@@ -33,7 +41,7 @@ namespace DougKlassen.Revit.Cron.Models
 			}
 		}
 
-		public void Add(String taskName, RCronTaskInfo task)
+		public void Add(String taskName, RCronTaskSpec task)
 		{
 			batchTasks.Add(taskName, new BatchTask(task));
 		}
@@ -41,16 +49,16 @@ namespace DougKlassen.Revit.Cron.Models
 		//todo: private inner class to encapsulate task's name, TaskInfo, and outcome
 		internal class BatchTask	//todo: check how scoping works for inner classes
 		{
-			RCronTaskInfo taskInfo;
-			BatchTaskResult result;
+			internal RCronTaskSpec taskSpec;
+			internal BatchTaskResult result;
 
-			internal BatchTask(RCronTaskInfo info)
+			internal BatchTask(RCronTaskSpec info)
 			{
-				taskInfo = info;
+				taskSpec = info;
 				result = BatchTaskResult.NotRun;
 			}
 		}
 
-		enum BatchTaskResult { NotRun, Suceeded, Failed }
+		public enum BatchTaskResult { NotRun, Suceeded, Failed }
 	}	
 }

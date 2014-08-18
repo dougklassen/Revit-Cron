@@ -49,7 +49,7 @@ namespace DougKlassen.Revit.Cron.Models
 
 
 		[DataMember(Order = 10)]
-		public RCronTaskInfo TaskInfo { get; set; } //to facilitate serialization, subclassed members belong to a member class
+		public RCronTaskSpec TaskInfo { get; set; } //to facilitate serialization, subclassed members belong to a member class
 		#endregion Properties
 
 		public Boolean IsDueToRun
@@ -73,7 +73,7 @@ namespace DougKlassen.Revit.Cron.Models
 	}
 
 	[DataContract]
-	public abstract class RCronTaskInfo
+	public abstract class RCronTaskSpec
 	{
 		[DataMember(Order = 0)]
 		public TaskType TaskType;
@@ -86,7 +86,7 @@ namespace DougKlassen.Revit.Cron.Models
 	}
 
 	[DataContract]
-	public class RCronPrintTaskInfo : RCronTaskInfo
+	public class RCronPrintTaskInfo : RCronTaskSpec
 	{
 		[DataMember(Order = 10)]
 		public String PrintSet { get; set; }
@@ -111,7 +111,7 @@ namespace DougKlassen.Revit.Cron.Models
 	}
 
 	[DataContract]
-	public class RCronExportTaskInfo : RCronTaskInfo
+	public class RCronExportTaskInfo : RCronTaskSpec
 	{
 		[DataMember(Order = 10)]
 		public String PrintSet { get; set; }
@@ -126,7 +126,7 @@ namespace DougKlassen.Revit.Cron.Models
 	}
 
 	[DataContract]
-	public class RCronETransmitTaskInfo : RCronTaskInfo
+	public class RCronETransmitTaskInfo : RCronTaskSpec
 	{
 		public RCronETransmitTaskInfo()
 		{
@@ -135,7 +135,7 @@ namespace DougKlassen.Revit.Cron.Models
 	}
 
 	[DataContract]
-	public class RCronCommandTaskInfo : RCronTaskInfo
+	public class RCronCommandTaskInfo : RCronTaskSpec
 	{
 		[DataMember(Order = 10)]
 		public String CommandName { get; set; }

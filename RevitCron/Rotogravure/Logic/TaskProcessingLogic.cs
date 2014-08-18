@@ -49,7 +49,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 					return;
 				}
 
-				batchRepo = new RCronBatchJsonRepo(options.BatchFileUri);
+				batchRepo = new RCronBatchJsonRepo(options.BatchFileUri);	//todo: account for multiple batch files
 				batch = batchRepo.GetRCronBatch();
 			}
 			catch (Exception exception)
@@ -60,23 +60,23 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 				throw exception; //can't continue if the TasksRepo can't be loaded
 			}
 
-			log.AppendLine("  -- number of tasks found: {0}", batch.Tasks.Count());
+			log.AppendLine("  -- number of tasks found: {0}", batch.TaskSpecs.Count());
 
 			Autodesk.Revit.ApplicationServices.Application app = (Autodesk.Revit.ApplicationServices.Application)sender;
 			Document dbDoc;
 			Boolean saveModified = false;
 
-			foreach (RCronTask task in batch.Tasks)
+			foreach (RCronTaskSpec	taskSpec in batch.TaskSpecs)
 			{
 				try
 				{
-					dbDoc = app.OpenDocumentFile(task.TaskInfo.ProjectFile);
+					dbDoc = app.OpenDocumentFile(taskSpec.ProjectFile);
 
-					switch (task.TaskInfo.TaskType)
+					switch (taskSpec.TaskType)
 					{
 						case TaskType.Print:
 							log.AppendLine("\n** running print task: {0}", dbDoc.PathName);
-							RCronPrintTaskInfo printTaskInfo = (RCronPrintTaskInfo)task.TaskInfo;
+							RCronPrintTaskInfo printTaskInfo = (RCronPrintTaskInfo)taskSpec;
 							ViewSheetSet printSet = new FilteredElementCollector(dbDoc)
 									.OfClass(typeof(ViewSheetSet))
 									.Where(s => s.Name.Equals(printTaskInfo.PrintSet))
@@ -169,6 +169,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 								log.AppendLine("  !! error: couldn't load printset {0}", printTaskInfo.PrintSet);
 							}
 
+
 							break;
 						case TaskType.Export:
 							log.AppendLine("\n** running export task: {0}", dbDoc.PathName);
@@ -185,19 +186,19 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 
 					dbDoc.Close(saveModified);	//todo: keep project open if running multiple tasks on it
 
-					task.LastRun = DateTime.Now; //todo: set this to scheduled run time rather than completion time
+					//taskSpec.LastRun = DateTime.Now; //todo: set this to scheduled run time rather than completion time
 				}
 				catch (Exception exception)
 				{
 					log.LogException(exception);
 				}
 
-				try
+				try		//todo: this moves to RCronD
 				{
 					RCronSchedule schedule = RCronScheduleJsonRepo.LoadSchedule(options.ScheduleFileUri);
-					Int32 numUpdates = schedule.UpdateLastRunFromBatch(batch);
+					//Int32 numUpdates = schedule.UpdateLastRunFromBatch(batch);
 					RCronScheduleJsonRepo.WriteSchedule(options.ScheduleFileUri, schedule);
-					log.AppendLine("  ** updated {0} tasks in {1}", numUpdates, options.ScheduleFileUri.LocalPath);
+					//log.AppendLine("  ** updated {0} tasks in {1}", numUpdates, options.ScheduleFileUri.LocalPath);
 				}
 				catch (Exception exc)
 				{
