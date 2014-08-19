@@ -13,19 +13,32 @@ namespace RCronTest
 	public class SchedulingTest
 	{
 		[TestMethod]
+		public void CanGetNextRunTime()
+		{
+			#region arrange
+			RCronTask task = new RCronTask()
+			{
+				Name = "task",
+				Schedule = "0 12 * * *"	//run every day at 1200
+			};
+			DateTime runAtTime = new DateTime(1999, 1, 1, 11, 30, 0);	//simulate a run at 1130
+			DateTime calculatedNextRun;
+			#endregion arrange
+
+			#region act
+			calculatedNextRun = task.NextRunTime(runAtTime);
+			#endregion act
+
+			#region assert
+			DateTime expectedRunTime = new DateTime(1999, 1, 1, 12, 0, 0);
+			Assert.AreEqual(expectedRunTime, calculatedNextRun);
+			#endregion assert
+		}
+
+		[TestMethod]
 		public void CanGetBatch()
 		{
 			#region arrange
-			//Mock<RCronSchedule> mockSchedule = new Mock<RCronSchedule>();
-			//mockSchedule.Setup(s => s.Tasks).Returns<IEnumerable<RCronTask>>(t =>
-			//	{
-			//		List<RCronTask> dumTasks = new List<RCronTask>();
-			//		for (int i = 0; i < 5; i++)
-			//		{
-			//			dumTasks.Add(new RCronTask() { Name = "Task" + i });
-			//		}
-			//		return dumTasks;
-			//	});
 			List<RCronTask> dumTasks = new List<RCronTask>();
 			for (int i = 0; i < 5; i++)
 			{
@@ -43,7 +56,7 @@ namespace RCronTest
 			#endregion arrange
 
 			#region act
-			RCronBatch batch = dumSchedule.GetRCronBatch();
+			RCronBatch batch = dumSchedule.GetNextRCronBatch();
 			#endregion act
 
 			#region assert
@@ -53,7 +66,37 @@ namespace RCronTest
 
 		[TestMethod]
 		public void CanUpdateLastRun()
-		{ }
+		{ 
+			throw new NotImplementedException();
+#region arrange
+#endregion arrange
+
+#region act
+#endregion act
+
+#region assert
+#endregion assert
+		}
+
+		[TestMethod]
+		public void CanAddTaskToBatch()
+		{
+			#region arrange
+			RCronBatch dumBatch = new RCronBatch();
+			RCronTask dumTask = new RCronTask()
+			{
+				Name = "dumTask"
+			};
+			#endregion arrange
+
+			#region act
+			dumBatch.Add(dumTask);
+			#endregion act
+
+			#region assert
+			Assert.IsTrue(1 == dumBatch.TaskSpecs.Count());
+			#endregion assert
+		}
 
 		[TestMethod]
 		[ExpectedException(typeof(ArgumentException))]
@@ -115,77 +158,6 @@ namespace RCronTest
 			#region act
 			dumSchedule.Tasks = dumTasks;
 			#endregion act
-		}
-
-		[TestMethod]	//todo: what if the task completes a little after the beginning of the current minute?
-		public void CanDetermineIsDueToRunEveryMinute()
-		{
-			#region arrange
-			RCronTask task = new RCronTask()
-			{
-				Schedule = "* * * * *",	//run every minute
-				LastRun = DateTime.Now.Subtract(new TimeSpan(0, 1, 1))	//LastRun was more than a minute ago
-			};
-			Boolean shouldRun;
-			#endregion arrange
-
-			#region act
-			shouldRun = task.IsDueToRun;
-			#endregion act
-
-			#region assert
-			Assert.IsTrue(shouldRun);
-			#endregion assert
-		}
-
-		[TestMethod] //todo: what if the task completes a little after the hour it was scheduled to run?
-		public void CanDetermineIsDueToRunHourly()
-		{
-			#region arrange
-			RCronTask task = new RCronTask()
-			{
-				Schedule = "0 * * * *",	//run at the beginning of every hour
-				LastRun = new DateTime(
-					DateTime.Now.Year,
-					DateTime.Now.Month,
-					DateTime.Now.Day,
-					DateTime.Now.Hour,
-					59,
-					59)
-					.Subtract(new TimeSpan(1, 0, 0))	//last run was in the final second of the previous hour
-			};
-			Boolean shouldRun;
-			#endregion arrange
-
-			#region act
-			shouldRun = task.IsDueToRun;
-			#endregion act
-
-			#region assert
-			Assert.IsTrue(shouldRun);
-			#endregion assert
-		}	
-
-		[TestMethod]	//todo: what if the task completes a few minutes after midnight?
-		public void CanDetermineIsDueToRunDaily()
-		{
-			#region arrange
-			RCronTask task = new RCronTask()
-			{
-				Schedule = "0 0 * * *",	//run every morning at midnight
-				LastRun = new DateTime(DateTime.Now.Year,DateTime.Now.Month,DateTime.Now.Day,0,0,0)
-					.Subtract(new TimeSpan(1, 0, 0, 1))	//last run was in the final second of the previous day
-			};
-			Boolean shouldRun;
-			#endregion arrange
-
-			#region act
-			shouldRun = task.IsDueToRun;
-			#endregion act
-
-			#region assert
-			Assert.IsTrue(shouldRun);
-			#endregion assert
 		}
 	}
 }

@@ -67,10 +67,24 @@ namespace DougKlassen.Revit.Cron
 		/// <returns>A collection of all run times from January 1st to December 31st of the current year</returns>
 		public IEnumerable<DateTime> GetAnnualRunTimes()
 		{
+			return GetAnnualRunTimes(DateTime.Now.Year);
+		}
+		
+		/// <summary>
+		/// Get all run times during a given year
+		/// </summary>
+		/// <param name="year">The year for which to return run times</param>
+		/// <returns>A collection of all run times from January 1st to December 31st of the given year</returns>
+		public IEnumerable<DateTime> GetAnnualRunTimes(Int32 year)
+		{
 			List<TimeSpan> runIntervals = new List<TimeSpan>();
 			if (!Days.IsWildCard() && WeekDays.IsWildCard())
 			{
 				runIntervals = CronUtils.GetCartesianProduct(Months.GetRunTimes(), Days.GetRunTimes());
+			}
+			else if (Days.IsWildCard() && WeekDays.IsWildCard())	//indicates task should be run everyday of the month
+			{
+				runIntervals = CronUtils.GetCartesianProduct(Months.GetRunTimes(), Days.GetRunTimes());	//if Days is a wildcard, Days.GetRunTimes() returns 1-31
 			}
 			else if (Days.IsWildCard() && !WeekDays.IsWildCard())
 			{
@@ -84,7 +98,7 @@ namespace DougKlassen.Revit.Cron
 			runIntervals = CronUtils.GetCartesianProduct(runIntervals, Hours.GetRunTimes());
 			runIntervals = CronUtils.GetCartesianProduct(runIntervals, Minutes.GetRunTimes()); 
 
-			DateTime yearBeginning = new DateTime(DateTime.Now.Year, 1, 1);
+			DateTime yearBeginning = new DateTime(year, 1, 1);
 			IEnumerable<DateTime> annualRunTimes = runIntervals
 				.Select(i => yearBeginning.Add(i)); //Turns the timespan into a DateTime for this year
 			return annualRunTimes;

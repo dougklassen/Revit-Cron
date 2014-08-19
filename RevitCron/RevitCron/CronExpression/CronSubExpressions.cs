@@ -686,7 +686,7 @@ namespace DougKlassen.Revit.Cron
 	/// </summary>
 	public class CronWeekDays : CronSubExpression
 	{
-		private UInt16[] runTimes;
+		private UInt16[] runTimes = new UInt16[0];	//initialize as an empty array
 
 		/// <summary>
 		/// match a list of 1 to 7 days of the week between 0 and 6, with 0 equal to Sunday
@@ -751,16 +751,18 @@ namespace DougKlassen.Revit.Cron
 		/// <returns></returns>
 		public IEnumerable<TimeSpan> GetRunTimes(Int32 year, Int32 month)
 		{
-			List<TimeSpan> runTimes = new List<TimeSpan>();
-			for (int i = 1; i < DateTime.DaysInMonth(year, month); i++)
+			List<TimeSpan> runIntervals = new List<TimeSpan>();
+
+			for (Int32 i = 1; i < DateTime.DaysInMonth(year, month); i++)
 			{
 				DateTime dayToCheck = new DateTime(year, month, i);
 				if (this.Expand().Contains((UInt16)dayToCheck.DayOfWeek))
 				{
-					runTimes.Add(TimeSpan.FromDays(i));
+					runIntervals.Add(TimeSpan.FromDays(i));
 				}
-			}
-			return runTimes;
+			} 
+
+			return runIntervals;
 		}
 
 		/// <summary>
@@ -778,7 +780,19 @@ namespace DougKlassen.Revit.Cron
 		/// <returns>An array of integers representing days of the week, with 0 equals Sunday</returns>
 		public override IEnumerable<ushort> Expand()
 		{
-			return runTimes;
+			if (null == runTimes)	//wildcard expression
+			{
+				UInt16[] everyDay = new UInt16[31];
+				for (UInt16 i = 0; i < everyDay.Length; i++)
+				{
+					everyDay[i] = i;
+				}
+				return everyDay;	//return an array specifying every day of the month
+			}
+			else
+			{
+				return runTimes;
+			}
 		}
 
 		/// <summary>

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace DougKlassen.Revit.Cron.Models
@@ -10,7 +12,7 @@ namespace DougKlassen.Revit.Cron.Models
 	[KnownType(typeof(RCronCommandTaskInfo))]
 	public class RCronTask
 	{
-		#region Properties
+		#region properties
 		/// <summary>
 		/// The unique name of the task
 		/// </summary>
@@ -47,29 +49,26 @@ namespace DougKlassen.Revit.Cron.Models
 		[DataMember]
 		public DateTime? NextRun {get;set;}
 
-
+		/// <summary>
+		/// The information Revit needs to run the task, encapsulated in a RCronTaskSpec
+		/// </summary>
 		[DataMember(Order = 10)]
 		public RCronTaskSpec TaskInfo { get; set; } //to facilitate serialization, subclassed members belong to a member class
-		#endregion Properties
+		#endregion properties
 
-		public Boolean IsDueToRun
+		#region methods
+		/// <summary>
+		/// Gets the first scheduled run time after the specified DateTime
+		/// </summary>
+		/// <param name="afterTime">The time after which the task should be scheduled</param>
+		/// <returns>The next run time</returns>
+		public DateTime NextRunTime(DateTime afterTime)
 		{
-			get
-			{
-				Boolean dueToRun = false;
-				//todo: determine if task should run
-
-				//if there's a star, add a grace period to next smallest increment
-				return dueToRun;
-			}
-		}
-
-		public DateTime NextRunTime()
-		{
-			DateTime nextRun = DateTime.MinValue;
-
+			CronExpression schedCron = new CronExpression(Schedule);
+			DateTime nextRun = schedCron.GetAnnualRunTimes(afterTime.Year).Where(r => r > afterTime).Min();
 			return nextRun;
 		}
+		#endregion methods
 	}
 
 	[DataContract]

@@ -39,6 +39,8 @@ namespace DougKlassen.Revit.Cron.Daemon
 		public void CheckSchedule(Object state)
 		{
 			System.Windows.Forms.MessageBox.Show("RCronD running");
+
+			
 		}
 	}
 }

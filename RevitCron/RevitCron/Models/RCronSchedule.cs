@@ -22,9 +22,11 @@ namespace DougKlassen.Revit.Cron.Models
 		/// Obtain a batch of tasks to run based on the current time and last run date of tasks
 		/// </summary>
 		/// <returns>A batch to be used in running Revit tasks</returns>
-		public RCronBatch GetRCronBatch()
+		public RCronBatch GetNextRCronBatch()
 		{
 			RCronBatch batch = new RCronBatch();
+
+			//List<RCronTask> nextBatchTasks = Tasks.OrderBy
 
 			return batch;
 		}

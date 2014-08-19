@@ -10,11 +10,11 @@ namespace DougKlassen.Revit.Cron.Models
 	public class RCronBatch
 	{
 		/// <summary>
-		/// A batch
+		/// A batch of tasks to be run by Revit upon startup
 		/// </summary>
-		[DataMember(Order = 0)]
 		private Dictionary<String, BatchTask> batchTasks;
 		
+		[DataMember(Order=0)]
 		public IEnumerable<RCronTaskSpec> TaskSpecs
 		{
 			get
@@ -41,12 +41,11 @@ namespace DougKlassen.Revit.Cron.Models
 			}
 		}
 
-		public void Add(String taskName, RCronTaskSpec task)
+		public void Add(String taskName, RCronTaskSpec taskSpec)
 		{
-			batchTasks.Add(taskName, new BatchTask(task));
+			batchTasks.Add(taskName, new BatchTask(taskSpec));
 		}
 
-		//todo: private inner class to encapsulate task's name, TaskInfo, and outcome
 		internal class BatchTask	//todo: check how scoping works for inner classes
 		{
 			internal RCronTaskSpec taskSpec;
