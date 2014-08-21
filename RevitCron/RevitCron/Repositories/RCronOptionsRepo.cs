@@ -47,12 +47,33 @@ namespace DougKlassen.Revit.Cron.Repositories
 			}
 		}
 
+		/// <summary>
+		/// Convenience method to load options from a file specified by a Uri
+		/// </summary>
+		/// <param name="uri">The Uri of the RCronOptions repo</param>
+		/// <returns>Options for running RCron</returns>
 		public static RCronOptions LoadOptions(Uri uri) //convenience method to load options from file
 		{
 			RCronOptionsJsonRepo repo = new RCronOptionsJsonRepo(uri);
 			return repo.GetRCronOptions();
 		}
 
+		/// <summary>
+		/// Convenience method to load options from a file specified by a file path
+		/// </summary>
+		/// <param name="filePath">The path of the RCronOptions repo</param>
+		/// <returns>Options for running RCron</returns>
+		public static RCronOptions LoadOptions(String filePath)
+		{
+			RCronOptionsJsonRepo repo = new RCronOptionsJsonRepo(new Uri(filePath));
+			return repo.GetRCronOptions();
+		}
+
+		/// <summary>
+		/// Convenience method to write options to a file specified by a Uri
+		/// </summary>
+		/// <param name="uri">The location of the repo to write the options to</param>
+		/// <param name="options">The options to write</param>
 		public static void WriteOptions(Uri uri, RCronOptions options) //convenience method to write options to file
 		{
 			RCronOptionsJsonRepo repo = new RCronOptionsJsonRepo(uri);

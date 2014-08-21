@@ -1,4 +1,5 @@
 ﻿using DougKlassen.Revit.Cron;
+using DougKlassen.Revit.Cron.Repositories;
 
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,17 @@ namespace DougKlassen.Revit.Cron.Models
 		{
 			RCronBatch batch = new RCronBatch();
 
-			//List<RCronTask> nextBatchTasks = Tasks.OrderBy
+			if (0 == Tasks.Count())	//if no tasks could be found, return the empty batch
+			{
+				return batch;
+			}
+
+			RCronOptions options = RCronOptionsJsonRepo.LoadOptions(RCronFileLocations.OptionsFilePath);
+			DateTime earliestRunTime = Tasks.Min(t => t.NextRunTime());	//find the time of the very next task scheduled to run
+			DateTime batchCutOff = earliestRunTime.Add(options.BatchSpan);	//calculate the window in which tasks will be grouped together
+			List<RCronTask> batchTasks = Tasks.Where(t => t.NextRunTime() < batchCutOff).OrderBy(t => t.Priority).ToList();
+
+			batch.AddRange(batchTasks);	//feed the RCronTasks into a new RCronBatch
 
 			return batch;
 		}

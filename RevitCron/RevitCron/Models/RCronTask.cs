@@ -68,6 +68,15 @@ namespace DougKlassen.Revit.Cron.Models
 			DateTime nextRun = schedCron.GetAnnualRunTimes(afterTime.Year).Where(r => r > afterTime).Min();
 			return nextRun;
 		}
+
+		/// <summary>
+		/// Gets the first scheduled run time
+		/// </summary>
+		/// <returns>The next run time</returns>
+		public DateTime NextRunTime()
+		{
+			return NextRunTime(DateTime.Now);
+		}
 		#endregion methods
 	}
 
