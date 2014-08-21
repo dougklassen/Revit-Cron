@@ -12,7 +12,22 @@ namespace DougKlassen.Revit.Cron.Daemon
 	/// </summary>
 	public class RCronD
 	{
+		/// <summary>
+		/// The Singleton instance
+		/// </summary>
 		private static RCronD instance = new RCronD();
+
+		/// <summary>
+		/// Whether a batch has been queued to run or not. If not, RCronD will generate and queue a new batch;
+		/// </summary>
+		private Boolean isBatchQueued = false;
+
+		/// <summary>
+		/// This is the run time of the last scheduled task of the most recently run batch.
+		/// This must be tracked so that tasks that have come due before completion of the batch (and therefore the resumption
+		/// of queueing) can be picked up for queueing
+		/// </summary>
+		private DateTime endOfLastBatch = DateTime.MinValue;
 
 		public static RCronD Instance
 		{
@@ -40,7 +55,16 @@ namespace DougKlassen.Revit.Cron.Daemon
 		{
 			System.Windows.Forms.MessageBox.Show("RCronD running");
 
+			if (!isBatchQueued)
+			{
+				RCronBatch batch = Schedule.GetNextRCronBatch(endOfLastBatch);
+			}
 			
+		}
+
+		public void QueueBatch(RCronBatch batch)
+		{
+			//set callback to run at run time
 		}
 	}
 }

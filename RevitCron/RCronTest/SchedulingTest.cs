@@ -56,7 +56,7 @@ namespace RCronTest
 			#endregion arrange
 
 			#region act
-			RCronBatch batch = dumSchedule.GetNextRCronBatch();
+			RCronBatch batch = dumSchedule.GetNextRCronBatch(DateTime.Now);
 			#endregion act
 
 			#region assert

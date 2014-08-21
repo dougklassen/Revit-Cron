@@ -20,10 +20,13 @@ namespace DougKlassen.Revit.Cron.Models
 		}
 
 		/// <summary>
-		/// Obtain a batch of tasks to run based on the current time and last run date of tasks
+		/// Obtain a batch of tasks to run based on the specified time
 		/// </summary>
+		/// <param name="afterTime">
+		/// Generate a batch for tasks after this time
+		/// </param>
 		/// <returns>A batch to be used in running Revit tasks</returns>
-		public RCronBatch GetNextRCronBatch()
+		public RCronBatch GetNextRCronBatch(DateTime afterTime)
 		{
 			RCronBatch batch = new RCronBatch();
 
@@ -33,9 +36,10 @@ namespace DougKlassen.Revit.Cron.Models
 			}
 
 			RCronOptions options = RCronOptionsJsonRepo.LoadOptions(RCronFileLocations.OptionsFilePath);
-			DateTime earliestRunTime = Tasks.Min(t => t.NextRunTime());	//find the time of the very next task scheduled to run
+			DateTime earliestRunTime = Tasks.Min(t => t.NextRunTime(afterTime));	//find the time of the very next task scheduled to run after afterTime
+			//todo: filter out tasks that have already completed due to batching but were scheduled to run in the future
 			DateTime batchCutOff = earliestRunTime.Add(options.BatchSpan);	//calculate the window in which tasks will be grouped together
-			List<RCronTask> batchTasks = Tasks.Where(t => t.NextRunTime() < batchCutOff).OrderBy(t => t.Priority).ToList();
+			List<RCronTask> batchTasks = Tasks.Where(t => t.NextRunTime(afterTime) < batchCutOff).OrderBy(t => t.Priority).ToList();
 
 			batch.AddRange(batchTasks);	//feed the RCronTasks into a new RCronBatch
 

@@ -23,6 +23,12 @@ namespace DougKlassen.Revit.Cron.Models
 			}
 		}
 
+		/// <summary>
+		/// The runtime of the batch as determined when the task is scheduled
+		/// </summary>
+		[DataMember(Order = 1)]
+		public DateTime RunTime;
+
 		public RCronBatch()
 		{
 			batchTasks = new Dictionary<String, BatchTask>();
