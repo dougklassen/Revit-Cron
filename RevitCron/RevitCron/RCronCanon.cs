@@ -6,10 +6,19 @@ namespace DougKlassen.Revit.Cron
 	public static class RCronFileLocations
 	{
 		public static readonly String AddInDirectoryPath = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\";
-		public static readonly String OptionsFilePath = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Resources\ini.json";
+		public static readonly String OptionsFilePath = AddInDirectoryPath + @"Resources\options.json";
 		public static readonly String BatchFilePath = AddInDirectoryPath + @"Resources\batch.json";
 		public static readonly String ScheduleFilePath = AddInDirectoryPath + @"Resources\schedule.json";
 		public static readonly String LogDirectoryPath = AddInDirectoryPath + @"\Logs\";
+	}
+
+	public static class RCronUris
+	{
+		public static readonly Uri AddInDirectoryUri = new Uri(RCronFileLocations.AddInDirectoryPath);
+		public static readonly Uri OptionsUri = new Uri(RCronFileLocations.OptionsFilePath);
+		public static readonly Uri BatchUri = new Uri(RCronFileLocations.BatchFilePath);
+		public static readonly Uri ScheduleUri = new Uri(RCronFileLocations.ScheduleFilePath);
+		public static readonly Uri LogDirectoryUri = new Uri(RCronFileLocations.LogDirectoryPath);		
 	}
 
 	public static class RCronCanon
@@ -37,8 +46,8 @@ namespace DougKlassen.Revit.Cron
 	/// <summary>
 	/// Recognized task types in Rotogravure
 	/// </summary>
-	public enum TaskType
+	public enum RCronTaskType
 	{
-		Print, Export, ETransmit, Command
+		Print, Export, ETransmit, Command, Test
 	}
 }

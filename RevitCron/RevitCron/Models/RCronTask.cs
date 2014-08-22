@@ -6,27 +6,30 @@ using System.Runtime.Serialization;
 namespace DougKlassen.Revit.Cron.Models
 {
 	[DataContract]
-	[KnownType(typeof(RCronPrintTaskInfo))]
-	[KnownType(typeof(RCronExportTaskInfo))]
-	[KnownType(typeof(RCronETransmitTaskInfo))]
-	[KnownType(typeof(RCronCommandTaskInfo))]
+	[KnownType(typeof(RCronPrintTaskSpec))]
+	[KnownType(typeof(RCronExportTaskSpec))]
+	[KnownType(typeof(RCronETransmitTaskSpec))]
+	[KnownType(typeof(RCronCommandTaskSpec))]
+	[KnownType(typeof(RCronTestTaskSpec))]
 	public class RCronTask
 	{
 		#region properties
 		/// <summary>
-		/// The unique name of the task
+		/// The name of the task, used as its unique ID
 		/// </summary>
 		[DataMember(Order = 0)]
 		public String Name { get; set; }
 
 		/// <summary>
-		/// The priority of a task in a batch when queued in a batch, highest first
+		/// Controls the order of tasks when batched together. Higher priority tasks run first.
+		/// Use is optional at this point.
 		/// </summary>
 		[DataMember(Order = 10)]
-		public Int32 Priority { get; set; }	//to control where the task falls in the batch when queued with other tasks
+		public Int32 Priority { get; set; }
 
 		/// <summary>
-		/// Whether to run the task immediately if it wasn't run at the last scheduled run time
+		/// Whether to run the task immediately if it wasn't run at the last scheduled run time.
+		/// Not currently implemented
 		/// </summary>
 		[DataMember(Order = 11)]
 		public Boolean RunIfMissed { get; set; }
@@ -44,16 +47,10 @@ namespace DougKlassen.Revit.Cron.Models
 		public DateTime? LastRun { get; set; }
 
 		/// <summary>
-		/// The next scheduled run time for the task, or null if not scheduled
-		/// </summary>
-		[DataMember]
-		public DateTime? NextRun {get;set;}
-
-		/// <summary>
 		/// The information Revit needs to run the task, encapsulated in a RCronTaskSpec
 		/// </summary>
 		[DataMember(Order = 10)]
-		public RCronTaskSpec TaskInfo { get; set; } //to facilitate serialization, subclassed members belong to a member class
+		public RCronTaskSpec TaskSpec { get; set; } //to facilitate serialization, subclassed members belong to a member class
 		#endregion properties
 
 		#region methods
@@ -84,7 +81,7 @@ namespace DougKlassen.Revit.Cron.Models
 	public abstract class RCronTaskSpec
 	{
 		[DataMember(Order = 0)]
-		public TaskType TaskType;
+		public RCronTaskType TaskType;
 
 		[DataMember(Order = 1)]
 		public String ProjectFile;
@@ -94,7 +91,7 @@ namespace DougKlassen.Revit.Cron.Models
 	}
 
 	[DataContract]
-	public class RCronPrintTaskInfo : RCronTaskSpec
+	public class RCronPrintTaskSpec : RCronTaskSpec
 	{
 		[DataMember(Order = 10)]
 		public String PrintSet { get; set; }
@@ -102,7 +99,7 @@ namespace DougKlassen.Revit.Cron.Models
 		[DataMember(Order = 11)]
 		public String OutputFileName { get; set; }
 
-		//todo: add RunDiff option
+		//todo: add RunDiff option or break out as command
 
 		public String OutputFilePath
 		{
@@ -112,14 +109,14 @@ namespace DougKlassen.Revit.Cron.Models
 			}
 		}
 
-		public RCronPrintTaskInfo()
+		public RCronPrintTaskSpec()
 		{
-			TaskType = TaskType.Print;
+			TaskType = RCronTaskType.Print;
 		}
 	}
 
 	[DataContract]
-	public class RCronExportTaskInfo : RCronTaskSpec
+	public class RCronExportTaskSpec : RCronTaskSpec
 	{
 		[DataMember(Order = 10)]
 		public String PrintSet { get; set; }
@@ -127,30 +124,39 @@ namespace DougKlassen.Revit.Cron.Models
 		[DataMember(Order = 11)]
 		public String ExportSetup { get; set; }
 
-		public RCronExportTaskInfo()
+		public RCronExportTaskSpec()
 		{
-			TaskType = TaskType.Export;
+			TaskType = RCronTaskType.Export;
 		}
 	}
 
 	[DataContract]
-	public class RCronETransmitTaskInfo : RCronTaskSpec
+	public class RCronETransmitTaskSpec : RCronTaskSpec
 	{
-		public RCronETransmitTaskInfo()
+		public RCronETransmitTaskSpec()
 		{
-			TaskType = TaskType.ETransmit;
+			TaskType = RCronTaskType.ETransmit;
 		}
 	}
 
 	[DataContract]
-	public class RCronCommandTaskInfo : RCronTaskSpec
+	public class RCronCommandTaskSpec : RCronTaskSpec
 	{
 		[DataMember(Order = 10)]
 		public String CommandName { get; set; }
 
-		public RCronCommandTaskInfo()
+		public RCronCommandTaskSpec()
 		{
-			TaskType = TaskType.Command;
+			TaskType = RCronTaskType.Command;
+		}
+	}
+
+	[DataContract]
+	public class RCronTestTaskSpec : RCronTaskSpec
+	{
+		public RCronTestTaskSpec()
+		{
+			TaskType = RCronTaskType.Test;
 		}
 	}
 }

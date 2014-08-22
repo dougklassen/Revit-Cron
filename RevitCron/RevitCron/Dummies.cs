@@ -16,6 +16,18 @@ namespace DougKlassen.Revit.Cron
 			BatchSpan = new TimeSpan(0, 10, 0)
 		};
 
+		public static readonly List<RCronTask> dummyTestTasks = new List<RCronTask>
+		{
+			new RCronTask()
+			{
+				Name = "Test Task",
+				LastRun = DateTime.MinValue,
+				Schedule = "* * * * *",	//run every minute,
+				Priority = 1,
+				TaskSpec = new RCronTestTaskSpec()
+			}
+		};
+
 		public static readonly List<RCronTask> dummyTasks = new List<RCronTask>
 		{
       new RCronTask()
@@ -24,9 +36,8 @@ namespace DougKlassen.Revit.Cron
         LastRun = new DateTime(),
         Schedule = "0 0 * * *",
 				Priority = 2,
-        TaskInfo = new RCronPrintTaskInfo()
+        TaskSpec = new RCronPrintTaskSpec()
         {
-          TaskType = TaskType.Print,
           ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",  //todo: URI
           OutputDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Test Output\",
           PrintSet = "test1",
@@ -39,9 +50,8 @@ namespace DougKlassen.Revit.Cron
         LastRun = new DateTime(),
         Schedule = "0 0 * * *",
 				Priority = 2,
-        TaskInfo = new RCronPrintTaskInfo()
+        TaskSpec = new RCronPrintTaskSpec()
         {
-          TaskType = TaskType.Print,
           ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",  //todo: URI
           OutputDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Test Output\",
           PrintSet = "test2",
@@ -54,9 +64,8 @@ namespace DougKlassen.Revit.Cron
         LastRun = new DateTime(),
         Schedule = "0 0 * * *",
 				Priority = 1,
-        TaskInfo = new RCronExportTaskInfo()
+        TaskSpec = new RCronExportTaskSpec()
         {
-          TaskType = TaskType.Export,
           ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
           OutputDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Test Output\",
           PrintSet = "test",
@@ -69,9 +78,8 @@ namespace DougKlassen.Revit.Cron
         LastRun = new DateTime(),
         Schedule = "0 0 * * *",
 				Priority = 3,
-        TaskInfo = new RCronETransmitTaskInfo()
+        TaskSpec = new RCronETransmitTaskSpec()
         {
-          TaskType = TaskType.ETransmit,
           ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
           OutputDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Test Output\"
         }          
@@ -82,9 +90,8 @@ namespace DougKlassen.Revit.Cron
         LastRun = new DateTime(),
         Schedule = "0 0 * * *",
 				Priority = 3,
-        TaskInfo = new RCronCommandTaskInfo()
+        TaskSpec = new RCronCommandTaskSpec()
         {
-          TaskType = TaskType.Command,
           ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
           OutputDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Test Output\",
           CommandName = "DougKlassen.Revit.Perfect.Commands.RenameFamiliesCommand"
@@ -92,13 +99,14 @@ namespace DougKlassen.Revit.Cron
       }
     };
 
+		public static RCronSchedule testSchedule;
 		public static RCronSchedule dummySchedule;
-
 		public static RCronBatch dummyBatch;
 
 		static Dummies()
 		{
-			dummySchedule = new RCronSchedule();
+			dummySchedule = new RCronSchedule() { Tasks = dummyTasks };
+			testSchedule = new RCronSchedule() { Tasks = dummyTestTasks };
 			dummyBatch = new RCronBatch();
 			foreach (RCronTask t in dummyTasks)
 			{

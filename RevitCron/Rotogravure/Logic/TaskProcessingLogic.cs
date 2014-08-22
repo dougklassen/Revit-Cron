@@ -74,9 +74,9 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 
 					switch (taskSpec.TaskType)
 					{
-						case TaskType.Print:
+						case RCronTaskType.Print:
 							log.AppendLine("\n** running print task: {0}", dbDoc.PathName);
-							RCronPrintTaskInfo printTaskInfo = (RCronPrintTaskInfo)taskSpec;
+							RCronPrintTaskSpec printTaskInfo = (RCronPrintTaskSpec)taskSpec;
 							ViewSheetSet printSet = new FilteredElementCollector(dbDoc)
 									.OfClass(typeof(ViewSheetSet))
 									.Where(s => s.Name.Equals(printTaskInfo.PrintSet))
@@ -171,13 +171,13 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 
 
 							break;
-						case TaskType.Export:
+						case RCronTaskType.Export:
 							log.AppendLine("\n** running export task: {0}", dbDoc.PathName);
 							break;
-						case TaskType.ETransmit:
+						case RCronTaskType.ETransmit:
 							log.AppendLine("\n** running eTransmit task: {0}", dbDoc.PathName);
 							break;
-						case TaskType.Command:
+						case RCronTaskType.Command:
 							log.AppendLine("\n** running command task: {0}", dbDoc.PathName);
 							break;
 						default:

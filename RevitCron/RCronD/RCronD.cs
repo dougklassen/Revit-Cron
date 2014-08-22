@@ -1,9 +1,12 @@
 ﻿using DougKlassen.Revit.Cron.Models;
+using DougKlassen.Revit.Cron.Repositories;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Timers;
+//using Timer = System.Timers.Timer;
 
 namespace DougKlassen.Revit.Cron.Daemon
 {
@@ -51,20 +54,43 @@ namespace DougKlassen.Revit.Cron.Daemon
 			Schedule = null;	//Schedule must be set to initialize RCronD
 		}
 
+		/// <summary>
+		/// TimerCallback for main appcontext loop
+		/// </summary>
+		/// <param name="state"></param>
 		public void CheckSchedule(Object state)
 		{
-			System.Windows.Forms.MessageBox.Show("RCronD running");
-
 			if (!isBatchQueued)
 			{
 				RCronBatch batch = Schedule.GetNextRCronBatch(endOfLastBatch);
+				if (0 == batch.TaskSpecs.Count())	//if the batch is empty, no tasks were found, so don't try to run batch
+				{
+					System.Windows.Forms.MessageBox.Show("No tasks found");
+					return;
+				}
+				isBatchQueued = true;
+				endOfLastBatch = batch.EndTime;	//move batch window forward
+
+				RCronBatchJsonRepo batchRepo = new RCronBatchJsonRepo(new Uri(RCronFileLocations.BatchFilePath));
+				batchRepo.PutRCronBatch(batch);
+
+				Console.WriteLine("running batch");
+				TimeSpan timeTillRun = batch.StartTime - DateTime.Now;
+				Timer runBatchTimer = new Timer();
+				runBatchTimer.Elapsed += runBatchTimer_Elapsed;
+				runBatchTimer.Start();
+
+				//todo: wait for Revit to close
+				//todo: record result of run
+				batchRepo.Delete();	//cleanup the repo
 			}
-			
 		}
 
-		public void QueueBatch(RCronBatch batch)
+		private void runBatchTimer_Elapsed(Object sender, ElapsedEventArgs e)
 		{
-			//set callback to run at run time
+			System.Windows.Forms.MessageBox.Show("Pretending to run something");
+
+			//todo: startup Revit here
 		}
 	}
 }

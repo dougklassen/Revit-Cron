@@ -58,7 +58,7 @@ namespace DougKlassen.Revit.Cron.Repositories
 		}
 
 		/// <summary>
-		/// Cleanup method to remove the JSON file once the batch has run
+		/// Cleanup method to flush the repo once the batch has run
 		/// </summary>
 		public void Delete()
 		{
@@ -66,15 +66,47 @@ namespace DougKlassen.Revit.Cron.Repositories
 			repoFilePath = null;
 		}
 
-		public static RCronBatch LoadBatch(Uri uri) //convenience method to load tasks from a file
+		/// <summary>
+		/// Convenience method to load a batch from a file specified by a URI
+		/// </summary>
+		/// <param name="uri">The Uri of the location to load from</param>
+		/// <returns>The loaded batch</returns>
+		public static RCronBatch LoadBatch(Uri uri) //convenience method to load tasks from a file specified by a URI
 		{
 			RCronBatchJsonRepo repo = new RCronBatchJsonRepo(uri);
 			return repo.GetRCronBatch();
 		}
 
+		/// <summary>
+		/// Convenience method to load a batch from a file specified by a path
+		/// </summary>
+		/// <param name="filePath">The path of the location to load from</param>
+		/// <returns>The loaded batch</returns>
+		public static RCronBatch LoadBatch(String filePath)	//convenience method to load tasks from a file specified by a path
+		{
+			RCronBatchJsonRepo repo = new RCronBatchJsonRepo(new Uri(filePath));
+			return repo.GetRCronBatch();
+		}
+
+		/// <summary>
+		/// Convenience method to write a batch to a repo specified by a Uri
+		/// </summary>
+		/// <param name="uri">The Uri to write to</param>
+		/// <param name="batch">The batch to write</param>
 		public static void WriteBatch(Uri uri, RCronBatch batch)
 		{
 			RCronBatchJsonRepo repo = new RCronBatchJsonRepo(uri);
+			repo.PutRCronBatch(batch);
+		}
+
+		/// <summary>
+		/// Convenience method to write a batch to a repo specified by a file path
+		/// </summary>
+		/// <param name="filePath">The path of the location to write to</param>
+		/// <param name="batch">The batch to write</param>
+		public static void WriteBatch(String filePath, RCronBatch batch)
+		{
+			RCronBatchJsonRepo repo = new RCronBatchJsonRepo(new Uri(filePath));
 			repo.PutRCronBatch(batch);
 		}
 	}
