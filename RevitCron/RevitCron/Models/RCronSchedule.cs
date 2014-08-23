@@ -47,7 +47,9 @@ namespace DougKlassen.Revit.Cron.Models
 					/////which will be in the future
 					//&& t.LastRun < earliestRunTime)
 				.OrderBy(t => t.Priority).ToList();
-			batch.EndTime = batchTasks.Max(t => t.NextRunTime(afterTime));
+			batch.EndTime = batchTasks.Max(t =>
+				t.NextRunTime(afterTime)
+				.Add(new TimeSpan(0,0,30)));
 			batch.AddRange(batchTasks);	//feed the RCronTasks into a new RCronBatch
 
 			return batch;

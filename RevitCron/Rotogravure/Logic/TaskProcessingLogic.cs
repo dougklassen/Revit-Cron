@@ -205,8 +205,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 					log.AppendLine("!! couldn't update schedule with last run times of task");
 					log.LogException(exc);
 				}
-				log.AppendLine("** deleting {0}", RCronFileLocations.BatchFilePath);
-				batchRepo.Delete();
+				log.AppendLine("** all tasks completed");
 			}
 		}
 	}

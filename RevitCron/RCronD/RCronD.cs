@@ -21,16 +21,17 @@ namespace DougKlassen.Revit.Cron.Daemon
 		private static RCronD instance = new RCronD();
 
 		/// <summary>
-		/// Whether a batch has been queued to run or not. If not, RCronD will generate and queue a new batch;
+		/// Whether a batch has been queued to run or not. If not, RCronD will generate
+		/// and queue a new batch;
 		/// </summary>
-		private Boolean isBatchQueued = false;
+		private Boolean isBatchQueued;
 
 		/// <summary>
 		/// This is the run time of the last scheduled task of the most recently run batch.
-		/// This must be tracked so that tasks that have come due before completion of the batch (and therefore the resumption
-		/// of queueing) can be picked up for queueing
+		/// This must be tracked so that tasks that have come due before completion of
+		/// the batch (and therefore the resumption of queueing) can be picked up for queueing
 		/// </summary>
-		private DateTime endOfLastBatch = DateTime.MinValue;
+		private DateTime endOfLastBatch;
 
 		public static RCronD Instance
 		{
@@ -52,6 +53,8 @@ namespace DougKlassen.Revit.Cron.Daemon
 		private RCronD()
 		{
 			Schedule = null;	//Schedule must be set to initialize RCronD
+			isBatchQueued = false;
+			endOfLastBatch = DateTime.Now;	//start looking for tasks from current time onwards
 		}
 
 		/// <summary>
@@ -77,20 +80,25 @@ namespace DougKlassen.Revit.Cron.Daemon
 				Console.WriteLine("running batch");
 				TimeSpan timeTillRun = batch.StartTime - DateTime.Now;
 				Timer runBatchTimer = new Timer();
+				runBatchTimer.Interval =
+					timeTillRun.TotalMilliseconds > 100 ? timeTillRun.TotalMilliseconds : 100;
 				runBatchTimer.Elapsed += runBatchTimer_Elapsed;
+				runBatchTimer.AutoReset = false;
+				//runBatchTimer.SynchronizingObject = ;
 				runBatchTimer.Start();
 
-				//todo: wait for Revit to close
+				//todo: wait for Revit to close/batch to finish
 				//todo: record result of run
 				batchRepo.Delete();	//cleanup the repo
+				//isBatchQueued = false;
 			}
 		}
 
 		private void runBatchTimer_Elapsed(Object sender, ElapsedEventArgs e)
 		{
 			System.Windows.Forms.MessageBox.Show("Pretending to run something");
-
+			isBatchQueued = false;
 			//todo: startup Revit here
-		}
+			}
 	}
 }
