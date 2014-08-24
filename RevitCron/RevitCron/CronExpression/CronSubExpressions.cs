@@ -322,10 +322,9 @@ namespace DougKlassen.Revit.Cron
 			}
 			else if (runTimes == null && denominator != null)
 			{
-				Double denominatedInterval = 60 / (Double)denominator;
-				for (int i = 0; i < denominator; i++)
+				for (UInt16 i = 0; i < 24; i += denominator.Value)
 				{
-					runIntervals.Add((UInt16)Math.Floor(denominatedInterval * i));
+					runIntervals.Add(i);
 				}
 			}
 			else
@@ -472,10 +471,9 @@ namespace DougKlassen.Revit.Cron
 			}
 			else if (runTimes == null && denominator != null)
 			{
-				Double denominatedInterval = 60 / (Double)denominator;
-				for (int i = 0; i < denominator; i++)
+				for (UInt16 i = 0; i < 31; i += denominator.Value)	//todo: need to prevent adding the 31st if it doesn't exist in month
 				{
-					runIntervals.Add((UInt16)Math.Floor(denominatedInterval * i));
+					runIntervals.Add(i);
 				}
 			}
 			else
@@ -615,31 +613,30 @@ namespace DougKlassen.Revit.Cron
 		{
 			List<UInt16> runIntervals = new List<UInt16>();
 
-			if (runTimes == null && denominator == null)
+			if (runTimes == null && denominator == null)	//wildcard
 			{
 				for (UInt16 i = 0; i < 12; i++)
 				{
 					runIntervals.Add(i);
 				}
 			}
-			else if (runTimes != null && denominator == null)
+			else if (runTimes != null && denominator == null)	//series or range
 			{
 				foreach (UInt16 time in runTimes)
 				{
 					runIntervals.Add(time);
 				}
 			}
-			else if (runTimes == null && denominator != null)
+			else if (runTimes == null && denominator != null)	//denominated
 			{
-				Double denominatedInterval = 60 / (Double)denominator;
-				for (int i = 0; i < denominator; i++)
+				for (UInt16 i = 0; i < 12; i += denominator.Value)
 				{
-					runIntervals.Add((UInt16)Math.Floor(denominatedInterval * i));
+					runIntervals.Add(i);
 				}
 			}
 			else
 			{
-				throw new InvalidOperationException("CronMonts object is corrupted");
+				throw new InvalidOperationException("CronMonths object is corrupted");
 			}
 
 			return runIntervals;
