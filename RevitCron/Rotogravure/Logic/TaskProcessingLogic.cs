@@ -66,7 +66,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			Document dbDoc;
 			Boolean saveModified = false;
 
-			foreach (RCronTaskSpec	taskSpec in batch.TaskSpecs)
+			foreach (RCronTaskSpec	taskSpec in batch.TaskSpecs.Values)
 			{
 				try
 				{

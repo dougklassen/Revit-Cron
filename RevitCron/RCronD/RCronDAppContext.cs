@@ -32,11 +32,24 @@ namespace DougKlassen.Revit.Cron.Daemon
 			Console.WriteLine("Initializing RCronD");
 
 			LoadRCronSettings();
-
-			CreateNotifyIcon();
-
 			daemon = RCronD.Instance;
 			daemon.Schedule = schedule;
+
+			components = new Container();
+			notifyIcon = new System.Windows.Forms.NotifyIcon(components)
+			{
+				ContextMenuStrip = new ContextMenuStrip(),
+				Icon = GetEmbeddedIconResource("rcron.ico"),
+				Text = "RCronD",
+				Visible = true
+			};
+
+			notifyIcon.ContextMenuStrip.Items.Add("&Pause", null, pauseItem_Click);
+			notifyIcon.ContextMenuStrip.Items.Add("&Exit", null, exitItem_Click);
+
+			notifyIcon.DoubleClick += daemon.notifyIcon_DoubleClick;
+			//notifyIcon.Click += notifyIcon_Click;	//todo: this is triggering on double click
+
 
 			timer = new Timer(daemon.CheckSchedule, null, TimeSpan.Zero, options.PollingPeriod);
 
@@ -59,11 +72,6 @@ namespace DougKlassen.Revit.Cron.Daemon
 		private void exitItem_Click(object sender, EventArgs e)
 		{
 			ExitThread();
-		}
-	
-		private void notifyIcon_DoubleClick(object sender, EventArgs e)
-		{
-			MessageBox.Show("Double-clicked icon");
 		}
 
 		protected override void Dispose(Boolean disposing)
@@ -121,27 +129,6 @@ namespace DougKlassen.Revit.Cron.Daemon
 				//ExitThread();	//todo: what does this do, program doesn't end
 				//possibly exiting wrong thread
 			}
-		}
-
-		/// <summary>
-		/// create the NotifyIcon and set interface event handlers
-		/// </summary>
-		private void CreateNotifyIcon()
-		{
-			components = new Container();
-			notifyIcon = new System.Windows.Forms.NotifyIcon(components)
-			{
-				ContextMenuStrip = new ContextMenuStrip(),
-				Icon = GetEmbeddedIconResource("rcron.ico"),
-				Text = "RCronD",
-				Visible = true
-			};
-
-			notifyIcon.ContextMenuStrip.Items.Add("&Pause", null, pauseItem_Click);
-			notifyIcon.ContextMenuStrip.Items.Add("&Exit", null, exitItem_Click);
-
-			notifyIcon.DoubleClick += notifyIcon_DoubleClick;
-			notifyIcon.Click += notifyIcon_Click;
 		}
 	}
 }

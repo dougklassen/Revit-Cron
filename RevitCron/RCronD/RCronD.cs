@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Timers;
-//using Timer = System.Timers.Timer;
+using Timer = System.Timers.Timer;
+using System.Windows.Forms;
 
 namespace DougKlassen.Revit.Cron.Daemon
 {
@@ -32,6 +33,8 @@ namespace DougKlassen.Revit.Cron.Daemon
 		/// the batch (and therefore the resumption of queueing) can be picked up for queueing
 		/// </summary>
 		private DateTime endOfLastBatch;
+
+		private RCronBatch batch;
 
 		public static RCronD Instance
 		{
@@ -65,7 +68,7 @@ namespace DougKlassen.Revit.Cron.Daemon
 		{
 			if (!isBatchQueued)
 			{
-				RCronBatch batch = Schedule.GetNextRCronBatch(endOfLastBatch);
+				batch = Schedule.GetNextRCronBatch(endOfLastBatch);
 				if (0 == batch.TaskSpecs.Count())	//if the batch is empty, no tasks were found, so don't try to run batch
 				{
 					System.Windows.Forms.MessageBox.Show("No tasks found");
@@ -77,7 +80,6 @@ namespace DougKlassen.Revit.Cron.Daemon
 				RCronBatchJsonRepo batchRepo = new RCronBatchJsonRepo(new Uri(RCronFileLocations.BatchFilePath));
 				batchRepo.PutRCronBatch(batch);
 
-				Console.WriteLine("running batch");
 				TimeSpan timeTillRun = batch.StartTime - DateTime.Now;
 				Timer runBatchTimer = new Timer();
 				runBatchTimer.Interval =
@@ -88,17 +90,49 @@ namespace DougKlassen.Revit.Cron.Daemon
 				runBatchTimer.Start();
 
 				//todo: wait for Revit to close/batch to finish
+				//todo: update last run times
 				//todo: record result of run
 				batchRepo.Delete();	//cleanup the repo
 				//isBatchQueued = false;
 			}
 		}
 
+		internal void notifyIcon_DoubleClick(object sender, EventArgs e)
+		{
+			StringBuilder msg = new StringBuilder();
+			msg.AppendLine("Scheduled Tasks:");
+			msg.AppendLine("---");
+			foreach (RCronTask t in Schedule.Tasks)
+			{
+				msg.AppendFormat("{0} - {1}\n", t.Name, t.TaskSpec.TaskType);
+				msg.AppendFormat("Last Run: {0}\nNext Run: {1}\n", t.LastRun, t.NextRunTime());
+				msg.AppendLine("---");
+			}
+			msg.AppendLine();
+
+			if (isBatchQueued)
+			{
+				msg.AppendLine("Current Queue:");
+				foreach (String taskName in batch.TaskSpecs.Keys)
+				{
+					msg.AppendFormat("{0} - {1}\n", taskName, batch.TaskSpecs[taskName].TaskType);
+				}
+				msg.AppendFormat("Start Time: {0}\nEnd Time: {1}\n", batch.StartTime, batch.EndTime);
+			}
+			else
+			{
+				msg.AppendLine("No batch queued");
+			}
+			MessageBox.Show(msg.ToString());
+		}
+
 		private void runBatchTimer_Elapsed(Object sender, ElapsedEventArgs e)
 		{
-			System.Windows.Forms.MessageBox.Show("Pretending to run something");
-			isBatchQueued = false;
+			String msg;
+			msg = String.Format("Running task at {0}:{1}", DateTime.Now.Hour, DateTime.Now.Minute);
+			System.Windows.Forms.MessageBox.Show(msg);
+			isBatchQueued = false;	//todo: this should happen at the end of CheckSchedule()
 			//todo: startup Revit here
-			}
+		}
 	}
 }

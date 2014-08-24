@@ -148,26 +148,25 @@ namespace DougKlassen.Revit.Cron
 		{
 			List<UInt16> runIntervals = new List<UInt16>();
 
-			if (runTimes == null && denominator == null)
+			if (runTimes == null && denominator == null)	//wildcard
 			{
 				for (UInt16 i = 0; i < 60; i++)
 				{
 					runIntervals.Add(i);
 				}
 			}
-			else if (runTimes != null && denominator == null)
+			else if (runTimes != null && denominator == null)	//series or range
 			{
 				foreach (UInt16 time in runTimes)
 				{
 					runIntervals.Add(time);
 				}
 			}
-			else if (runTimes == null && denominator != null)
+			else if (runTimes == null && denominator != null)	//denominated
 			{
-				Double denominatedInterval = 60 / (Double)denominator;
-				for (Int32 i = 0; i < denominator; i++)
+				for (UInt16 i = 0; i < 60; i += denominator.Value)	//count by the step for every value within one hour
 				{
-					runIntervals.Add((UInt16)Math.Floor(denominatedInterval * i));
+					runIntervals.Add(i);
 				}
 			}
 			else

@@ -17,17 +17,22 @@ namespace DougKlassen.Revit.Cron.Models
 		/// <summary>
 		/// A batch of tasks to be run by Revit upon startup
 		/// </summary>
-		private Dictionary<String, BatchTask> batchTasks;
+		private List<BatchTask> batchTasks;
 		
 		/// <summary>
 		/// A collection of tasks to run specified for processing by Rotogravure
 		/// </summary>
 		[DataMember(Order=0)]
-		public IEnumerable<RCronTaskSpec> TaskSpecs
+		public Dictionary<String, RCronTaskSpec> TaskSpecs
 		{
 			get
 			{
-				return batchTasks.Values.Select(s => s.taskSpec);
+				Dictionary<String, RCronTaskSpec> taskSpecs = new Dictionary<string, RCronTaskSpec>();
+				foreach (BatchTask bT in batchTasks)
+				{
+					taskSpecs.Add(bT.taskName, bT.taskSpec);
+				}
+				return taskSpecs;
 			}
 		}
 
@@ -48,12 +53,12 @@ namespace DougKlassen.Revit.Cron.Models
 		/// </summary>
 		public RCronBatch()
 		{
-			batchTasks = new Dictionary<String, BatchTask>();
+			batchTasks = new List<BatchTask>();
 		}
 
 		public void Add(String taskName, RCronTaskSpec taskSpec)
 		{
-			batchTasks.Add(taskName, new BatchTask(taskSpec));
+			batchTasks.Add(new BatchTask(taskName, taskSpec));
 		}
 
 		public void Add(RCronTask task)
@@ -71,11 +76,13 @@ namespace DougKlassen.Revit.Cron.Models
 
 		internal class BatchTask	//todo: check how scoping works for inner classes
 		{
+			internal String taskName;
 			internal RCronTaskSpec taskSpec;
 			internal BatchTaskResult result;
 
-			internal BatchTask(RCronTaskSpec spec)
+			internal BatchTask(String name, RCronTaskSpec spec)
 			{
+				taskName = name;
 				taskSpec = spec;
 				result = BatchTaskResult.NotRun;
 			}
