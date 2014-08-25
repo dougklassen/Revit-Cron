@@ -47,7 +47,7 @@ namespace DougKlassen.Revit.Cron.Daemon
 			notifyIcon.ContextMenuStrip.Items.Add("&Pause", null, pauseItem_Click);
 			notifyIcon.ContextMenuStrip.Items.Add("&Exit", null, exitItem_Click);
 
-			notifyIcon.DoubleClick += daemon.notifyIcon_DoubleClick;
+			notifyIcon.DoubleClick += notifyIcon_DoubleClick;
 			//notifyIcon.Click += notifyIcon_Click;	//todo: this is triggering on double click
 
 
@@ -67,6 +67,12 @@ namespace DougKlassen.Revit.Cron.Daemon
 		private void pauseItem_Click(object sender, EventArgs e)
 		{
 			//timer.
+		}
+
+
+		private void notifyIcon_DoubleClick(object sender, EventArgs e)
+		{
+			MessageBox.Show(daemon.StatusMessage, "RCronD Status");
 		}
 
 		private void exitItem_Click(object sender, EventArgs e)

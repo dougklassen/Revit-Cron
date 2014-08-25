@@ -20,6 +20,14 @@ namespace DougKlassen.Revit.Cron
 		{
 			new RCronTask()
 			{
+				Name = "Test_1min",
+				LastRun = DateTime.MinValue,
+				Schedule = "* * * * *",	//run every 15 minutes
+				Priority = 1,
+				TaskSpec = new RCronTestTaskSpec()
+			},
+			new RCronTask()
+			{
 				Name = "Test_15min",
 				LastRun = DateTime.MinValue,
 				Schedule = "*/15 * * * *",	//run every 15 minutes
