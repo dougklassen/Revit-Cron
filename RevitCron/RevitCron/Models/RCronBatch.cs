@@ -34,6 +34,14 @@ namespace DougKlassen.Revit.Cron.Models
 				}
 				return taskSpecs;
 			}
+			set
+			{
+				batchTasks = new List<BatchTask>();
+				foreach (String key in value.Keys)
+				{
+					batchTasks.Add(new BatchTask(key, value[key]));
+				}
+			}
 		}
 
 		/// <summary>

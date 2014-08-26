@@ -8,6 +8,9 @@ using System.Threading;
 
 namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 {
+	/// <summary>
+	/// UI Automation for Bluebeam
+	/// </summary>
 	public static class BluebeamPrintDialogHandler
 	{
 		private static RCronLog log = RCronLog.Instance;

@@ -14,6 +14,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 		public class User32
 		{
 			public const Int32 BM_SETSTATE = 0x00F3;
+			public const Int32 WM_CLOSE = 0x0010;
 			public const Int32 WM_LBUTTONDOWN = 0x0201;
 			public const Int32 WM_LBUTTONUP = 0x0202;
 			public const Int32 WM_SETTEXT = 0x000C;

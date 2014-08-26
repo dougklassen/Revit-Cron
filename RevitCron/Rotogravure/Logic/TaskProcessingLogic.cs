@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
 
 using DougKlassen.Revit.Cron.Models;
 using DougKlassen.Revit.Cron.Repositories;
@@ -70,13 +71,14 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			{
 				try
 				{
-					dbDoc = app.OpenDocumentFile(taskSpec.ProjectFile);
-
 					switch (taskSpec.TaskType)
 					{
 						case RCronTaskType.Print:
-							log.AppendLine("\n** running print task: {0}", dbDoc.PathName);
+							//todo: factor this into a method
+							log.AppendLine("\n** running print task");
 							RCronPrintTaskSpec printTaskInfo = (RCronPrintTaskSpec)taskSpec;
+							dbDoc = app.OpenDocumentFile(printTaskInfo.ProjectFile);
+							log.AppendLine("\n** document: {0}", dbDoc.PathName);
 							ViewSheetSet printSet = new FilteredElementCollector(dbDoc)
 									.OfClass(typeof(ViewSheetSet))
 									.Where(s => s.Name.Equals(printTaskInfo.PrintSet))
@@ -140,7 +142,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 								{
 									Thread.CurrentThread.Name = "RotoGravure"; 
 								}
-								AutoResetEvent externalTaskWaitHandle = new AutoResetEvent(false);
+								AutoResetEvent dialogHandlerWait = new AutoResetEvent(false);
 
 								//BluebeamPrintDialogHandler.Save(
 								//	externalTaskWaitHandle,
@@ -149,7 +151,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 								ThreadStart ts = new ThreadStart(() =>
 									{
 										BluebeamPrintDialogHandler.Save(
-												externalTaskWaitHandle,
+												dialogHandlerWait,
 												outputDirectoryPath + printTaskInfo.OutputFileName);
 									});
 								Thread dialogHandlerThread = new Thread(ts);
@@ -157,7 +159,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 								dialogHandlerThread.Start();
 								try
 								{
-									externalTaskWaitHandle.WaitOne(10000); //give the handler 10 seconds to complete
+									dialogHandlerWait.WaitOne(10000); //give the handler 10 seconds to complete
 								}
 								catch (Exception)
 								{
@@ -168,45 +170,52 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 							{
 								log.AppendLine("  !! error: couldn't load printset {0}", printTaskInfo.PrintSet);
 							}
-
-
+							dbDoc.Close(saveModified);	//todo: keep project open if running multiple tasks on it
 							break;
 						case RCronTaskType.Export:
+							dbDoc = app.OpenDocumentFile(taskSpec.ProjectFile);
 							log.AppendLine("\n** running export task: {0}", dbDoc.PathName);
+							dbDoc.Close(saveModified);	//todo: keep project open if running multiple tasks on it
 							break;
 						case RCronTaskType.ETransmit:
+							dbDoc = app.OpenDocumentFile(taskSpec.ProjectFile);
 							log.AppendLine("\n** running eTransmit task: {0}", dbDoc.PathName);
+							dbDoc.Close(saveModified);	//todo: keep project open if running multiple tasks on it
 							break;
 						case RCronTaskType.Command:
+							dbDoc = app.OpenDocumentFile(taskSpec.ProjectFile);
 							log.AppendLine("\n** running command task: {0}", dbDoc.PathName);
+							dbDoc.Close(saveModified);	//todo: keep project open if running multiple tasks on it
+							break;
+						case RCronTaskType.Test:
+							TaskDialog.Show("Test", "Running test task");
+							log.AppendLine("\n** running test task");
 							break;
 						default:
 							break;
 					}
-
-					dbDoc.Close(saveModified);	//todo: keep project open if running multiple tasks on it
-
-					//taskSpec.LastRun = DateTime.Now; //todo: set this to scheduled run time rather than completion time
 				}
 				catch (Exception exception)
 				{
 					log.LogException(exception);
 				}
+			}	//end of task processing foreach
 
-				try		//todo: this moves to RCronD
-				{
-					RCronSchedule schedule = RCronScheduleJsonRepo.LoadSchedule(options.ScheduleFileUri);
-					//Int32 numUpdates = schedule.UpdateLastRunFromBatch(batch);
-					RCronScheduleJsonRepo.WriteSchedule(options.ScheduleFileUri, schedule);
-					//log.AppendLine("  ** updated {0} tasks in {1}", numUpdates, options.ScheduleFileUri.LocalPath);
-				}
-				catch (Exception exc)
-				{
-					log.AppendLine("!! couldn't update schedule with last run times of task");
-					log.LogException(exc);
-				}
-				log.AppendLine("** all tasks completed");
-			}
+			//try		//todo: this moves to RCronD
+			//{
+			//	RCronSchedule schedule = RCronScheduleJsonRepo.LoadSchedule(options.ScheduleFileUri);
+			//	//Int32 numUpdates = schedule.UpdateLastRunFromBatch(batch);
+			//	RCronScheduleJsonRepo.WriteSchedule(options.ScheduleFileUri, schedule);
+			//	//log.AppendLine("  ** updated {0} tasks in {1}", numUpdates, options.ScheduleFileUri.LocalPath);
+			//}
+			//catch (Exception exc)
+			//{
+			//	log.AppendLine("!! couldn't update schedule with last run times of task");
+			//	log.LogException(exc);
+			//}
+
+			RevitHandler.Exit();
+			log.AppendLine("** all tasks completed");
 		}
 	}
 }

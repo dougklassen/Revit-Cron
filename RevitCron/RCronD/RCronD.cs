@@ -3,6 +3,8 @@ using DougKlassen.Revit.Cron.Repositories;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -120,10 +122,13 @@ namespace DougKlassen.Revit.Cron.Daemon
 				if (0 == batch.TaskSpecs.Count()) return;	//if the batch is empty, no tasks were found, so don't try to run batch
 
 				Interlocked.Exchange(ref status, (Int32)DaemonStatus.BatchQueued);	//signal that a batch is queued
+				//todo: this needs to be tracked on a task by task basis because it's missing tasks that have come due between the start and end of the window
+				//todo: maybe it should be set to the start of the batch
 				endOfLastBatch = batch.EndTime;	//move batch window forward
 
 				RCronBatchJsonRepo batchRepo = new RCronBatchJsonRepo(new Uri(RCronFileLocations.BatchFilePath));
-				batchRepo.PutRCronBatch(batch);
+				File.Delete(RCronFileLocations.BatchFilePath);	//clean up any left over batch file
+				batchRepo.PutRCronBatch(batch);	//write the batch repo to be read by Rotogravure
 
 				TimeSpan timeTillRun = batch.StartTime - DateTime.Now;
 				Timer runBatchTimer = new Timer();
@@ -147,10 +152,16 @@ namespace DougKlassen.Revit.Cron.Daemon
 		{
 			Interlocked.Exchange(ref status, (Int32)DaemonStatus.RunningBatch);
 
+			DateTime start = DateTime.Now;
+			Process revit = Process.Start(RevitInstall.StartInfo);
+			revit.WaitForExit();
 			String msg;
-			msg = String.Format("Started running task at {0}:{1}\nClick Ok to complete", DateTime.Now.Hour, DateTime.Now.Minute);
+			msg = String.Format("Started at {0}:{1}\nCompleted at {2}:{3}\nClick Ok to complete",
+				start.Hour,
+				start.Minute,
+				DateTime.Now.Hour,
+				DateTime.Now.Minute);
 			System.Windows.Forms.MessageBox.Show(msg);
-			//todo: start Revit here
 
 			runBatchWait.Set();
 		}

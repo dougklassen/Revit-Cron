@@ -1,8 +1,22 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 
 namespace DougKlassen.Revit.Cron
 {
+	public static class RevitInstall
+	{
+		/// <summary>
+		/// The information needed by Process.Start() to launch Revit
+		/// </summary>
+		public static ProcessStartInfo StartInfo = new ProcessStartInfo()
+			{
+				FileName = @"C:\Program Files\Autodesk\Revit 2014\Revit.exe",
+				WorkingDirectory = @"C:\Program Files\Autodesk\Revit 2014\",
+				Arguments = @"/language ENU"
+			};
+	}
+
 	public static class RCronFileLocations
 	{
 		public static readonly String AddInDirectoryPath = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\";
