@@ -155,13 +155,14 @@ namespace DougKlassen.Revit.Cron.Daemon
 			DateTime start = DateTime.Now;
 			Process revit = Process.Start(RevitInstall.StartInfo);
 			revit.WaitForExit();
-			String msg;
-			msg = String.Format("Started at {0}:{1}\nCompleted at {2}:{3}\nClick Ok to complete",
-				start.Hour,
-				start.Minute,
-				DateTime.Now.Hour,
-				DateTime.Now.Minute);
-			System.Windows.Forms.MessageBox.Show(msg);
+
+			//String msg;
+			//msg = String.Format("Started at {0}:{1}\nCompleted at {2}:{3}\nClick Ok to complete",
+			//	start.Hour,
+			//	start.Minute,
+			//	DateTime.Now.Hour,
+			//	DateTime.Now.Minute);
+			//System.Windows.Forms.MessageBox.Show(msg);
 
 			runBatchWait.Set();
 		}

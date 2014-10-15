@@ -13,6 +13,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 	/// </summary>
 	public static class BluebeamPrintDialogHandler
 	{
+		//todo: ensure hWnd doesn't get swithced from the print dialog
 		private static RCronLog log = RCronLog.Instance;
 		private static String saveFilePath;
 		private static AutoResetEvent taskProcessingWaitHandle;

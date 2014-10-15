@@ -26,15 +26,21 @@ namespace DougKlassen.Revit.Cron.Models
 		public Uri LogDirectoryUri { get; set; }
 
 		/// <summary>
-		/// Polling period for RCronD
+		/// The location to which to write local files when opening workshared projects
 		/// </summary>
 		[DataMember(Order = 3)]
+		public Uri LocalFileDirectoryUri { get; set; }
+
+		/// <summary>
+		/// Polling period for RCronD
+		/// </summary>
+		[DataMember(Order = 4)]
 		public TimeSpan PollingPeriod { get; set; }
 
 		/// <summary>
 		/// The span of time in which to group sequential tasks into a single batch
 		/// </summary>
-		[DataMember(Order = 4)]
+		[DataMember(Order = 5)]
 		public TimeSpan BatchSpan { get; set; }
 	}
 }

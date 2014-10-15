@@ -152,6 +152,15 @@ namespace DougKlassen.Revit.Cron.Models
 	}
 
 	[DataContract]
+	public class RCronAuditCompactTaskSpec : RCronTaskSpec
+	{
+		public RCronAuditCompactTaskSpec()
+		{
+			TaskType = RCronTaskType.AuditCompact;
+		}
+	}
+
+	[DataContract]
 	public class RCronTestTaskSpec : RCronTaskSpec
 	{
 		public RCronTestTaskSpec()

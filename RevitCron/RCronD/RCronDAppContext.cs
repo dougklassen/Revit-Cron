@@ -46,10 +46,7 @@ namespace DougKlassen.Revit.Cron.Daemon
 
 			notifyIcon.ContextMenuStrip.Items.Add("&Pause", null, pauseItem_Click);
 			notifyIcon.ContextMenuStrip.Items.Add("&Exit", null, exitItem_Click);
-
 			notifyIcon.DoubleClick += notifyIcon_DoubleClick;
-			//notifyIcon.Click += notifyIcon_Click;	//todo: this is triggering on double click
-
 
 			timer = new Timer(daemon.CheckSchedule, null, TimeSpan.Zero, options.PollingPeriod);
 
@@ -66,7 +63,7 @@ namespace DougKlassen.Revit.Cron.Daemon
 		
 		private void pauseItem_Click(object sender, EventArgs e)
 		{
-			//timer.
+			//todo:	not implemented
 		}
 
 
@@ -95,6 +92,8 @@ namespace DougKlassen.Revit.Cron.Daemon
 			{
 				notifyIcon.Visible = false; 
 			}
+			IRCronBatchRepo repo = new RCronBatchJsonRepo(new Uri(RCronFileLocations.BatchFilePath));	//todo: setup dependency injection
+			repo.Delete();	//flush the repo (for file repos, delete the file)
 			base.ExitThreadCore();
 		}
 

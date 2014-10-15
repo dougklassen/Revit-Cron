@@ -9,9 +9,10 @@ namespace DougKlassen.Revit.Cron
 	{
 		public static readonly RCronOptions dummyOpts = new RCronOptions()
 		{
-			BatchFileUri = new Uri(RCronFileLocations.BatchFilePath),
+			BatchFileUri = RCronUris.BatchFileUri,
 			ScheduleFileUri = new Uri(RCronFileLocations.ScheduleFilePath),
 			LogDirectoryUri = new Uri(RCronFileLocations.LogDirectoryPath),
+			LocalFileDirectoryUri = new Uri(RCronFileLocations.AddInDirectoryPath),
 			PollingPeriod = new TimeSpan(0, 0, 7),
 			BatchSpan = new TimeSpan(0, 10, 0)
 		};

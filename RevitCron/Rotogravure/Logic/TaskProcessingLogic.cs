@@ -20,6 +20,11 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 		private static RCronOptions options;
 		private static RCronLog log;
 
+		/// <summary>
+		/// When Revit is started, check for a batch repo, load the batch, and run it
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		public static void OnApplicationInitialized(object sender, Autodesk.Revit.DB.Events.ApplicationInitializedEventArgs e)
 		{
 			{
@@ -64,8 +69,11 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			log.AppendLine("  -- number of tasks found: {0}", batch.TaskSpecs.Count());
 
 			Autodesk.Revit.ApplicationServices.Application app = (Autodesk.Revit.ApplicationServices.Application)sender;
+			UIApplication uiApp;
 			Document dbDoc;
-			Boolean saveModified = false;
+			UIDocument uiDoc;
+			ModelPath docPath;
+			OpenOptions openOpts;
 
 			foreach (RCronTaskSpec	taskSpec in batch.TaskSpecs.Values)
 			{
@@ -76,9 +84,19 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 						case RCronTaskType.Print:
 							//todo: factor this into a method
 							log.AppendLine("\n** running print task");
+							log.AppendLine("-- specified path: {0}", taskSpec.ProjectFile);
 							RCronPrintTaskSpec printTaskInfo = (RCronPrintTaskSpec)taskSpec;
-							dbDoc = app.OpenDocumentFile(printTaskInfo.ProjectFile);
-							log.AppendLine("\n** document: {0}", dbDoc.PathName);
+							docPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(printTaskInfo.ProjectFile);
+							openOpts = new OpenOptions();
+							if (docPath.ServerPath)
+							{
+								openOpts.DetachFromCentralOption = DetachFromCentralOption.DetachAndPreserveWorksets; 
+							}
+							uiApp = new UIApplication(app);
+							uiDoc = uiApp.OpenAndActivateDocument(docPath, openOpts, false);
+							dbDoc = uiDoc.Document;
+							//dbDoc = app.OpenDocumentFile(docPath, openOpts);
+							log.AppendLine("-- loaded path: {0}", dbDoc.PathName);
 							ViewSheetSet printSet = new FilteredElementCollector(dbDoc)
 									.OfClass(typeof(ViewSheetSet))
 									.Where(s => s.Name.Equals(printTaskInfo.PrintSet))
@@ -92,25 +110,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 									log.AppendLine("  -- view: \"{0}\"", v.Name);
 								}
 
-								using (Transaction t = new Transaction(dbDoc, "Set printset"))
-								{
-									t.Start();
-									PrintManager pm = dbDoc.PrintManager;
-									pm.SelectNewPrintDriver("Bluebeam PDF"); //todo: read from RCronOptions
-									pm.PrintSetup
-											.InSession
-											.PrintParameters
-											.PaperSize = pm.PaperSizes
-													.Cast<PaperSize>()
-													.Where(p => "Letter" == p.Name) //todo: read from RCronOptions
-													.FirstOrDefault();
-									pm.PrintRange = PrintRange.Select;
-									pm.ViewSheetSetting.CurrentViewSheetSet = printSet;
-									pm.CombinedFile = true;
-									pm.SubmitPrint();
-									t.Commit();
-								}
-
+								//verify outputDirectoryPath and OutputFileName and update as necessary
 								String outputDirectoryPath = printTaskInfo.OutputDirectory + RCronCanon.TimeStamp + '\\';
 								if (!Directory.Exists(outputDirectoryPath))
 								{
@@ -138,9 +138,35 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 									}
 								}
 
+								using (Transaction t = new Transaction(dbDoc, "Run RCron Print Task"))
+								{
+									t.Start();
+
+									PrintManager pm = dbDoc.PrintManager;
+									pm.SelectNewPrintDriver("Bluebeam PDF"); //todo: read from RCronOptions
+									pm.PrintSetup
+											.InSession
+											.PrintParameters
+											.PaperSize = pm.PaperSizes
+													.Cast<PaperSize>()
+													.Where(p => "Letter" == p.Name) //todo: read from RCronOptions
+													.FirstOrDefault();
+									pm.PrintRange = PrintRange.Select;
+									pm.ViewSheetSetting.CurrentViewSheetSet = printSet;
+									pm.CombinedFile = true;
+									//this value isn't used but SubmitPrint() thows an exception if it isn't set
+									pm.PrintToFileName = outputDirectoryPath + printTaskInfo.OutputFileName;
+									log.AppendLine("  ** Setting output destination");
+									log.AppendLine("		-- PrintToFileName: {0}", pm.PrintToFileName);
+									log.AppendLine("		-- OutputFileName: {0}", printTaskInfo.OutputFileName);
+									log.AppendLine("		-- outputDirectoryPath: {0}", outputDirectoryPath);
+									pm.SubmitPrint();
+									t.Commit();
+								}
+
 								if (null == Thread.CurrentThread.Name)
 								{
-									Thread.CurrentThread.Name = "RotoGravure"; 
+									Thread.CurrentThread.Name = "RotoGravure";
 								}
 								AutoResetEvent dialogHandlerWait = new AutoResetEvent(false);
 
@@ -170,22 +196,54 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 							{
 								log.AppendLine("  !! error: couldn't load printset {0}", printTaskInfo.PrintSet);
 							}
-							dbDoc.Close(saveModified);	//todo: keep project open if running multiple tasks on it
+							//this won't work because we had to make the document active
+							//dbDoc.Close(false);	//todo: keep project open if running multiple tasks on it
 							break;
 						case RCronTaskType.Export:
 							dbDoc = app.OpenDocumentFile(taskSpec.ProjectFile);
 							log.AppendLine("\n** running export task: {0}", dbDoc.PathName);
-							dbDoc.Close(saveModified);	//todo: keep project open if running multiple tasks on it
+							dbDoc.Close(false);	//todo: keep project open if running multiple tasks on it
 							break;
 						case RCronTaskType.ETransmit:
 							dbDoc = app.OpenDocumentFile(taskSpec.ProjectFile);
 							log.AppendLine("\n** running eTransmit task: {0}", dbDoc.PathName);
-							dbDoc.Close(saveModified);	//todo: keep project open if running multiple tasks on it
+							dbDoc.Close(false);	//todo: keep project open if running multiple tasks on it
 							break;
 						case RCronTaskType.Command:
 							dbDoc = app.OpenDocumentFile(taskSpec.ProjectFile);
 							log.AppendLine("\n** running command task: {0}", dbDoc.PathName);
-							dbDoc.Close(saveModified);	//todo: keep project open if running multiple tasks on it
+							dbDoc.Close(false);	//todo: keep project open if running multiple tasks on it
+							break;
+						case RCronTaskType.AuditCompact:
+							log.AppendLine("\n** running audit and compact task");
+							log.AppendLine("-- specified path: {0}", taskSpec.ProjectFile);
+							RCronAuditCompactTaskSpec acTaskInfo = (RCronAuditCompactTaskSpec)taskSpec;
+							ModelPath sourcePath = ModelPathUtils.ConvertUserVisiblePathToModelPath(acTaskInfo.ProjectFile);
+							openOpts = new OpenOptions();
+							try	//todo: convert this to if(fileIsCentralFile)
+							{
+								FileInfo centralFile = new FileInfo(acTaskInfo.ProjectFile);
+								String centralFileName = centralFile.Name;
+								String localFilePath
+									= RCronFileLocations.ResourcesDirectoryPath + RCronCanon.GetLocalFileName(centralFileName);
+								docPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(localFilePath);
+								WorksharingUtils.CreateNewLocal(docPath, sourcePath);
+								log.AppendLine("  -- project is workshared");
+							}
+							catch (Autodesk.Revit.Exceptions.ArgumentException)
+							{
+								log.AppendLine("  -- project is not workshared");
+								docPath = sourcePath;
+							}
+							if (docPath.ServerPath)
+							{
+								openOpts.DetachFromCentralOption = DetachFromCentralOption.DoNotDetach;
+								openOpts.Audit = true;
+								//todo: create new local
+							}
+							dbDoc = app.OpenDocumentFile(docPath, openOpts);
+							//todo: synchronize
+							dbDoc.Close(false);
 							break;
 						case RCronTaskType.Test:
 							TaskDialog.Show("Test", "Running test task");
