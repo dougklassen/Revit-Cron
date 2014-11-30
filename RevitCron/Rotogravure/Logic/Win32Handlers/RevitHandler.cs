@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Windows.Automation;
 
 namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 {
@@ -21,6 +23,14 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			WinApi.User32.SendMessage(hWndRevit, WinApi.User32.WM_CLOSE, 0, 0);
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		public static void HandleCloseDocumentWindow(Boolean save)
+		{
+			
+		}
+
 		private static IntPtr GetRevitHandle()
 		{
 			IntPtr hWndRevit = IntPtr.Zero;
@@ -29,6 +39,14 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			hWndRevit = process.MainWindowHandle;
 
 			return hWndRevit;
+		}
+
+		private static void ClickButton(IntPtr hWndChild)
+		{
+					WinApi.User32.SendMessage(hWndChild, WinApi.User32.BM_SETSTATE, 1, 0);
+					WinApi.User32.SendMessage(hWndChild, WinApi.User32.WM_LBUTTONDOWN, 0, 0);
+					WinApi.User32.SendMessage(hWndChild, WinApi.User32.WM_LBUTTONUP, 0, 0);
+					WinApi.User32.SendMessage(hWndChild, WinApi.User32.BM_SETSTATE, 1, 0);
 		}
 	}
 }

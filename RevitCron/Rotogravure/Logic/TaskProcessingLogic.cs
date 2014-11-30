@@ -6,7 +6,6 @@ using DougKlassen.Revit.Cron.Repositories;
 using DougKlassen.Revit.Cron.Rotogravure.Interface;
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -197,7 +196,8 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 								log.AppendLine("  !! error: couldn't load printset {0}", printTaskInfo.PrintSet);
 							}
 							//this won't work because we had to make the document active
-							//dbDoc.Close(false);	//todo: keep project open if running multiple tasks on it
+							dbDoc.Close(false);	//todo: keep project open if running multiple tasks on it
+							RevitHandler.HandleCloseDocumentWindow(false);
 							break;
 						case RCronTaskType.Export:
 							dbDoc = app.OpenDocumentFile(taskSpec.ProjectFile);
