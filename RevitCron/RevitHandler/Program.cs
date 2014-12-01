@@ -24,6 +24,23 @@ namespace DougKlassen.RevitHandler
 				if (adButton != null)
 				{
 					Console.WriteLine("AdApplication button found");
+
+					var patterns = adButton.GetSupportedPatterns();
+					Console.WriteLine(" Patterns:");
+					foreach (var patt in patterns)
+					{
+						Console.WriteLine( " - {0}", patt.ProgrammaticName);
+					}
+					var props = adButton.GetSupportedProperties();
+					Console.WriteLine(" Properties:");
+					foreach (var prop in props)
+					{
+						Console.WriteLine(" - {0}", prop.ProgrammaticName);
+						Console.WriteLine("   + {0}", adButton.GetCurrentPropertyValue(prop));
+					}
+
+					//var adButtonPatt = adButton.GetCurrentPattern(InvokePattern.Pattern) as InvokePattern;
+					//adButtonPatt.Invoke();
 				}
 				if (close != null)
 				{
@@ -40,15 +57,7 @@ namespace DougKlassen.RevitHandler
 					Console.WriteLine("Class: {0}", child.GetCurrentPropertyValue(AutomationElement.ClassNameProperty));
 					ControlType ct = child.GetCurrentPropertyValue(AutomationElement.ControlTypeProperty) as ControlType;
 					Console.WriteLine("Control Type: {0}", ct.ProgrammaticName);
-					foreach (AutomationElement subChild in child.FindAll(TreeScope.Children, contentPropCondition))
-					{
-						Console.WriteLine(" - {0}", subChild.GetCurrentPropertyValue(AutomationElement.NameProperty));
-						foreach (AutomationElement sub2Child in child.FindAll(TreeScope.Children, contentPropCondition))
-						{
-							Console.WriteLine("   + {0}", sub2Child.GetCurrentPropertyValue(AutomationElement.NameProperty));
-						}
-						Console.ReadKey();
-					}
+
 					Console.WriteLine("* * *");
 				}
 			}

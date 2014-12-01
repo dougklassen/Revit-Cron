@@ -44,6 +44,11 @@ namespace DougKlassen.RevitHandler
 		{
 			get
 			{
+				var revit = RevitWindow;
+				if (revit = null)
+				{
+					return null;
+				}
 				AutomationElement button;
 				PropertyCondition cond = new PropertyCondition(AutomationElement.NameProperty, "AdApplicationButton");
 				button = RevitWindow.FindFirst(TreeScope.Children, cond);
