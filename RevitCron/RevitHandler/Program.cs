@@ -13,16 +13,21 @@ namespace DougKlassen.RevitHandler
 		{
 			var revit = RevitHandler.RevitWindow;
 			var adButton = RevitHandler.AdAppButton;
+			var close = RevitHandler.CloseItem;
 
 			if (revit != null)
 			{
 				Console.WriteLine("Revit Found");
-				Console.WriteLine("Name: {0}", revit.GetCurrentPropertyValue(AutomationElement.NameProperty));
-				Console.WriteLine("Native Window Property: {0}", revit.GetCurrentPropertyValue(AutomationElement.NativeWindowHandleProperty));
+				Console.WriteLine("** Name: {0}", revit.GetCurrentPropertyValue(AutomationElement.NameProperty));
+				Console.WriteLine("** Native Window Property: {0}", revit.GetCurrentPropertyValue(AutomationElement.NativeWindowHandleProperty));
 
 				if (adButton != null)
 				{
 					Console.WriteLine("AdApplication button found");
+				}
+				if (close != null)
+				{
+					Console.WriteLine("Close menu item found");
 				}
 
 				PropertyCondition contentPropCondition = new PropertyCondition(AutomationElement.IsContentElementProperty, true);

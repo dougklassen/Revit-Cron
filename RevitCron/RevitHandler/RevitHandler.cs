@@ -50,5 +50,19 @@ namespace DougKlassen.RevitHandler
 				return button;
 			}
 		}
+
+		/// <summary>
+		/// The "Close" menu item
+		/// </summary>
+		public static AutomationElement CloseItem
+		{
+			get
+			{
+				AutomationElement elem;
+				PropertyCondition cond = new PropertyCondition(AutomationElement.NameProperty, "Close");
+				elem = AdAppButton.FindFirst(TreeScope.Children, cond);
+				return elem;
+			}
+		}
 	}
 }
