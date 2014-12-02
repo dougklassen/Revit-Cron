@@ -92,7 +92,12 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\RevitHandler\RevitHandler.csproj">
+      <Project>{18a69b9f-3f27-4785-8033-19626bb8b628}</Project>
+      <Name>RevitHandler</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(ProjectDir)""$(OutDir)"* "C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure" /S /Y</PostBuildEvent>

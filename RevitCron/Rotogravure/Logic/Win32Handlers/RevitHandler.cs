@@ -23,14 +23,6 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			WinApi.User32.SendMessage(hWndRevit, WinApi.User32.WM_CLOSE, 0, 0);
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public static void HandleCloseDocumentWindow(Boolean save)
-		{
-			
-		}
-
 		private static IntPtr GetRevitHandle()
 		{
 			IntPtr hWndRevit = IntPtr.Zero;

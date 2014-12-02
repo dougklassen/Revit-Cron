@@ -15,6 +15,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
 		Result IExternalApplication.OnStartup(UIControlledApplication application)
 		{
 			application.ControlledApplication.ApplicationInitialized += TaskProcessingLogic.OnApplicationInitialized;
+			application.DialogBoxShowing += DougKlassen.Revit.Automation.RevitHandler.OnDialogShowing;
 
 			return Result.Succeeded;
 		}

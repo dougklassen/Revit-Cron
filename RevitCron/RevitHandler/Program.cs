@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Automation;
 
-namespace DougKlassen.RevitHandler
+namespace DougKlassen.Revit.Automation
 {
 	class Program
 	{
@@ -13,7 +13,6 @@ namespace DougKlassen.RevitHandler
 		{
 			var revit = RevitHandler.RevitWindow;
 			var adButton = RevitHandler.AdAppButton;
-			var close = RevitHandler.CloseItem;
 
 			if (revit != null)
 			{
@@ -38,13 +37,6 @@ namespace DougKlassen.RevitHandler
 						Console.WriteLine(" - {0}", prop.ProgrammaticName);
 						Console.WriteLine("   + {0}", adButton.GetCurrentPropertyValue(prop));
 					}
-
-					//var adButtonPatt = adButton.GetCurrentPattern(InvokePattern.Pattern) as InvokePattern;
-					//adButtonPatt.Invoke();
-				}
-				if (close != null)
-				{
-					Console.WriteLine("Close menu item found");
 				}
 
 				PropertyCondition contentPropCondition = new PropertyCondition(AutomationElement.IsControlElementProperty, true);

@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Automation;
+using System.Diagnostics;
 
-namespace DougKlassen.RevitHandler
+namespace DougKlassen.Revit.Automation
 {
 	/// <summary>
 	/// A class supporting Revit UI automation
@@ -45,7 +46,7 @@ namespace DougKlassen.RevitHandler
 			get
 			{
 				var revit = RevitWindow;
-				if (revit = null)
+				if (revit == null)
 				{
 					return null;
 				}
@@ -57,17 +58,32 @@ namespace DougKlassen.RevitHandler
 		}
 
 		/// <summary>
-		/// The "Close" menu item
+		/// Exit Revit
 		/// </summary>
-		public static AutomationElement CloseItem
+		public static void Exit()
 		{
-			get
-			{
-				AutomationElement elem;
-				PropertyCondition cond = new PropertyCondition(AutomationElement.NameProperty, "Close");
-				elem = AdAppButton.FindFirst(TreeScope.Children, cond);
-				return elem;
-			}
+			IntPtr hWndRevit = GetRevitHandle();
+			WinApi.SendMessage(hWndRevit, WinApi.WM_CLOSE, 0, 0);
+		}
+	
+		private static IntPtr GetRevitHandle()
+		{
+			IntPtr hWndRevit = IntPtr.Zero;
+
+			Process process = Process.GetCurrentProcess();
+			hWndRevit = process.MainWindowHandle;
+
+			return hWndRevit;
+		}
+
+		/// <summary>
+		/// When Revit is started, check for a batch repo, load the batch, and run it
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		public static void OnDialogShowing(object sender, Autodesk.Revit.UI.Events.DialogBoxShowingEventArgs e)
+		{
+
 		}
 	}
 }
