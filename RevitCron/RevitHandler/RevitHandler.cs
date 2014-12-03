@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Automation;
+using System.Windows.Forms;
 using System.Diagnostics;
+using Autodesk.Revit.UI;
+using Autodesk.Revit.UI.Events;
 
 namespace DougKlassen.Revit.Automation
 {
@@ -83,7 +86,16 @@ namespace DougKlassen.Revit.Automation
 		/// <param name="e"></param>
 		public static void OnDialogShowing(object sender, Autodesk.Revit.UI.Events.DialogBoxShowingEventArgs e)
 		{
-
+			var args = e as TaskDialogShowingEventArgs;
+			if (args != null)
+			{
+				var msg = string.Format("HelpId: {0}\nDialogId: {1}\nMessage: {2}", args.HelpId, args.DialogId, args.Message);
+				MessageBox.Show(msg, "Dialog Showing");
+			}
+			else
+			{
+				MessageBox.Show("Event Type: " + e.GetType().ToString(), "Dialog Showing");
+			}
 		}
 	}
 }

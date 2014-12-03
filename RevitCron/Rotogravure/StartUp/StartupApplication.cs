@@ -1,9 +1,9 @@
 ﻿using Autodesk.Revit.UI;
-
+using DougKlassen.Revit.Automation;
+using RevitHandler = DougKlassen.Revit.Automation.RevitHandler;
 using DougKlassen.Revit.Cron.Models;
 using DougKlassen.Revit.Cron.Repositories;
 using DougKlassen.Revit.Cron.Rotogravure.Logic;
-
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -15,7 +15,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
 		Result IExternalApplication.OnStartup(UIControlledApplication application)
 		{
 			application.ControlledApplication.ApplicationInitialized += TaskProcessingLogic.OnApplicationInitialized;
-			application.DialogBoxShowing += DougKlassen.Revit.Automation.RevitHandler.OnDialogShowing;
+			application.DialogBoxShowing += RevitHandler.OnDialogShowing;
 
 			return Result.Succeeded;
 		}
