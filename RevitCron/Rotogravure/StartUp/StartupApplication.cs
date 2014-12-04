@@ -1,6 +1,5 @@
 ﻿using Autodesk.Revit.UI;
 using DougKlassen.Revit.Automation;
-using RevitHandler = DougKlassen.Revit.Automation.RevitHandler;
 using DougKlassen.Revit.Cron.Models;
 using DougKlassen.Revit.Cron.Repositories;
 using DougKlassen.Revit.Cron.Rotogravure.Logic;
@@ -10,6 +9,9 @@ using System.Windows.Forms;
 
 namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
 {
+	/// <summary>
+	/// Start up app to set up the task processing logic
+	/// </summary>
 	public class StartUpApp : IExternalApplication
 	{
 		private RevitHandler revitHandler;
