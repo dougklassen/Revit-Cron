@@ -13,11 +13,11 @@ using System.Threading;
 
 namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 {
+	/// <summary>
+	/// The handler to process batched tasks, with a callback that is invoked when Revit starts up
+	/// </summary>
 	public static class TaskProcessingLogic
 	{
-		private static RCronOptions options;
-		private static RCronLog log;
-
 		/// <summary>
 		/// When Revit is started, check for a batch repo, load the batch, and run it
 		/// </summary>
@@ -25,6 +25,10 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 		/// <param name="e"></param>
 		public static void OnApplicationInitialized(object sender, Autodesk.Revit.DB.Events.ApplicationInitializedEventArgs e)
 		{
+			RCronLog log;
+			RCronOptions options;
+			RevitHandler revitHandler = RevitHandler.Instance;
+
 			{
 				log = RCronLog.Instance;
 				try
@@ -270,7 +274,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			//	log.LogException(exc);
 			//}
 
-			RevitHandler.Exit();
+			revitHandler.Exit();
 			log.AppendLine("** all tasks completed");
 		}
 	}

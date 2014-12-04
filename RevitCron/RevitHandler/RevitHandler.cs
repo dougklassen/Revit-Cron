@@ -130,17 +130,15 @@ namespace DougKlassen.Revit.Automation
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		public static void OnDialogShowing(object sender, Autodesk.Revit.UI.Events.DialogBoxShowingEventArgs e)
+		public void OnDialogShowing(Object sender, DialogBoxShowingEventArgs e)
 		{
 			var args = e as TaskDialogShowingEventArgs;
 			if (args != null)
 			{
-				var msg = string.Format("HelpId: {0}\nDialogId: {1}\nMessage: {2}", args.HelpId, args.DialogId, args.Message);
-				MessageBox.Show(msg, "Dialog Showing");
-			}
-			else
-			{
-				MessageBox.Show("Event Type: " + e.GetType().ToString(), "Dialog Showing");
+				if (DialogHandler.HasOverride(args.DialogId))
+				{
+					args.OverrideResult(DialogHandler.GetOverride(args.DialogId));
+				}
 			}
 		}
 	}

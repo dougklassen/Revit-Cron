@@ -12,10 +12,14 @@ namespace DougKlassen.Revit.Cron.Rotogravure.StartUp
 {
 	public class StartUpApp : IExternalApplication
 	{
+		private RevitHandler revitHandler;
+
 		Result IExternalApplication.OnStartup(UIControlledApplication application)
 		{
+			revitHandler = RevitHandler.Instance;
+
 			application.ControlledApplication.ApplicationInitialized += TaskProcessingLogic.OnApplicationInitialized;
-			application.DialogBoxShowing += RevitHandler.OnDialogShowing;
+			application.DialogBoxShowing += revitHandler.OnDialogShowing;
 
 			return Result.Succeeded;
 		}
