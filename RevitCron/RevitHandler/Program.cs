@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Automation;
 
 namespace DougKlassen.Revit.Automation
@@ -11,8 +7,8 @@ namespace DougKlassen.Revit.Automation
 	{
 		static void Main(string[] args)
 		{
-			var revit = RevitHandler.RevitWindow;
-			var adButton = RevitHandler.AdAppButton;
+			var revit = RevitHandler.GetRevitWindow();
+			var adButton = RevitHandler.GetAdAppButton();
 
 			if (revit != null)
 			{

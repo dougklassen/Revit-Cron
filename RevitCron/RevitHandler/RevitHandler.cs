@@ -1,74 +1,90 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Autodesk.Revit.UI.Events;
+using System;
+using System.Diagnostics;
 using System.Windows.Automation;
 using System.Windows.Forms;
-using System.Diagnostics;
-using Autodesk.Revit.UI;
-using Autodesk.Revit.UI.Events;
 
 namespace DougKlassen.Revit.Automation
 {
 	/// <summary>
 	/// A class supporting Revit UI automation
 	/// </summary>
-	public static class RevitHandler
+	public sealed class RevitHandler
 	{
 		/// <summary>
-		/// A reference to the Revit main window
+		/// Field for specifying response behavior to 
 		/// </summary>
-		public static AutomationElement RevitWindow
+		private DialogResponse DialogHandler { get; set; }
+
+		/// <summary>
+		/// Singleton static initializer
+		/// </summary>
+		private static readonly RevitHandler instance = new RevitHandler();
+
+		/// <summary>
+		/// Accessor for singleton instance
+		/// </summary>
+		public static RevitHandler Instance
 		{
 			get
 			{
-				AutomationElement revit = null;
-
-				PropertyCondition contentPropCondition = new PropertyCondition(AutomationElement.IsContentElementProperty, true);
-				var windows = AutomationElement.RootElement.FindAll(TreeScope.Children, contentPropCondition);
-
-				foreach (AutomationElement window in windows)
-				{
-					String name = window.GetCurrentPropertyValue(AutomationElement.NameProperty).ToString();
-					if (name.StartsWith("Autodesk Revit "))
-					{
-						revit = window;
-					}
-				}
-
-				return revit;
+				return instance;
 			}
 		}
 
 		/// <summary>
-		/// A reference to the "AdApplicationButton" which holds the Revit program menu
+		/// Private default constructor
 		/// </summary>
-		public static AutomationElement AdAppButton
+		private RevitHandler()
 		{
-			get
+			DialogHandler = new DialogResponse();
+		}
+
+		/// <summary>
+		/// Get a reference to the Revit main window
+		/// </summary>
+		public static AutomationElement GetRevitWindow()
+		{
+			AutomationElement revit = null;
+
+			PropertyCondition contentPropCondition = new PropertyCondition(AutomationElement.IsContentElementProperty, true);
+			var windows = AutomationElement.RootElement.FindAll(TreeScope.Children, contentPropCondition);
+
+			foreach (AutomationElement window in windows)
 			{
-				var revit = RevitWindow;
-				if (revit == null)
+				String name = window.GetCurrentPropertyValue(AutomationElement.NameProperty).ToString();
+				if (name.StartsWith("Autodesk Revit "))
 				{
-					return null;
+					revit = window;
 				}
+			}
+
+			return revit;
+		}
+
+		/// <summary>
+		/// Get a reference to the "AdApplicationButton" which holds the Revit program menu
+		/// </summary>
+		public static AutomationElement GetAdAppButton()
+		{
+			var revit = GetRevitWindow();
+			if (revit == null)
+			{
+				return null;
+			}
+			else
+			{
 				AutomationElement button;
 				PropertyCondition cond = new PropertyCondition(AutomationElement.NameProperty, "AdApplicationButton");
-				button = RevitWindow.FindFirst(TreeScope.Children, cond);
+				button = revit.FindFirst(TreeScope.Children, cond);
 				return button;
 			}
 		}
 
 		/// <summary>
-		/// Exit Revit
+		/// Get a handle to Revit using Win32
 		/// </summary>
-		public static void Exit()
-		{
-			IntPtr hWndRevit = GetRevitHandle();
-			WinApi.SendMessage(hWndRevit, WinApi.WM_CLOSE, 0, 0);
-		}
-	
+		/// <returns></returns>
 		private static IntPtr GetRevitHandle()
 		{
 			IntPtr hWndRevit = IntPtr.Zero;
@@ -80,7 +96,37 @@ namespace DougKlassen.Revit.Automation
 		}
 
 		/// <summary>
-		/// When Revit is started, check for a batch repo, load the batch, and run it
+		/// Exit Revit 
+		/// </summary>
+		public void Exit(Boolean synchronize = false, Boolean save = false)
+		{
+			if (save)
+			{
+				DialogHandler.AddOverride(RevitDialog.SaveFile, 6); //yes
+			}
+			else
+			{
+				DialogHandler.AddOverride(RevitDialog.SaveFile, 7); //no
+			}
+			IntPtr hWndRevit = GetRevitHandle();
+			WinApi.SendMessage(hWndRevit, WinApi.WM_CLOSE, 0, 0);
+			DialogHandler.ClearOverrides();
+		}
+
+		/// <summary>
+		/// Send a button click to the specified button element
+		/// </summary>
+		/// <param name="hWndChild"></param>
+		private static void ClickButton(IntPtr hWndChild)
+		{
+			WinApi.SendMessage(hWndChild, WinApi.BM_SETSTATE, 1, 0);
+			WinApi.SendMessage(hWndChild, WinApi.WM_LBUTTONDOWN, 0, 0);
+			WinApi.SendMessage(hWndChild, WinApi.WM_LBUTTONUP, 0, 0);
+			WinApi.SendMessage(hWndChild, WinApi.BM_SETSTATE, 1, 0);
+		}
+
+		/// <summary>
+		/// Carry out dialog handling according to current dialog handling settings
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
