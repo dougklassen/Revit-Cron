@@ -66,9 +66,9 @@ namespace DougKlassen.Revit.Cron.Models
 		public void LogThreadInfo()
 		{
 			Thread currThrd = Thread.CurrentThread;
-			AppendLine("!! current thread: {0}", currThrd.Name);
-			AppendLine("!! Id: {0}", currThrd.ManagedThreadId);
-			AppendLine("!! app domain: {0}", AppDomain.CurrentDomain.FriendlyName);
+			AppendLine("  ** current thread: {0}", currThrd.Name);
+			AppendLine("  -- Id: {0}", currThrd.ManagedThreadId);
+			AppendLine("  -- app domain: {0}", AppDomain.CurrentDomain.FriendlyName);
 		}
 	}
 }
