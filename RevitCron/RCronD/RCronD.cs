@@ -126,24 +126,31 @@ namespace DougKlassen.Revit.Cron.Daemon
 				//todo: maybe it should be set to the start of the batch
 				endOfLastBatch = batch.EndTime;	//move batch window forward
 
-				RCronBatchJsonRepo batchRepo = new RCronBatchJsonRepo(new Uri(RCronFileLocations.BatchFilePath));
-				File.Delete(RCronFileLocations.BatchFilePath);	//clean up any left over batch file
-				batchRepo.PutRCronBatch(batch);	//write the batch repo to be read by Rotogravure
+				var subBatches = GetSubBatches(batch.TaskSpecs.Values);
 
 				TimeSpan timeTillRun = batch.StartTime - DateTime.Now;
-				Timer runBatchTimer = new Timer();
-				runBatchTimer.Interval =
-					timeTillRun.TotalMilliseconds > 100 ? timeTillRun.TotalMilliseconds : 100;
-				runBatchTimer.Elapsed += runBatchTimer_Elapsed;
-				runBatchTimer.AutoReset = false;
-				runBatchWait.Reset();	//reset the AutoResetEvent handle to wait
-				runBatchTimer.Start();
-				//todo: should this method return here and let all the cleanup happen in the timer callback?
+				foreach (var subBatch in subBatches)
+				{
+					RCronBatchJsonRepo batchRepo = new RCronBatchJsonRepo(new Uri(RCronFileLocations.BatchFilePath));
+					File.Delete(RCronFileLocations.BatchFilePath);	//clean up any left over batch file
+					batchRepo.PutRCronBatch(subBatch);	//write the batch repo to be read by Rotogravure
 
-				runBatchWait.WaitOne();	//wait till the callback signals to continue
-				//todo: update last run times (maybe to endOfLastBatch?)
-				//todo: record result of run
-				batchRepo.Delete();	//cleanup the repo
+					Timer runBatchTimer = new Timer();
+					runBatchTimer.Interval =
+						timeTillRun.TotalMilliseconds > 100 ? timeTillRun.TotalMilliseconds : 100;
+					runBatchTimer.Elapsed += runBatchTimer_Elapsed;
+					runBatchTimer.AutoReset = false;
+					runBatchWait.Reset();	//reset the AutoResetEvent handle to wait
+					runBatchTimer.Start();
+					//todo: should this method return here and let all the cleanup happen in the timer callback?
+
+					runBatchWait.WaitOne();	//wait till the callback signals to continue
+					//todo: update last run times (maybe to endOfLastBatch?)
+					//todo: record result of run
+					batchRepo.Delete();	//cleanup the repo
+					timeTillRun = new TimeSpan(500); //set pause till next sub batch is run
+				}
+
 				Interlocked.Exchange(ref status, (Int32)DaemonStatus.NoBatchQueued);
 			}
 		}
@@ -165,6 +172,39 @@ namespace DougKlassen.Revit.Cron.Daemon
 			//System.Windows.Forms.MessageBox.Show(msg);
 
 			runBatchWait.Set();
+		}
+
+		/// <summary>
+		/// Break the batches up into sub batches
+		/// </summary>
+		/// <param name="taskSpecs"></param>
+		/// <returns></returns>
+		private List<RCronBatch> GetSubBatches(IEnumerable<RCronTaskSpec> taskSpecs)
+		{
+			var subBatches = new List<RCronBatch>();
+			var acTaskSpecs = taskSpecs.Where(t => t is RCronAuditCompactTaskSpec);
+			Int32 ctr = 0;
+			foreach (var taskSpec in acTaskSpecs)
+			{
+				var acSubBatch = new RCronBatch();
+				String name = String.Format("{0}-{1}-{2}", ctr++, taskSpec.TaskType.ToString(), taskSpec.ProjectFile);
+				acSubBatch.Add(name, taskSpec);
+				subBatches.Add(acSubBatch);
+			}
+			var taskSpecsByProject = taskSpecs.Where(t => !(t is RCronAuditCompactTaskSpec)).GroupBy(e => e.ProjectFile);
+
+			foreach (var projectGrouping in taskSpecsByProject)
+			{
+				var projectSubBatch = new RCronBatch();
+				foreach (var taskSpec in projectGrouping)
+				{
+					String name = String.Format("{0}-{1}-{2}", ctr++, taskSpec.TaskType.ToString(), taskSpec.ProjectFile);
+					projectSubBatch.Add(name, taskSpec);
+				}
+				subBatches.Add(projectSubBatch);
+			}
+
+			return subBatches;
 		}
 	}
 

@@ -69,6 +69,35 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 
 			log.AppendLine("  -- number of tasks found: {0}", batch.TaskSpecs.Count());
 
+			var firstTask = batch.TaskSpecs.Values.First();
+			var docPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(firstTask.ProjectFile);
+			var openOpts = new OpenOptions();
+			if (docPath.ServerPath)
+			{
+				openOpts.DetachFromCentralOption = DetachFromCentralOption.DetachAndPreserveWorksets;
+			}
+			var uiApp = new UIApplication(app);
+			Document dbDoc = null;
+
+			if (firstTask is RCronAuditCompactTaskSpec) //audit and compact tasks are batched separately
+			{
+				log.AppendLine("\n** running audit and compact task");
+				RunAuditCompactTask(firstTask as RCronAuditCompactTaskSpec, app);
+			}
+			else if (firstTask is RCronTestTaskSpec)
+			{
+				log.AppendLine("\n** running test task");
+			}
+			else if (batch.TaskSpecs.Values.Where(t => t is RCronPrintTaskSpec).Count() > 0) //if the batch contains a PrintTask
+			{
+				var uiDoc = uiApp.OpenAndActivateDocument(docPath, openOpts, false); //We need to open and activate the doc at the ui level or the Bluebeam print driver will crash when run on VDI. Can't use dbDoc = app.OpenDocumentFile(docPath, openOpts);
+				dbDoc = uiDoc.Document;				
+			}
+			else //otherwise open normally
+			{
+				dbDoc = app.OpenDocumentFile(docPath, openOpts);
+			}
+
 			foreach (RCronTaskSpec taskSpec in batch.TaskSpecs.Values)
 			{
 				try
@@ -77,27 +106,19 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 					{
 						case RCronTaskType.Print:
 							log.AppendLine("\n** running print task");
-							RunPrintTask(taskSpec as RCronPrintTaskSpec, app);
+							RunPrintTask(taskSpec as RCronPrintTaskSpec, dbDoc);
 							break;
 						case RCronTaskType.Export:
 							log.AppendLine("\n** running export task");
-							RunExportTask(taskSpec as RCronExportTaskSpec, app);
+							RunExportTask(taskSpec as RCronExportTaskSpec, dbDoc);
 							break;
 						case RCronTaskType.ETransmit:
 							log.AppendLine("\n** running eTransmit task");
-							RunETransmitTask(taskSpec as RCronETransmitTaskSpec, app);
+							RunETransmitTask(taskSpec as RCronETransmitTaskSpec, dbDoc);
 							break;
 						case RCronTaskType.Command:
 							log.AppendLine("\n** running command task");
-							RunCommandTask(taskSpec as RCronCommandTaskSpec, app);
-							break;
-						case RCronTaskType.AuditCompact:
-							log.AppendLine("\n** running audit and compact task");
-							RunAuditCompactTask(taskSpec as RCronAuditCompactTaskSpec, app);
-							break;
-						case RCronTaskType.Test:
-							//TaskDialog.Show("Test", "Running test task");
-							log.AppendLine("\n** running test task");
+							RunCommandTask(taskSpec as RCronCommandTaskSpec, dbDoc);
 							break;
 						default:
 							break;
@@ -109,7 +130,6 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 				}
 			}
 
-			revitHandler.CloseActive(); //in case a doc is active
 			revitHandler.Exit(synchronize: false, save: false); //close Revit without saving or synchronizing any open documents
 			log.AppendLine("** all tasks completed");
 		}
@@ -148,46 +168,40 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			return;
 		}
 
-		private static void RunExportTask(RCronExportTaskSpec exportTask, Application app)
+		private static void RunExportTask(RCronExportTaskSpec exportTask, Document dbDoc)
 		{
-			var dbDoc = app.OpenDocumentFile(exportTask.ProjectFile);
 			log.AppendLine("\n-- specified path: {0}", dbDoc.PathName);
-			dbDoc.Close(false);	//todo: keep project open if running multiple tasks on it
 			return;
 		}
 
-		private static void RunETransmitTask(RCronETransmitTaskSpec eTransmitTask, Application app)
+		private static void RunETransmitTask(RCronETransmitTaskSpec eTransmitTask, Document dbDoc)
 		{
-			var dbDoc = app.OpenDocumentFile(eTransmitTask.ProjectFile);
 			log.AppendLine("\n-- path: {0}", dbDoc.PathName);
-			dbDoc.Close(false);	//todo: keep project open if running multiple tasks on it
 			return;
 		}
 
-		private static void RunCommandTask(RCronCommandTaskSpec commandTask, Application app)
+		private static void RunCommandTask(RCronCommandTaskSpec commandTask, Document dbDoc)
 		{
-			var dbDoc = app.OpenDocumentFile(commandTask.ProjectFile);
 			log.AppendLine("\n** running command task: {0}", dbDoc.PathName);
-			dbDoc.Close(false);	//todo: keep project open if running multiple tasks on it
 			return;
 		}
 
-		private static void RunPrintTask(RCronPrintTaskSpec printTask, Application app)
+		private static void RunPrintTask(RCronPrintTaskSpec printTask, Document dbDoc)
 		{
 			log.AppendLine("-- specified path: {0}", printTask.ProjectFile);
 
-			var docPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(printTask.ProjectFile);
-			var openOpts = new OpenOptions();
-			if (docPath.ServerPath)
-			{
-				openOpts.DetachFromCentralOption = DetachFromCentralOption.DetachAndPreserveWorksets;
-			}
+			//var docPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(printTask.ProjectFile);
+			//var openOpts = new OpenOptions();
+			//if (docPath.ServerPath)
+			//{
+			//	openOpts.DetachFromCentralOption = DetachFromCentralOption.DetachAndPreserveWorksets;
+			//}
 
-			var uiApp = new UIApplication(app);
-			//todo: check that the document isn't open and active already before opening
-			//todo: test what happens when the doc is already open
-			var uiDoc = uiApp.OpenAndActivateDocument(docPath, openOpts, false); //We need to open and activate the doc at the ui level or the Bluebeam print driver will crash when run on VDI. Can't use dbDoc = app.OpenDocumentFile(docPath, openOpts);
-			var dbDoc = uiDoc.Document;
+			//var uiApp = new UIApplication(app);
+			////todo: check that the document isn't open and active already before opening
+			////todo: test what happens when the doc is already open
+			//var uiDoc = uiApp.OpenAndActivateDocument(docPath, openOpts, false); //We need to open and activate the doc at the ui level or the Bluebeam print driver will crash when run on VDI. Can't use dbDoc = app.OpenDocumentFile(docPath, openOpts);
+			//var dbDoc = uiDoc.Document;
 			log.AppendLine("-- loaded path: {0}", dbDoc.PathName);
 			ViewSheetSet printSet = new FilteredElementCollector(dbDoc)
 					.OfClass(typeof(ViewSheetSet))
@@ -282,8 +296,6 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			{
 				log.AppendLine("  ++ error: dialog handler timed out");
 			}
-			revitHandler.CloseActive();
-			//We can't close the document with dbDoc.Close(false) because we had to make it active. It will be left open
 		}
 	}
 }
