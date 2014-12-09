@@ -86,6 +86,15 @@ namespace DougKlassen.Revit.Automation
 		///		1002: Detach and discard worksets
 		///		2:		Cancel
 		/// </remarks>
-		DetachModel
+		DetachModel,
+		/// <summary>
+		/// When project is opened and ActiveX elements were lost on import
+		/// </summary>
+		/// <remarks>
+		/// DialogId: TaskDialog_Lost_On_Import
+		/// Message: Some elements were lost during import. ActiveX(r) and some proprietary components cannot be imported
+		/// 1:	Ok
+		/// </remarks>
+		LostOnImport
 	}
 }

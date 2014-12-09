@@ -69,8 +69,8 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 
 			log.AppendLine("  -- number of tasks found: {0}", batch.TaskSpecs.Count());
 
+			revitHandler.AddDialogOverride(RevitDialog.LostOnImport, 1); //respond with Ok
 			var firstTask = batch.TaskSpecs.Values.First();
-
 			if (firstTask is RCronAuditCompactTaskSpec) //audit and compact tasks are batched separately and will open there own doc
 			{
 				log.AppendLine("\n** running audit and compact task");

@@ -42,6 +42,24 @@ namespace DougKlassen.Revit.Automation
 		}
 
 		/// <summary>
+		/// Set a dialog override
+		/// </summary>
+		/// <param name="dialogType">The type of dialog to override</param>
+		/// <param name="resultOverride">The result to use</param>
+		public void AddDialogOverride(RevitDialog dialogType, Int32 resultOverride)
+		{
+			DialogHandler.AddOverride(dialogType, resultOverride);
+		}
+
+		/// <summary>
+		/// clear all dialog overrides in effect
+		/// </summary>
+		public void ClearDialogOverrides()
+		{
+			DialogHandler.ClearOverrides();
+		}
+
+		/// <summary>
 		/// Get a reference to the Revit main window
 		/// </summary>
 		public static AutomationElement GetRevitWindow()
@@ -234,10 +252,17 @@ namespace DougKlassen.Revit.Automation
 			var args = e as TaskDialogShowingEventArgs;
 			if (args != null)
 			{
+				//var msg = string.Format("HelpId: {0}\nDialogId: {1}\nMessage: {2}", args.HelpId, args.DialogId, args.Message);
+				//MessageBox.Show(msg, "Dialog Showing");
 				if (DialogHandler.HasOverride(args.DialogId))
 				{
 					args.OverrideResult(DialogHandler.GetOverride(args.DialogId));
 				}
+			}
+			else
+			{
+				//todo: add default override
+				//MessageBox.Show("Event Type: " + e.GetType().ToString(), "Dialog Showing");
 			}
 		}
 	}
