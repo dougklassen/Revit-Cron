@@ -96,7 +96,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 							RunAuditCompactTask(taskSpec as RCronAuditCompactTaskSpec, app);
 							break;
 						case RCronTaskType.Test:
-							TaskDialog.Show("Test", "Running test task");
+							//TaskDialog.Show("Test", "Running test task");
 							log.AppendLine("\n** running test task");
 							break;
 						default:
@@ -109,6 +109,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 				}
 			}
 
+			revitHandler.CloseActive(); //in case a doc is active
 			revitHandler.Exit(synchronize: false, save: false); //close Revit without saving or synchronizing any open documents
 			log.AppendLine("** all tasks completed");
 		}
@@ -281,6 +282,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			{
 				log.AppendLine("  ++ error: dialog handler timed out");
 			}
+			revitHandler.CloseActive();
 			//We can't close the document with dbDoc.Close(false) because we had to make it active. It will be left open
 		}
 	}

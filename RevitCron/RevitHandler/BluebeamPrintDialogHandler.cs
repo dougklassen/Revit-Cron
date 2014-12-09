@@ -97,7 +97,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 				hWndChild = WinApi.GetWindow(hWndChild, WinApi.GW_HWNDNEXT);
 			} while (IntPtr.Zero != hWndChild);
 
-			log.AppendLine("  ** print dialog handeled, releasing TaskProcessing to continue");
+			log.AppendLine("  ** print dialog handled, releasing TaskProcessing to continue");
 			log.LogThreadInfo();
 			taskProcessingWaitHandle.Set(); //free TaskProcessingLogic to continue with other tasks
 		}
