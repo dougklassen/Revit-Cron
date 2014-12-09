@@ -70,16 +70,8 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			log.AppendLine("  -- number of tasks found: {0}", batch.TaskSpecs.Count());
 
 			var firstTask = batch.TaskSpecs.Values.First();
-			var docPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(firstTask.ProjectFile);
-			var openOpts = new OpenOptions();
-			if (docPath.ServerPath)
-			{
-				openOpts.DetachFromCentralOption = DetachFromCentralOption.DetachAndPreserveWorksets;
-			}
-			var uiApp = new UIApplication(app);
-			Document dbDoc = null;
 
-			if (firstTask is RCronAuditCompactTaskSpec) //audit and compact tasks are batched separately
+			if (firstTask is RCronAuditCompactTaskSpec) //audit and compact tasks are batched separately and will open there own doc
 			{
 				log.AppendLine("\n** running audit and compact task");
 				RunAuditCompactTask(firstTask as RCronAuditCompactTaskSpec, app);
@@ -88,45 +80,57 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			{
 				log.AppendLine("\n** running test task");
 			}
-			else if (batch.TaskSpecs.Values.Where(t => t is RCronPrintTaskSpec).Count() > 0) //if the batch contains a PrintTask
+			else //other commands will use an already open doc
 			{
-				var uiDoc = uiApp.OpenAndActivateDocument(docPath, openOpts, false); //We need to open and activate the doc at the ui level or the Bluebeam print driver will crash when run on VDI. Can't use dbDoc = app.OpenDocumentFile(docPath, openOpts);
-				dbDoc = uiDoc.Document;				
-			}
-			else //otherwise open normally
-			{
-				dbDoc = app.OpenDocumentFile(docPath, openOpts);
-			}
-
-			foreach (RCronTaskSpec taskSpec in batch.TaskSpecs.Values)
-			{
-				try
+				var docPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(firstTask.ProjectFile);
+				var openOpts = new OpenOptions();
+				if (docPath.ServerPath)
 				{
-					switch (taskSpec.TaskType)
-					{
-						case RCronTaskType.Print:
-							log.AppendLine("\n** running print task");
-							RunPrintTask(taskSpec as RCronPrintTaskSpec, dbDoc);
-							break;
-						case RCronTaskType.Export:
-							log.AppendLine("\n** running export task");
-							RunExportTask(taskSpec as RCronExportTaskSpec, dbDoc);
-							break;
-						case RCronTaskType.ETransmit:
-							log.AppendLine("\n** running eTransmit task");
-							RunETransmitTask(taskSpec as RCronETransmitTaskSpec, dbDoc);
-							break;
-						case RCronTaskType.Command:
-							log.AppendLine("\n** running command task");
-							RunCommandTask(taskSpec as RCronCommandTaskSpec, dbDoc);
-							break;
-						default:
-							break;
-					}
+					openOpts.DetachFromCentralOption = DetachFromCentralOption.DetachAndPreserveWorksets;
 				}
-				catch (Exception exception)
+				var uiApp = new UIApplication(app);
+				Document dbDoc;
+
+				if (batch.TaskSpecs.Values.Where(t => t is RCronPrintTaskSpec).Count() > 0) //if the batch contains a PrintTask
 				{
-					log.LogException(exception);
+					var uiDoc = uiApp.OpenAndActivateDocument(docPath, openOpts, false); //We need to open and activate the doc at the ui level or the Bluebeam print driver will crash when run on VDI. Can't use dbDoc = app.OpenDocumentFile(docPath, openOpts);
+					dbDoc = uiDoc.Document;
+				}
+				else //otherwise open normally
+				{
+					dbDoc = app.OpenDocumentFile(docPath, openOpts);
+				}
+
+				foreach (RCronTaskSpec taskSpec in batch.TaskSpecs.Values)
+				{
+					try
+					{
+						switch (taskSpec.TaskType)
+						{
+							case RCronTaskType.Print:
+								log.AppendLine("\n** running print task");
+								RunPrintTask(taskSpec as RCronPrintTaskSpec, dbDoc);
+								break;
+							case RCronTaskType.Export:
+								log.AppendLine("\n** running export task");
+								RunExportTask(taskSpec as RCronExportTaskSpec, dbDoc);
+								break;
+							case RCronTaskType.ETransmit:
+								log.AppendLine("\n** running eTransmit task");
+								RunETransmitTask(taskSpec as RCronETransmitTaskSpec, dbDoc);
+								break;
+							case RCronTaskType.Command:
+								log.AppendLine("\n** running command task");
+								RunCommandTask(taskSpec as RCronCommandTaskSpec, dbDoc);
+								break;
+							default:
+								break;
+						}
+					}
+					catch (Exception exception)
+					{
+						log.LogException(exception);
+					}
 				}
 			}
 
@@ -189,19 +193,6 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 		private static void RunPrintTask(RCronPrintTaskSpec printTask, Document dbDoc)
 		{
 			log.AppendLine("-- specified path: {0}", printTask.ProjectFile);
-
-			//var docPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(printTask.ProjectFile);
-			//var openOpts = new OpenOptions();
-			//if (docPath.ServerPath)
-			//{
-			//	openOpts.DetachFromCentralOption = DetachFromCentralOption.DetachAndPreserveWorksets;
-			//}
-
-			//var uiApp = new UIApplication(app);
-			////todo: check that the document isn't open and active already before opening
-			////todo: test what happens when the doc is already open
-			//var uiDoc = uiApp.OpenAndActivateDocument(docPath, openOpts, false); //We need to open and activate the doc at the ui level or the Bluebeam print driver will crash when run on VDI. Can't use dbDoc = app.OpenDocumentFile(docPath, openOpts);
-			//var dbDoc = uiDoc.Document;
 			log.AppendLine("-- loaded path: {0}", dbDoc.PathName);
 			ViewSheetSet printSet = new FilteredElementCollector(dbDoc)
 					.OfClass(typeof(ViewSheetSet))
