@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.7\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -43,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dummies.cs" />
     <Compile Include="CronExpression\CronSubExpressions.cs" />
     <Compile Include="CronExpression\CronExpression.cs" />
     <Compile Include="CronExpression\CronUtils.cs" />
@@ -58,6 +60,9 @@
     <Compile Include="Repositories\RCronScheduleRepo.cs" />
     <Compile Include="Repositories\RCronOptionsRepo.cs" />
     <Compile Include="Repositories\RCronBatchRepo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

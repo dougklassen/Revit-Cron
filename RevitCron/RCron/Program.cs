@@ -19,7 +19,7 @@ namespace RCron
 		{
 			if (args.Length >= 2)
 			{
-				if ("--uri" == args[0])
+				if ("-uri" == args[0])
 				{
 					String path = Directory.GetCurrentDirectory() + '\\' + args[1];
 					try
@@ -33,7 +33,7 @@ namespace RCron
 				}
 			}
 
-			Regex cmdRegex = new Regex(@"--(\S*)");
+			Regex cmdRegex = new Regex(@"-(\S*)");
 
 			IEnumerable<String> cmds = args
 					.Where(s => cmdRegex.IsMatch(s));
@@ -71,7 +71,7 @@ namespace RCron
 						break;
 					default:
 						Console.WriteLine("{0} : command not recognized", cmd);
-						Console.WriteLine("commands:\n--newoptions\n--newbatch\n--testschedule\n--timestamp");
+						Console.WriteLine("commands:\n-newoptions\n-newbatch\n-testschedule\n-timestamp\n-uri");
 						break;
 				}
 			}
