@@ -28,11 +28,12 @@ namespace DougKlassen.Revit.Cron.Repositories
 		public RCronOptions GetRCronOptions()
 		{
 			RCronOptions options = null;
+			var js = GetJsonSerializer();
 
-			using (FileStream fs = new FileStream(repoFileUri.LocalPath, FileMode.Open))
+			using (var sr = new StreamReader(repoFileUri.LocalPath))
+			using (var reader = new JsonTextReader(sr))
 			{
-				DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(RCronOptions));
-				options = (RCronOptions)s.ReadObject(fs);
+				options = js.Deserialize<RCronOptions>(reader);
 			}
 
 			return options;
@@ -40,10 +41,12 @@ namespace DougKlassen.Revit.Cron.Repositories
 
 		public void PutRCronOptions(RCronOptions options)
 		{
-			using (FileStream fs = new FileStream(repoFileUri.LocalPath, FileMode.Create))
+			var js = GetJsonSerializer();
+
+			using (var sw = new StreamWriter(repoFileUri.LocalPath, false))
+			using (var writer = new JsonTextWriter(sw))
 			{
-				DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(RCronOptions));
-				s.WriteObject(fs, options);
+				js.Serialize(writer, options);
 			}
 		}
 
@@ -78,6 +81,17 @@ namespace DougKlassen.Revit.Cron.Repositories
 		{
 			RCronOptionsJsonRepo repo = new RCronOptionsJsonRepo(uri);
 			repo.PutRCronOptions(options);
+		}
+
+		/// <summary>
+		/// Get the JsonSerializer to use with RCronOptions
+		/// </summary>
+		/// <returns></returns>
+		private JsonSerializer GetJsonSerializer()
+		{
+			var serializer = new JsonSerializer();
+			serializer.Formatting = Formatting.Indented;
+			return serializer;
 		}
 	}
 }

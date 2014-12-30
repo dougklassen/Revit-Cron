@@ -39,9 +39,11 @@
   <ItemGroup>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1408.0511\lib\net40\Moq.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.7\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
@@ -74,6 +76,7 @@
     <ProjectReference Include="..\RCron\RCron.csproj">
       <Project>{d1ce21fe-6464-4f92-b972-00b3719472fd}</Project>
       <Name>RCron</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\RevitCron\RevitCron.csproj">
       <Project>{0e122eec-7ad1-40b7-8165-5ed94289d351}</Project>

@@ -37,11 +37,12 @@ namespace DougKlassen.Revit.Cron.Repositories
 		public RCronBatch GetRCronBatch()
 		{
 			RCronBatch batch = null;
+			var js = GetJsonSerializer();
 
-			using (FileStream fs = new FileStream(repoFilePath, FileMode.Open))
+			using (var sr = new StreamReader(repoFilePath))
+			using (var reader = new JsonTextReader(sr))
 			{
-				DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(RCronBatch));
-				batch = (RCronBatch)s.ReadObject(fs);
+				batch = js.Deserialize<RCronBatch>(reader);
 			}
 
 			return batch;
@@ -49,10 +50,12 @@ namespace DougKlassen.Revit.Cron.Repositories
 
 		public void PutRCronBatch(RCronBatch batch)
 		{
-			using (FileStream fs = new FileStream(repoFilePath, FileMode.Create))
+			var js = GetJsonSerializer();
+
+			using (var sw = new StreamWriter(repoFilePath, false))
+			using (var writer = new JsonTextWriter(sw))
 			{
-				DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(RCronBatch));
-				s.WriteObject(fs, batch);
+				js.Serialize(writer, batch);
 			}
 		}
 
@@ -107,6 +110,17 @@ namespace DougKlassen.Revit.Cron.Repositories
 		{
 			RCronBatchJsonRepo repo = new RCronBatchJsonRepo(new Uri(filePath));
 			repo.PutRCronBatch(batch);
+		}
+
+		/// <summary>
+		/// Get the JsonSerializer to use with RCronOptions
+		/// </summary>
+		/// <returns></returns>
+		private JsonSerializer GetJsonSerializer()
+		{
+			var serializer = new JsonSerializer();
+			serializer.Formatting = Formatting.Indented;
+			return serializer;
 		}
 	}
 }

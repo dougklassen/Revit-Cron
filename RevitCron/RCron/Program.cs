@@ -17,61 +17,56 @@ namespace RCron
 
 		static void Main(string[] args)
 		{
-			if (args.Length >= 2)
-			{
-				if ("-uri" == args[0])
-				{
-					String path = Directory.GetCurrentDirectory() + '\\' + args[1];
-					try
-					{
-						Console.WriteLine("Uri: " + new Uri(path).AbsoluteUri);
-					}
-					catch (Exception exc)
-					{
-						Console.WriteLine(exc.Message);
-					}
-				}
-			}
-
-			Regex cmdRegex = new Regex(@"-(\S*)");
-
-			IEnumerable<String> cmds = args
-					.Where(s => cmdRegex.IsMatch(s));
-
 			optionsRepo = new RCronOptionsJsonRepo(new Uri(RCronFileLocations.OptionsFilePath));
 			batchRepo = new RCronBatchJsonRepo(new Uri(RCronFileLocations.BatchFilePath));
 			scheduleRepo = new RCronScheduleJsonRepo(new Uri(RCronFileLocations.ScheduleFilePath));
 
-			if (null == cmds.FirstOrDefault())
+			if (args.Length == 0)
 			{
 				Console.WriteLine("No command specified");
 			}
 			else
 			{
-				String cmd = cmdRegex.Match(cmds.First()).Groups[1].Value.ToLower();
-				switch (cmd)
+				switch (args[0])
 				{
-					case "newoptions":
+					case "-newoptions":
 						CreateOptionsRepo();
 						break;
-					case "newbatch":
+					case "-newbatch":
 						Console.WriteLine("created new batch.json");
 						batchRepo.PutRCronBatch(Dummies.dummyBatch);
 						break;
-					case "testschedule":
+					case "-testschedule":
 						Console.WriteLine("created new test schedule.json");
 						scheduleRepo.PutRCronSchedule(Dummies.testSchedule);
 						break;
-					case "newschedule":
+					case "-newschedule":
 						Console.WriteLine("created new schedule.json");
 						scheduleRepo.PutRCronSchedule(Dummies.dummySchedule);
 						break;
-					case "timestamp":
+					case "-readschedule":
+						Console.WriteLine("reading schedule file:");
+						var readSched = scheduleRepo.GetRCronSchedule();
+						foreach (var item in readSched.Tasks)
+						{
+							Console.WriteLine(item.Name);
+						}
+						break;
+					case "-timestamp":
 						Console.WriteLine(RCronCanon.TimeStamp);
 						break;
+					case "-uri":
+						if (args.Length < 2)
+						{
+							Console.WriteLine("-uri requires a directory argument");
+							break;
+						}
+						String path = Directory.GetCurrentDirectory() + '\\' + args[1];
+						Console.WriteLine("Uri: " + new Uri(path).AbsoluteUri);
+						break;
 					default:
-						Console.WriteLine("{0} : command not recognized", cmd);
-						Console.WriteLine("commands:\n-newoptions\n-newbatch\n-testschedule\n-timestamp\n-uri");
+						Console.WriteLine("{0} : command not recognized", args[0]);
+						Console.WriteLine("commands:\n-newoptions\n-newbatch\n-newschedule\n-readschedule\n-testschedule\n-timestamp\n-uri");
 						break;
 				}
 			}

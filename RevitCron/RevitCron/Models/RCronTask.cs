@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -81,6 +83,7 @@ namespace DougKlassen.Revit.Cron.Models
 	public abstract class RCronTaskSpec
 	{
 		[DataMember(Order = 0)]
+		[JsonConverter(typeof(StringEnumConverter))]
 		public RCronTaskType TaskType;
 
 		[DataMember(Order = 1)]

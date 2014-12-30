@@ -1,5 +1,6 @@
 ﻿using DougKlassen.Revit.Cron.Models;
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,11 +39,12 @@ namespace DougKlassen.Revit.Cron.Repositories
 		public RCronSchedule GetRCronSchedule()
 		{
 			RCronSchedule schedule = null;
+			var js = GetJsonSerializer();
 
-			using (FileStream fs = new FileStream(repoFilePath, FileMode.Open))
+			using (var sr = new StreamReader(repoFilePath))
+			using (var reader = new JsonTextReader(sr))
 			{
-				DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(RCronSchedule));
-				schedule = (RCronSchedule)s.ReadObject(fs);
+				schedule = js.Deserialize<RCronSchedule>(reader);
 			}
 
 			return schedule;
@@ -50,10 +52,12 @@ namespace DougKlassen.Revit.Cron.Repositories
 
 		public void PutRCronSchedule(RCronSchedule schedule)
 		{
-			using (FileStream fs = new FileStream(repoFilePath, FileMode.Create))
+			var js = GetJsonSerializer();
+
+			using (var sw = new StreamWriter(repoFilePath))
+			using (var writer = new JsonTextWriter(sw))
 			{
-				DataContractJsonSerializer s = new DataContractJsonSerializer(typeof(RCronSchedule));
-				s.WriteObject(fs, schedule);
+				js.Serialize(writer, schedule);
 			}
 		}
 
@@ -77,6 +81,17 @@ namespace DougKlassen.Revit.Cron.Repositories
 		{
 			RCronScheduleJsonRepo repo = new RCronScheduleJsonRepo(uri);
 			repo.PutRCronSchedule(schedule);
+		}
+
+		/// <summary>
+		/// Get the JsonSerializer to use with RCronSchedule
+		/// </summary>
+		/// <returns></returns>
+		private JsonSerializer GetJsonSerializer()
+		{
+			var serializer = new JsonSerializer();
+			serializer.Formatting = Formatting.Indented;
+			return serializer;
 		}
 	}
 }
