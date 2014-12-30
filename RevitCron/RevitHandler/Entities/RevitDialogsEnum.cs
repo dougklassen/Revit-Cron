@@ -95,6 +95,16 @@ namespace DougKlassen.Revit.Automation
 		/// Message: Some elements were lost during import. ActiveX(r) and some proprietary components cannot be imported
 		/// 1:	Ok
 		/// </remarks>
-		LostOnImport
+		LostOnImport,
+		/// <summary>
+		/// When there are unresolved references during project open
+		/// </summary>
+		/// <remarks>
+		/// DialogId: TaskDialog_Unresolved_References
+		/// Message: Revit could not find or read {number} referenced files. What do you want to do?
+		/// 1001: Open Manage Links to correct the problem
+		/// 1002: Ignore and continue opening the project
+		/// </remarks>
+		UnresolvedReferences
 	}
 }

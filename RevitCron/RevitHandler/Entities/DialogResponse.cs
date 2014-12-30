@@ -107,7 +107,8 @@ namespace DougKlassen.Revit.Automation
 					{ RevitDialog.ChangesNotSynchronized, "TaskDialog_Local_Changes_Not_Synchronized_With_Central" },
 					{ RevitDialog.ChangesNotSaved, "TaskDialog_Changes_Not_Saved" },
 					{ RevitDialog.CloseWithoutSaving, "TaskDialog_Close_Project_Without_Saving" },
-					{ RevitDialog.LostOnImport, "TaskDialog_Elements_Lost_On_Import"}
+					{ RevitDialog.LostOnImport, "TaskDialog_Elements_Lost_On_Import"},
+					{ RevitDialog.UnresolvedReferences, "TaskDialog_Unresolved_References"}
 			};
 	}
 }
