@@ -113,6 +113,30 @@ namespace DougKlassen.Revit.Cron
           OutputDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Test Output\",
           CommandName = "DougKlassen.Revit.Perfect.Commands.RenameFamiliesCommand"
         }                
+      },
+			new RCronTask()
+      {
+        Name = "Test Audit Compact Task",
+        LastRun = new DateTime(),
+        Schedule = "0 0 * * *",
+				Priority = 3,
+        TaskSpec = new RCronAuditCompactTaskSpec()
+        {
+          ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
+          OutputDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Test Output\"
+        }                
+      },
+			new RCronTask()
+      {
+        Name = "Test Task",
+        LastRun = new DateTime(),
+        Schedule = "0 0 * * *",
+				Priority = 3,
+        TaskSpec = new RCronTestTaskSpec()
+        {
+          ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\playpen.rvt",
+          OutputDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure\Test Output\"
+        }                
       }
     };
 

@@ -65,11 +65,50 @@ namespace DougKlassen.Revit.Cron.Repositories
 					printTask.OutputFileName = reader.ReadAsString();
 					reader.Read();
 					return printTask;
+				case "Export":
+					var exportTask = new RCronExportTaskSpec();
+					exportTask.ProjectFile = reader.ReadAsString();
+					reader.Read();
+					exportTask.OutputDirectory = reader.ReadAsString();
+					reader.Read();
+					exportTask.PrintSet = reader.ReadAsString();
+					reader.Read();
+					exportTask.ExportSetup = reader.ReadAsString();
+					reader.Read();
+					return exportTask;
+				case "ETransmit":
+					var transmitTask = new RCronETransmitTaskSpec();
+					transmitTask.ProjectFile = reader.ReadAsString();
+					reader.Read();
+					transmitTask.OutputDirectory = reader.ReadAsString();
+					reader.Read();
+					return transmitTask;
+				case "Command":
+					var commandTask = new RCronCommandTaskSpec();
+					commandTask.ProjectFile = reader.ReadAsString();
+					reader.Read();
+					commandTask.OutputDirectory = reader.ReadAsString();
+					reader.Read();
+					commandTask.CommandName = reader.ReadAsString();
+					reader.Read();
+					return commandTask;
+				case "AuditCompact":
+					var auditTask = new RCronETransmitTaskSpec();
+					auditTask.ProjectFile = reader.ReadAsString();
+					reader.Read();
+					auditTask.OutputDirectory = reader.ReadAsString();
+					reader.Read();
+					return auditTask;
+				case "Test":
+					var testTask = new RCronTestTaskSpec();
+					testTask.ProjectFile = reader.ReadAsString();
+					reader.Read();
+					testTask.OutputDirectory = reader.ReadAsString();
+					reader.Read();
+					return testTask;
 				default:
 					throw new InvalidOperationException("Unrecognized task type: " + taskType);
 			}
-
-			return task;
 		}
 
 		/// <summary>
