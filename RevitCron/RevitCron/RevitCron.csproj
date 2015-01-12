@@ -60,6 +60,7 @@
     <Compile Include="Repositories\RCronScheduleRepo.cs" />
     <Compile Include="Repositories\RCronOptionsRepo.cs" />
     <Compile Include="Repositories\RCronBatchRepo.cs" />
+    <Compile Include="Repositories\RCronTaskSpecConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

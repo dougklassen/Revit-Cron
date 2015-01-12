@@ -91,6 +91,7 @@ namespace DougKlassen.Revit.Cron.Repositories
 		{
 			var serializer = new JsonSerializer();
 			serializer.Formatting = Formatting.Indented;
+			serializer.Converters.Add(new RCronTaskSpecConverter());
 			return serializer;
 		}
 	}
