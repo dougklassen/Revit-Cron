@@ -1,18 +1,17 @@
 Revit-Cron
 ==========
 
-A task scheduling suite for Revit
+A task scheduling application for Revit
 ---------------------------------
 
 - Plot specified print sets
 - Package the model with e-transmit
 - Export specified print set to CAD
-- Run external commands
+- Run external commands on the model
 
-The application will consist of five parts
+The application consists of several parts:
 
-- A calendar file that schedules when tasks should run and records the last run time
-- An editor for calendar file
-- A dispatcher that will run Revit at a specified time and generate a work file
-- A work file that specifies what tasks should be run during the current session
-- An external application add-in that will check the work file, run current tasks, update the calendar file, and delete the work file
+- A schedule file that specifies when tasks should run and records the last run time
+- A dispatcher that batches tasks, records the batches in batch files, and launches Revit sessions to run them
+- Batch files that specify what tasks should be run during the current session
+- An external application Revit add-in that checks for a batch file on startup, runs if found, deletes the batch file on completion, and finally closes Revit.
