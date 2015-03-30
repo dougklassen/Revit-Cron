@@ -6,8 +6,8 @@ using System.Resources;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NewAddIn")]
-[assembly: AssemblyDescription("A Revit 2014 Add-In")]
+[assembly: AssemblyTitle("Rotogravure")]
+[assembly: AssemblyDescription("Batch task handler for Revit Cron")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("")]
