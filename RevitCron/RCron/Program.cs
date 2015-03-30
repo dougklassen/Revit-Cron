@@ -21,14 +21,20 @@ namespace RCron
 			batchRepo = new RCronBatchJsonRepo(new Uri(RCronFileLocations.BatchFilePath));
 			scheduleRepo = new RCronScheduleJsonRepo(new Uri(RCronFileLocations.ScheduleFilePath));
 
+			CheckDirectories();
+
 			if (args.Length == 0)
 			{
 				Console.WriteLine("No command specified");
+				WriteHelp();
 			}
 			else
 			{
 				switch (args[0])
 				{
+					case "-help":
+						WriteHelp();
+						break;
 					case "-newoptions":
 						CreateOptionsRepo();
 						break;
@@ -45,12 +51,7 @@ namespace RCron
 						scheduleRepo.PutRCronSchedule(Dummies.dummySchedule);
 						break;
 					case "-readschedule":
-						Console.WriteLine("reading schedule file:");
-						var readSched = scheduleRepo.GetRCronSchedule();
-						foreach (var item in readSched.Tasks)
-						{
-							Console.WriteLine(item.Name);
-						}
+						ReadSchedule();
 						break;
 					case "-timestamp":
 						Console.WriteLine(RCronCanon.TimeStamp);
@@ -66,7 +67,7 @@ namespace RCron
 						break;
 					default:
 						Console.WriteLine("{0} : command not recognized", args[0]);
-						Console.WriteLine("commands:\n-newoptions\n-newbatch\n-newschedule\n-readschedule\n-testschedule\n-timestamp\n-uri");
+						WriteHelp();
 						break;
 				}
 			}
@@ -74,8 +75,45 @@ namespace RCron
 
 		static void CreateOptionsRepo()
 		{
-			Console.WriteLine("created new options.json");
 			optionsRepo.PutRCronOptions(Dummies.dummyOpts);
+			Console.WriteLine("created new options.json");
+		}
+
+		static void ReadSchedule()
+		{
+			if (!File.Exists(RCronFileLocations.ScheduleFilePath))
+			{
+				Console.WriteLine("schedule file not found");
+				return;
+			}
+			Console.WriteLine("reading schedule file:");
+			var readSched = scheduleRepo.GetRCronSchedule();
+			foreach (var item in readSched.Tasks)
+			{
+				Console.WriteLine(item.Name);
+			}
+			return;
+		}
+
+		static void WriteHelp()
+		{
+			Console.WriteLine("commands:\n-newoptions\n-newbatch\n-newschedule\n-readschedule\n-testschedule\n-timestamp\n-uri");
+			return;
+		}
+
+		static void CheckDirectories()
+		{
+			if (!Directory.Exists(RCronFileLocations.ResourcesDirectoryPath))
+			{
+				Directory.CreateDirectory(RCronFileLocations.ResourcesDirectoryPath);
+				Console.WriteLine("created " + RCronFileLocations.ResourcesDirectoryPath);
+			}
+
+			if (!Directory.Exists(RCronFileLocations.LogDirectoryPath))
+			{
+				Directory.CreateDirectory(RCronFileLocations.LogDirectoryPath);
+				Console.WriteLine("created " + RCronFileLocations.LogDirectoryPath);
+			}
 		}
 	}
 }

@@ -36,9 +36,6 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.7\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="RevitCron">
-      <HintPath>..\RevitCron\bin\Debug\RevitCron.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -56,9 +53,15 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RevitCron\RevitCron.csproj">
+      <Project>{0e122eec-7ad1-40b7-8165-5ed94289d351}</Project>
+      <Name>RevitCron</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(ProjectDir)""$(OutDir)"*.exe "C:\ProgramData\Autodesk\Revit\Addins\2014\Rotogravure" /S /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(ProjectDir)""$(OutDir)"*.exe "C:\ProgramData\Autodesk\Revit\Addins\2015\Rotogravure" /S /Y</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
