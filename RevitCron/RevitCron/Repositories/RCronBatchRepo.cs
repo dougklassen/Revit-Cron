@@ -38,12 +38,6 @@ namespace DougKlassen.Revit.Cron.Repositories
 		{
 			RCronBatch batch = null;
 
-			//doesn't work because RCronTaskSpec is an interface
-			//String jsonString = File.ReadAllText(repoFilePath);
-			//JsonSerializerSettings settings = new JsonSerializerSettings();
-			//settings.Converters.Add(new RCronTaskSpecConverter());
-			//batch = JsonConvert.DeserializeObject<RCronBatch>(jsonString, settings);
-
 			var js = GetJsonSerializer();
 
 			using (var sr = new StreamReader(repoFilePath))
@@ -67,7 +61,7 @@ namespace DougKlassen.Revit.Cron.Repositories
 		}
 
 		/// <summary>
-		/// Cleanup method to flush the repo once the batch has run
+		/// Flush the repository by deleting the temporary batch file
 		/// </summary>
 		public void Delete()
 		{

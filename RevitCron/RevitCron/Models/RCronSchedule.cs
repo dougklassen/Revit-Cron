@@ -50,7 +50,7 @@ namespace DougKlassen.Revit.Cron.Models
 			batch.EndTime = batchTasks.Max(t =>
 				t.NextRunTime(afterTime)
 				.Add(new TimeSpan(0,0,30)));
-			batch.AddRange(batchTasks);	//feed the RCronTasks into a new RCronBatch
+			batch.AddTasks(batchTasks);	//feed the RCronTasks into a new RCronBatch
 
 			return batch;
 		}

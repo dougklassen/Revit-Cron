@@ -137,7 +137,7 @@ namespace RCronTest
 			#endregion arrange
 
 			#region act
-			dumBatch.AddRange(dumTasks);
+			dumBatch.AddTasks(dumTasks);
 			#endregion act
 		}
 
