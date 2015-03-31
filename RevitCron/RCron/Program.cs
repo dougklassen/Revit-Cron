@@ -42,6 +42,9 @@ namespace RCron
 						Console.WriteLine("created new batch.json");
 						batchRepo.PutRCronBatch(Dummies.dummyBatch);
 						break;
+					case "-readbatch":
+						ReadBatch();
+						break;
 					case "-testschedule":
 						Console.WriteLine("created new test schedule.json");
 						scheduleRepo.PutRCronSchedule(Dummies.testSchedule);
@@ -77,6 +80,24 @@ namespace RCron
 		{
 			optionsRepo.PutRCronOptions(Dummies.dummyOpts);
 			Console.WriteLine("created new options.json");
+		}
+
+		static void ReadBatch()
+		{
+			if (!File.Exists(RCronFileLocations.BatchFilePath))
+			{
+				Console.WriteLine("batch file not found");
+				return;
+			}
+			Console.WriteLine("reading batch file");
+			var readBatch = batchRepo.GetRCronBatch();
+			Console.WriteLine("start time: " + readBatch.StartTime);
+			Console.WriteLine("end time: " + readBatch.EndTime);
+			Console.WriteLine("number of tasks: " + readBatch.TaskSpecs.Count);
+			foreach (var item in readBatch.TaskSpecs)
+			{
+				Console.WriteLine(item.Key);
+			}
 		}
 
 		static void ReadSchedule()

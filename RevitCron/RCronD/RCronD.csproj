@@ -70,6 +70,7 @@
     <ProjectReference Include="..\RevitCron\RevitCron.csproj">
       <Project>{0e122eec-7ad1-40b7-8165-5ed94289d351}</Project>
       <Name>RevitCron</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

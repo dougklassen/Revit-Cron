@@ -72,7 +72,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			revitHandler.AddDialogOverride(RevitDialog.LostOnImport, 1); //respond with Ok
 			revitHandler.AddDialogOverride(RevitDialog.UnresolvedReferences, 1002); //respond with "Ignore and continue opening the project"
 			var firstTask = batch.TaskSpecs.Values.First();
-			if (firstTask is RCronAuditCompactTaskSpec) //audit and compact tasks are batched separately and will open there own doc
+			if (firstTask is RCronAuditCompactTaskSpec) //audit and compact tasks are batched separately and will open their own doc
 			{
 				log.AppendLine("\n** running audit and compact task");
 				RunAuditCompactTask(firstTask as RCronAuditCompactTaskSpec, app);

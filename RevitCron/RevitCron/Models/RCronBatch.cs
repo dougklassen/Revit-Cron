@@ -14,35 +14,36 @@ namespace DougKlassen.Revit.Cron.Models
 	[KnownType(typeof(RCronTestTaskSpec))]
 	public class RCronBatch
 	{
-		/// <summary>
-		/// A batch of tasks to be run by Revit upon startup
-		/// </summary>
-		private List<BatchTask> batchTasks;
+		///// <summary>
+		///// A batch of tasks to be run by Revit upon startup
+		///// </summary>
+		//private List<BatchTask> batchTasks;
 		
 		/// <summary>
 		/// A collection of tasks to run specified for processing by Rotogravure
 		/// </summary>
-		[DataMember(Order=0)]
-		public Dictionary<String, RCronTaskSpec> TaskSpecs
-		{
-			get
-			{
-				Dictionary<String, RCronTaskSpec> taskSpecs = new Dictionary<string, RCronTaskSpec>();
-				foreach (BatchTask bT in batchTasks)
-				{
-					taskSpecs.Add(bT.taskName, bT.taskSpec);
-				}
-				return taskSpecs;
-			}
-			set
-			{
-				batchTasks = new List<BatchTask>();
-				foreach (String key in value.Keys)
-				{
-					batchTasks.Add(new BatchTask(key, value[key]));
-				}
-			}
-		}
+		[DataMember(Order = 0)]
+		public Dictionary<String, RCronTaskSpec> TaskSpecs;
+		//public Dictionary<String, RCronTaskSpec> TaskSpecs
+		//{
+		//	get
+		//	{
+		//		Dictionary<String, RCronTaskSpec> taskSpecs = new Dictionary<string, RCronTaskSpec>();
+		//		foreach (BatchTask bT in batchTasks)
+		//		{
+		//			taskSpecs.Add(bT.taskName, bT.taskSpec);
+		//		}
+		//		return taskSpecs;
+		//	}
+		//	set
+		//	{
+		//		batchTasks = new List<BatchTask>();
+		//		foreach (String key in value.Keys)
+		//		{
+		//			batchTasks.Add(new BatchTask(key, value[key]));
+		//		}
+		//	}
+		//}
 
 		/// <summary>
 		/// The scheduled runtime of the batch, set by the scheduled run-time of the first task in the batch
@@ -61,12 +62,14 @@ namespace DougKlassen.Revit.Cron.Models
 		/// </summary>
 		public RCronBatch()
 		{
-			batchTasks = new List<BatchTask>();
+			//batchTasks = new List<BatchTask>();
+			TaskSpecs = new Dictionary<String, RCronTaskSpec>();
 		}
 
 		public void Add(String taskName, RCronTaskSpec taskSpec)
 		{
-			batchTasks.Add(new BatchTask(taskName, taskSpec));
+			//batchTasks.Add(new BatchTask(taskName, taskSpec));
+			TaskSpecs.Add(taskName, taskSpec);
 		}
 
 		public void Add(RCronTask task)
@@ -82,20 +85,20 @@ namespace DougKlassen.Revit.Cron.Models
 			}
 		}
 
-		internal class BatchTask	//todo: check how scoping works for inner classes
-		{
-			internal String taskName;
-			internal RCronTaskSpec taskSpec;
-			internal BatchTaskResult result;
+		//internal class BatchTask	//todo: check how scoping works for inner classes
+		//{
+		//	internal String taskName;
+		//	internal RCronTaskSpec taskSpec;
+		//	internal BatchTaskResult result;
 
-			internal BatchTask(String name, RCronTaskSpec spec)
-			{
-				taskName = name;
-				taskSpec = spec;
-				result = BatchTaskResult.NotRun;
-			}
-		}
+		//	internal BatchTask(String name, RCronTaskSpec spec)
+		//	{
+		//		taskName = name;
+		//		taskSpec = spec;
+		//		result = BatchTaskResult.NotRun;
+		//	}
+		//}
 
-		public enum BatchTaskResult { NotRun, Suceeded, Failed }
+		//public enum BatchTaskResult { NotRun, Suceeded, Failed }
 	}	
 }

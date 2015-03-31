@@ -37,6 +37,13 @@ namespace DougKlassen.Revit.Cron.Repositories
 		public RCronBatch GetRCronBatch()
 		{
 			RCronBatch batch = null;
+
+			//doesn't work because RCronTaskSpec is an interface
+			//String jsonString = File.ReadAllText(repoFilePath);
+			//JsonSerializerSettings settings = new JsonSerializerSettings();
+			//settings.Converters.Add(new RCronTaskSpecConverter());
+			//batch = JsonConvert.DeserializeObject<RCronBatch>(jsonString, settings);
+
 			var js = GetJsonSerializer();
 
 			using (var sr = new StreamReader(repoFilePath))

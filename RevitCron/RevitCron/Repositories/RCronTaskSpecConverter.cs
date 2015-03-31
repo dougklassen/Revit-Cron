@@ -41,8 +41,9 @@ namespace DougKlassen.Revit.Cron.Repositories
 		/// <returns>A RCronTask deserialized from the reader. It will be a subclass of RCronTask</returns>
 		public override Object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
+			Console.WriteLine("reading task");
+
 			RCronTaskSpec task;
-			Console.WriteLine("reading RCronTask");
 			
 			//start reading the object			
 			if (reader.TokenType != JsonToken.StartObject)
@@ -64,6 +65,8 @@ namespace DougKlassen.Revit.Cron.Repositories
 					reader.Read();
 					printTask.OutputFileName = reader.ReadAsString();
 					reader.Read();
+					Console.WriteLine("print task");
+					Console.WriteLine("print set: " + printTask.PrintSet);
 					return printTask;
 				case "Export":
 					var exportTask = new RCronExportTaskSpec();
