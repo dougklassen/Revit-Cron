@@ -141,9 +141,16 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 
 		private static void RunAuditCompactTask(RCronAuditCompactTaskSpec auditTask, Application app)
 		{
+			Boolean isCentralFile;
+
 			log.AppendLine("-- specified path: {0}", auditTask.ProjectFile);
 			ModelPath sourcePath = ModelPathUtils.ConvertUserVisiblePathToModelPath(auditTask.ProjectFile);
-			var openOpts = new OpenOptions();
+			var openOpts = new OpenOptions()
+				{
+					Audit = true,
+					DetachFromCentralOption = DetachFromCentralOption.DoNotDetach
+				};
+
 			ModelPath docPath;
 			try	//todo: convert this to if(fileIsCentralFile)
 			{
@@ -154,21 +161,41 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 				docPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(localFilePath);
 				WorksharingUtils.CreateNewLocal(docPath, sourcePath);
 				log.AppendLine("  -- project is workshared");
+				isCentralFile = true;
 			}
-			catch (Autodesk.Revit.Exceptions.ArgumentException)
+			catch (Exception exc)
 			{
-				log.AppendLine("  -- project is not workshared");
-				docPath = sourcePath;
+				if (exc is Autodesk.Revit.Exceptions.CentralModelException) //this indicates that the attempt to create a local file was unsucessful
+				{
+					log.AppendLine("  -- project is not workshared");
+					docPath = sourcePath; //overwrite docPath to open the file directly, because it isn't a central file
+					isCentralFile = false;
+				}
+				else
+				{
+					log.LogException(exc);
+					return;
+				}
 			}
-			if (docPath.ServerPath)
-			{
-				openOpts.DetachFromCentralOption = DetachFromCentralOption.DoNotDetach;
-				openOpts.Audit = true;
-				//todo: create new local
-			}
+
+			//if (docPath.ServerPath)
+			//{
+			//	openOpts.DetachFromCentralOption = DetachFromCentralOption.DoNotDetach;
+			//	//todo: create new local
+			//}
+
 			var dbDoc = app.OpenDocumentFile(docPath, openOpts);
-			//todo: synchronize
-			dbDoc.Close(false); //todo: leave open if more tasks are running on the document
+
+			if (isCentralFile)
+			{
+				//todo: synchronize
+				dbDoc.Close(false); //todo: leave open if more tasks are running on the document
+				//todo: delete local?
+			}
+			else
+			{
+				dbDoc.Close(); //save to original location
+			}
 
 			return;
 		}

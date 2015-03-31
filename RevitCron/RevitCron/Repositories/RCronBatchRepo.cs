@@ -6,21 +6,39 @@ using System.Runtime.Serialization.Json;
 
 namespace DougKlassen.Revit.Cron.Repositories
 {
+	/// <summary>
+	/// An interface representing a repository for batch information
+	/// </summary>
 	public interface IRCronBatchRepo
 	{
+		/// <summary>
+		/// Retrieve a batch from the repository
+		/// </summary>
+		/// <returns>The batch stored in the repository</returns>
 		RCronBatch GetRCronBatch();
 
+		/// <summary>
+		/// Record a batch to the repository
+		/// </summary>
+		/// <param name="batch">The batch to record to the repository</param>
 		void PutRCronBatch(RCronBatch batch);
 
 		void Delete();
 	}
 
+	/// <summary>
+	/// A repository for batch information
+	/// </summary>
 	public class RCronBatchJsonRepo : IRCronBatchRepo
 	{
 		private String repoFilePath;
 
 		private RCronBatchJsonRepo() { }
 
+		/// <summary>
+		/// Create a new instance of RCronBatchJsonRepo
+		/// </summary>
+		/// <param name="fileUri">The file location of the repository</param>
 		public RCronBatchJsonRepo(Uri fileUri)
 			: this()
 		{
@@ -34,6 +52,10 @@ namespace DougKlassen.Revit.Cron.Repositories
 			}
 		}
 
+		/// <summary>
+		/// Retrieve a batch from the repository
+		/// </summary>
+		/// <returns>The batch stored in the repository</returns>
 		public RCronBatch GetRCronBatch()
 		{
 			RCronBatch batch = null;
@@ -49,6 +71,10 @@ namespace DougKlassen.Revit.Cron.Repositories
 			return batch;
 		}
 
+		/// <summary>
+		/// Write a batch to the repository
+		/// </summary>
+		/// <param name="batch">The batch to be written to the repository</param>
 		public void PutRCronBatch(RCronBatch batch)
 		{
 			var js = GetJsonSerializer();
@@ -61,7 +87,7 @@ namespace DougKlassen.Revit.Cron.Repositories
 		}
 
 		/// <summary>
-		/// Flush the repository by deleting the temporary batch file
+		/// Clear the repository by deleting the temporary batch file
 		/// </summary>
 		public void Delete()
 		{

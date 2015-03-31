@@ -6,25 +6,47 @@ using System.Runtime.Serialization.Json;
 
 namespace DougKlassen.Revit.Cron.Repositories
 {
+	/// <summary>
+	/// An interface representing a repository for storing RevitCron options
+	/// </summary>
 	public interface IRCronOptionsRepo
 	{
+		/// <summary>
+		/// Retrieve options from the repository
+		/// </summary>
+		/// <returns>The options stored in the repository</returns>
 		RCronOptions GetRCronOptions();
 
+		/// <summary>
+		/// Write options to the repository
+		/// </summary>
+		/// <param name="options">The options to be written to the repository</param>
 		void PutRCronOptions(RCronOptions options);
 	}
 
+	/// <summary>
+	/// A repository for recording RevitCron options as a JSON text file
+	/// </summary>
 	public class RCronOptionsJsonRepo : IRCronOptionsRepo
 	{
 		private Uri repoFileUri;
 
 		private RCronOptionsJsonRepo() { }
 
+		/// <summary>
+		/// Create a new instance of RevitCronOptionsJsonRepo
+		/// </summary>
+		/// <param name="uri">The file location of the options repository</param>
 		public RCronOptionsJsonRepo(Uri uri)
 			: this()
 		{
 			repoFileUri = uri;
 		}
 
+		/// <summary>
+		/// Retrieve options from the repository
+		/// </summary>
+		/// <returns>The options stored in the repository</returns>
 		public RCronOptions GetRCronOptions()
 		{
 			RCronOptions options = null;
@@ -39,6 +61,10 @@ namespace DougKlassen.Revit.Cron.Repositories
 			return options;
 		}
 
+		/// <summary>
+		/// Write options to the repository
+		/// </summary>
+		/// <param name="options">The options to be written to the repository</param>
 		public void PutRCronOptions(RCronOptions options)
 		{
 			var js = GetJsonSerializer();

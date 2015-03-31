@@ -92,7 +92,7 @@ namespace DougKlassen.Revit.Cron.Repositories
 					reader.Read();
 					return commandTask;
 				case "AuditCompact":
-					var auditTask = new RCronETransmitTaskSpec();
+					var auditTask = new RCronAuditCompactTaskSpec();
 					auditTask.ProjectFile = reader.ReadAsString();
 					reader.Read();
 					auditTask.OutputDirectory = reader.ReadAsString();

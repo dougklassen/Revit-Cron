@@ -41,16 +41,29 @@ namespace DougKlassen.Revit.Cron.Models
 			TaskSpecs = new Dictionary<String, RCronTaskSpec>();
 		}
 
+		/// <summary>
+		/// Add an RCronTaskSpec to the batch
+		/// </summary>
+		/// <param name="taskName">The name used to identify the task</param>
+		/// <param name="taskSpec">The RCronTaskSpec defining the task</param>
 		public void Add(String taskName, RCronTaskSpec taskSpec)
 		{
 			TaskSpecs.Add(taskName, taskSpec);
 		}
 
+		/// <summary>
+		/// Add an RCronTask to the batch
+		/// </summary>
+		/// <param name="task">The task to add to the batch</param>
 		public void Add(RCronTask task)
 		{
 			TaskSpecs.Add(task.Name, task.TaskSpec);
 		}
 
+		/// <summary>
+		/// Add a collection of tasks to the batch
+		/// </summary>
+		/// <param name="tasks">A collection of tasks to add to the batch</param>
 		public void AddTasks(IEnumerable<RCronTask> tasks)
 		{
 			foreach (RCronTask t in tasks)

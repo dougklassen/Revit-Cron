@@ -3,6 +3,9 @@ using System.Runtime.Serialization;
 
 namespace DougKlassen.Revit.Cron.Models
 {
+	/// <summary>
+	/// Model class for RevitCron options, including file locations
+	/// </summary>
 	[DataContract]
 	public class RCronOptions
 	{

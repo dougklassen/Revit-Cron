@@ -5,6 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace DougKlassen.Revit.Cron
 {
+	/// <summary>
+	/// A class modelling information about the Revit installation used to run RevitCron
+	/// </summary>
 	public static class RevitInstall
 	{
 		/// <summary>
@@ -18,6 +21,9 @@ namespace DougKlassen.Revit.Cron
 			};
 	}
 
+	/// <summary>
+	/// A class storing file locations for RevitCron
+	/// </summary>
 	public static class RCronFileLocations
 	{
 		public static readonly String AddInDirectoryPath = @"C:\ProgramData\Autodesk\Revit\Addins\2015\Rotogravure\";
@@ -28,6 +34,9 @@ namespace DougKlassen.Revit.Cron
 		public static readonly String LogDirectoryPath = AddInDirectoryPath + @"Logs\";
 	}
 
+	/// <summary>
+	/// RevitCron file locations represented as Uri objects
+	/// </summary>
 	public static class RCronUris
 	{
 		public static readonly Uri AddInDirectoryUri = new Uri(RCronFileLocations.AddInDirectoryPath);
@@ -38,6 +47,9 @@ namespace DougKlassen.Revit.Cron
 		public static readonly Uri LogDirectoryUri = new Uri(RCronFileLocations.LogDirectoryPath);		
 	}
 
+	/// <summary>
+	/// A class used to generate canonical representations of information used by RevitCron
+	/// </summary>
 	public static class RCronCanon
 	{
 		/// <summary>
@@ -84,7 +96,6 @@ namespace DougKlassen.Revit.Cron
 		}
 	}
 
-  //todo: use string keys for enum
 	/// <summary>
 	/// Recognized task types in Rotogravure
 	/// </summary>
