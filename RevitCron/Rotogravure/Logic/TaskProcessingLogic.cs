@@ -154,28 +154,21 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			ModelPath docPath;
 
 			/// the try block attempts to create a local file on the assumption that the project is workshared.
-			/// If an exception is thrown when trying to create a local file, the catch block proceeds for a non-workshared project 
+			/// If an exception is thrown when trying to create the local file, the catch block proceeds for a non-workshared project 
 			/// todo: find a test for if(fileIsCentralFile) to replace the try block
 			try
 			{
-				//FileInfo centralFile = new FileInfo(auditTask.ProjectFile);
-				//String localFilePath
-				//	= RCronFileLocations.ResourcesDirectoryPath + RCronCanon.GetLocalFileName(centralFile.Name);
 				var segments = new Uri(auditTask.ProjectFile).Segments;
 				String centralFileName = segments.Last();
-				foreach (var seg in segments)
-				{
-					log.AppendLine("  ** segment: " + seg);
-				}
 				String localFilePath
 					= RCronFileLocations.ResourcesDirectoryPath + RCronCanon.GetLocalFileName(centralFileName);
 				docPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(localFilePath);
 
-				log.AppendLine("  -- created local file " + localFilePath);
 				WorksharingUtils.CreateNewLocal(sourcePath, docPath);
+				log.AppendLine("  -- created local file " + localFilePath);
 
-				log.AppendLine("  -- project is workshared");
 				isCentralFile = true;
+				log.AppendLine("  -- project is workshared");
 			}
 			catch (Exception exc)
 			{
@@ -183,9 +176,9 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 				{
 					docPath = sourcePath; //overwrite docPath to open the file directly, because it isn't a central file
 
+					isCentralFile = false;
 					log.LogException(exc);
 					log.AppendLine("  -- project is not workshared");
-					isCentralFile = false;
 				}
 				else
 				{
@@ -194,19 +187,21 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 				}
 			}
 
-			//if (docPath.ServerPath)
-			//{
-			//	openOpts.DetachFromCentralOption = DetachFromCentralOption.DoNotDetach;
-			//	//todo: create new local
-			//}
-
 			var dbDoc = app.OpenDocumentFile(docPath, openOpts);
 
 			if (isCentralFile)
 			{
-				//todo: synchronize
+				var transactOpts = new TransactWithCentralOptions();
+				var relinquishOpts = new RelinquishOptions(true); //creates an instance with all options set to true, so that everything will be relinquished
+				var syncOpts = new SynchronizeWithCentralOptions();
+				syncOpts.Comment = "Revit Cron Audit-Compact task run at " + DateTime.Now.ToString();
+				syncOpts.Compact = true;
+				syncOpts.SaveLocalAfter = false;
+				syncOpts.SaveLocalBefore = false;
+				syncOpts.SetRelinquishOptions(relinquishOpts); //documentation implies that this isn't necessary because default behavior already relinquishes everything
+				dbDoc.SynchronizeWithCentral(transactOpts, syncOpts);
 				log.AppendLine("  -- project synchronized with central");
-				dbDoc.Close(false); //todo: leave open if more tasks are running on the document
+				dbDoc.Close(false); //todo: leave open if more tasks are running on the document?
 				//todo: delete local?
 			}
 			else
