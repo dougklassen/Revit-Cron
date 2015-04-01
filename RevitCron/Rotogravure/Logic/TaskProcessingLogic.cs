@@ -152,14 +152,28 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 				};
 
 			ModelPath docPath;
-			try	//todo: convert this to if(fileIsCentralFile)
+
+			/// the try block attempts to create a local file on the assumption that the project is workshared.
+			/// If an exception is thrown when trying to create a local file, the catch block proceeds for a non-workshared project 
+			/// todo: find a test for if(fileIsCentralFile) to replace the try block
+			try
 			{
-				FileInfo centralFile = new FileInfo(auditTask.ProjectFile);
-				String centralFileName = centralFile.Name;
+				//FileInfo centralFile = new FileInfo(auditTask.ProjectFile);
+				//String localFilePath
+				//	= RCronFileLocations.ResourcesDirectoryPath + RCronCanon.GetLocalFileName(centralFile.Name);
+				var segments = new Uri(auditTask.ProjectFile).Segments;
+				String centralFileName = segments.Last();
+				foreach (var seg in segments)
+				{
+					log.AppendLine("  ** segment: " + seg);
+				}
 				String localFilePath
 					= RCronFileLocations.ResourcesDirectoryPath + RCronCanon.GetLocalFileName(centralFileName);
 				docPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(localFilePath);
-				WorksharingUtils.CreateNewLocal(docPath, sourcePath);
+
+				log.AppendLine("  -- created local file " + localFilePath);
+				WorksharingUtils.CreateNewLocal(sourcePath, docPath);
+
 				log.AppendLine("  -- project is workshared");
 				isCentralFile = true;
 			}
@@ -167,8 +181,10 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			{
 				if (exc is Autodesk.Revit.Exceptions.CentralModelException) //this indicates that the attempt to create a local file was unsucessful
 				{
-					log.AppendLine("  -- project is not workshared");
 					docPath = sourcePath; //overwrite docPath to open the file directly, because it isn't a central file
+
+					log.LogException(exc);
+					log.AppendLine("  -- project is not workshared");
 					isCentralFile = false;
 				}
 				else
@@ -189,6 +205,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			if (isCentralFile)
 			{
 				//todo: synchronize
+				log.AppendLine("  -- project synchronized with central");
 				dbDoc.Close(false); //todo: leave open if more tasks are running on the document
 				//todo: delete local?
 			}

@@ -1,0 +1,87 @@
+{
+  "Tasks": [
+    {
+      "Name": "Test Print Task 1",
+      "Priority": 2,
+      "TaskSpec": {
+        "__type": "RCronPrintTaskSpec:#DougKlassen.Revit.Cron.Models",
+        "TaskType": 0,
+        "ProjectFile": "C:\\Users\\dklassen\\Source\\Repos\\Revit-Cron\\playpen\\rcron-playpen.rvt",
+        "OutputDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2014\\Rotogravure\\Test Output\\",
+        "PrintSet": "test1",
+        "OutputFileName": "test1.pdf"
+      },
+      "RunIfMissed": false,
+      "LastRun": "/Date(-62135568000000-0800)/",
+      "Schedule": "*/2 * * * *"
+    },
+    {
+      "Name": "Test Print Task 2",
+      "Priority": 2,
+      "TaskSpec": {
+        "__type": "RCronPrintTaskSpec:#DougKlassen.Revit.Cron.Models",
+        "TaskType": 0,
+        "ProjectFile": "C:\\Users\\dklassen\\Source\\Repos\\Revit-Cron\\playpen\\rcron-playpen.rvt",
+        "OutputDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2014\\Rotogravure\\Test Output\\",
+        "PrintSet": "test2",
+        "OutputFileName": "test2.pdf"
+      },
+      "RunIfMissed": false,
+      "LastRun": "/Date(-62135568000000-0800)/",
+      "Schedule": "*/2 * * * *"
+    },
+    {
+      "Name": "Test Export Task",
+      "Priority": 1,
+      "TaskSpec": {
+        "__type": "RCronExportTaskSpec:#DougKlassen.Revit.Cron.Models",
+        "TaskType": 1,
+        "ProjectFile": "C:\\Users\\dklassen\\Source\\Repos\\Revit-Cron\\playpen\\rcron-playpen.rvt",
+        "OutputDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2014\\Rotogravure\\Test Output\\",
+        "PrintSet": "test",
+        "ExportSetup": "test"
+      },
+      "RunIfMissed": false,
+      "LastRun": "/Date(-62135568000000-0800)/",
+      "Schedule": "*/2 * * * *"
+    },
+    {
+      "Name": "Test eTransmit Task",
+      "Priority": 3,
+      "TaskSpec": {
+        "__type": "RCronETransmitTaskSpec:#DougKlassen.Revit.Cron.Models",
+        "TaskType": 2,
+        "ProjectFile": "C:\\Users\\dklassen\\Source\\Repos\\Revit-Cron\\playpen\\rcron-playpen.rvt",
+        "OutputDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2014\\Rotogravure\\Test Output\\"
+      },
+      "RunIfMissed": false,
+      "LastRun": "/Date(-62135568000000-0800)/",
+      "Schedule": "*/2 * * * *"
+    },
+    {
+      "Name": "Test Command Task",
+      "Priority": 3,
+      "TaskSpec": {
+        "__type": "RCronCommandTaskSpec:#DougKlassen.Revit.Cron.Models",
+        "TaskType": 3,
+        "ProjectFile": "C:\\Users\\dklassen\\Source\\Repos\\Revit-Cron\\playpen\\rcron-playpen.rvt",
+        "OutputDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2014\\Rotogravure\\Test Output\\",
+        "CommandName": "DougKlassen.Revit.Perfect.Commands.RenameFamiliesCommand"
+      },
+      "RunIfMissed": false,
+      "LastRun": "/Date(-62135568000000-0800)/",
+      "Schedule": "*/3 * * * *"
+    },
+    {
+      "Name": "Test Task",
+      "Priority": 3,
+      "TaskSpec": {
+        "__type": "RCronTestTaskSpec:#DougKlassen.Revit.Cron.Models",
+        "TaskType": 4
+      },
+      "RunIfMissed": false,
+      "LastRun": "/Date(-62135568000000-0800)/",
+      "Schedule": "*/2 * * * *"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "Tasks": [
+    {
+      "Name": "Test Print Task 1",
+      "Priority": 2,
+      "TaskSpec": {
+        "TaskType": "Print",
+        "ProjectFile": "C:\\Users\\dklassen\\Source\\Repos\\Revit-Cron\\playpen\\playpen.rvt",
+        "OutputDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2014\\Rotogravure\\Test Output\\",
+        "PrintSet": "test1",
+        "OutputFileName": "test1.pdf"
+      },
+      "RunIfMissed": false,
+      "LastRun": "0001-01-01T00:00:00",
+      "Schedule": "0 0 * * *"
+    },
+    {
+      "Name": "Test Print Task 2",
+      "Priority": 2,
+      "TaskSpec": {
+        "TaskType": "Print",
+        "ProjectFile": "C:\\Users\\dklassen\\Source\\Repos\\Revit-Cron\\playpen\\playpen.rvt",
+        "OutputDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2014\\Rotogravure\\Test Output\\",
+        "PrintSet": "test2",
+        "OutputFileName": "test2.pdf"
+      },
+      "RunIfMissed": false,
+      "LastRun": "0001-01-01T00:00:00",
+      "Schedule": "0 0 * * *"
+    },
+    {
+      "Name": "Test Export Task",
+      "Priority": 1,
+      "TaskSpec": {
+        "TaskType": "Export",
+        "ProjectFile": "C:\\Users\\dklassen\\Source\\Repos\\Revit-Cron\\playpen\\playpen.rvt",
+        "OutputDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2014\\Rotogravure\\Test Output\\",
+        "PrintSet": "test",
+        "ExportSetup": "test"
+      },
+      "RunIfMissed": false,
+      "LastRun": "0001-01-01T00:00:00",
+      "Schedule": "0 0 * * *"
+    },
+    {
+      "Name": "Test eTransmit Task",
+      "Priority": 3,
+      "TaskSpec": {
+        "TaskType": "ETransmit",
+        "ProjectFile": "C:\\Users\\dklassen\\Source\\Repos\\Revit-Cron\\playpen\\playpen.rvt",
+        "OutputDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2014\\Rotogravure\\Test Output\\"
+      },
+      "RunIfMissed": false,
+      "LastRun": "0001-01-01T00:00:00",
+      "Schedule": "0 0 * * *"
+    },
+    {
+      "Name": "Test Command Task",
+      "Priority": 3,
+      "TaskSpec": {
+        "TaskType": "Command",
+        "ProjectFile": "C:\\Users\\dklassen\\Source\\Repos\\Revit-Cron\\playpen\\playpen.rvt",
+        "OutputDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2014\\Rotogravure\\Test Output\\",
+        "CommandName": "DougKlassen.Revit.Perfect.Commands.RenameFamiliesCommand"
+      },
+      "RunIfMissed": false,
+      "LastRun": "0001-01-01T00:00:00",
+      "Schedule": "0 0 * * *"
+    },
+    {
+      "Name": "Test Audit Compact Task",
+      "Priority": 3,
+      "TaskSpec": {
+        "TaskType": "AuditCompact",
+        "ProjectFile": "C:\\Users\\dklassen\\Source\\Repos\\Revit-Cron\\playpen\\playpen.rvt",
+        "OutputDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2014\\Rotogravure\\Test Output\\"
+      },
+      "RunIfMissed": false,
+      "LastRun": "0001-01-01T00:00:00",
+      "Schedule": "0 0 * * *"
+    },
+    {
+      "Name": "Test Task",
+      "Priority": 3,
+      "TaskSpec": {
+        "TaskType": "Test",
+        "ProjectFile": "C:\\Users\\dklassen\\Source\\Repos\\Revit-Cron\\playpen\\playpen.rvt",
+        "OutputDirectory": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2014\\Rotogravure\\Test Output\\"
+      },
+      "RunIfMissed": false,
+      "LastRun": "0001-01-01T00:00:00",
+      "Schedule": "0 0 * * *"
+    }
+  ]
+}

@@ -90,7 +90,7 @@ namespace DougKlassen.Revit.Cron
 			String localName = String.Empty;
 
 			String localSuffix = "_loc" + TimeStamp;
-			Regex.Replace(centralFileName, @"(?:=\.rvt$)", localSuffix, RegexOptions.IgnoreCase);
+			localName = Regex.Replace(centralFileName, @"(?=\.rvt$)", localSuffix, RegexOptions.IgnoreCase);
 
 			return localName;
 		}

@@ -1,0 +1,8 @@
+{
+  "BatchFileUri": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2014\\Rotogravure\\Resources\\batch.json",
+  "ScheduleFileUri": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2014\\Rotogravure\\Resources\\schedule.json",
+  "LogDirectoryUri": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2014\\Rotogravure\\\\Logs\\",
+  "LocalFileDirectoryUri": "C:\\ProgramData\\Autodesk\\Revit\\Addins\\2014\\Rotogravure\\",
+  "PollingPeriod": "00:00:07",
+  "BatchSpan": "00:10:00"
+}
