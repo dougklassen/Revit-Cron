@@ -143,7 +143,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 		{
 			Boolean isCentralFile;
 
-			log.AppendLine("-- specified path: {0}", auditTask.ProjectFile);
+			log.AppendLine("  -- specified path: {0}", auditTask.ProjectFile);
 			ModelPath sourcePath = ModelPathUtils.ConvertUserVisiblePathToModelPath(auditTask.ProjectFile);
 			var openOpts = new OpenOptions()
 				{
@@ -172,16 +172,17 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			}
 			catch (Exception exc)
 			{
-				if (exc is Autodesk.Revit.Exceptions.CentralModelException) //this indicates that the attempt to create a local file was unsucessful
+				if (exc.Message.StartsWith("The model is not workshared")) //this indicates that the attempt to create a local file was unsucessful
 				{
 					docPath = sourcePath; //overwrite docPath to open the file directly, because it isn't a central file
 
 					isCentralFile = false;
-					log.LogException(exc);
 					log.AppendLine("  -- project is not workshared");
 				}
 				else
 				{
+					log.AppendLine("  !!  unknown exception");
+					log.AppendLine("  !!  message: \"" + exc.Message + "\"");
 					log.LogException(exc);
 					return;
 				}
@@ -200,13 +201,16 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 				syncOpts.SaveLocalBefore = false;
 				syncOpts.SetRelinquishOptions(relinquishOpts); //documentation implies that this isn't necessary because default behavior already relinquishes everything
 				dbDoc.SynchronizeWithCentral(transactOpts, syncOpts);
-				log.AppendLine("  -- project synchronized with central");
+				log.AppendLine("  -- project compacted and synchronized with central");
 				dbDoc.Close(false); //todo: leave open if more tasks are running on the document?
-				//todo: delete local?
+				String localPath = ModelPathUtils.ConvertModelPathToUserVisiblePath(docPath);
+				File.Delete(localPath); //delete the local file
+				Directory.Delete(localPath.Remove(localPath.Length - 4, 4) + "_backup", true); //delete the backup files created with the local file
 			}
 			else
 			{
 				dbDoc.Close(); //save to original location
+				log.AppendLine("  -- project saved");
 			}
 
 			return;
