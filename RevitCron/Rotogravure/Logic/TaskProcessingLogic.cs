@@ -19,9 +19,9 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 	/// </summary>
 	public static class TaskProcessingLogic
 	{
+		static RevitHandler revitHandler = RevitHandler.Instance;
 		static RCronLog log = RCronLog.Instance;
 		static RCronOptions options;
-		static RevitHandler revitHandler = RevitHandler.Instance;
 
 		/// <summary>
 		/// When Revit is started, check for a batch repo, load the batch, and run it
@@ -94,8 +94,16 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 
 				if (batch.TaskSpecs.Values.Where(t => t is RCronPrintTaskSpec).Count() > 0) //if the batch contains a PrintTask
 				{
-					var uiDoc = uiApp.OpenAndActivateDocument(docPath, openOpts, false); //We need to open and activate the doc at the ui level or the Bluebeam print driver will crash when run on VDI. Can't use dbDoc = app.OpenDocumentFile(docPath, openOpts);
-					dbDoc = uiDoc.Document;
+					try
+					{
+						var uiDoc = uiApp.OpenAndActivateDocument(docPath, openOpts, false); //We need to open and activate the doc at the ui level or the Bluebeam print driver will crash when run on VDI. Can't use dbDoc = app.OpenDocumentFile(docPath, openOpts);
+						dbDoc = uiDoc.Document;
+					}
+					catch(Exception exc)
+					{
+						log.LogException(exc);
+						return; //todo: improve behavior when file isn't found
+					}
 				}
 				else //otherwise open normally
 				{
@@ -219,6 +227,10 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 		private static void RunExportTask(RCronExportTaskSpec exportTask, Document dbDoc)
 		{
 			log.AppendLine("\n-- specified path: {0}", dbDoc.PathName);
+
+			//todo: create export task
+			//dbDoc.Export
+
 			return;
 		}
 
