@@ -10,7 +10,7 @@ using System.Resources;
 [assembly: AssemblyDescription("Batch task handler for Revit Cron")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("")]
+[assembly: AssemblyProduct("RevitCron")]
 [assembly: AssemblyCopyright("Copyright © Doug Klasen 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -33,6 +33,6 @@ using System.Resources;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("14.0.1.0")]
-[assembly: AssemblyFileVersion("14.0.1.0")]
+[assembly: AssemblyVersion("15.0.*")]
+[assembly: AssemblyFileVersion("15.0")]
 [assembly: NeutralResourcesLanguageAttribute("en-US")]
