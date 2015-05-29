@@ -88,12 +88,16 @@ namespace DougKlassen.Revit.Cron
 			}
 			else if (Days.IsWildCard() && !WeekDays.IsWildCard())
 			{
-				runIntervals = CronUtils.GetCartesianProduct(Months.GetRunTimes(), WeekDays.GetRunTimes());
+				throw new NotImplementedException();
+				//runIntervals = CronUtils.GetCartesianProduct(Months.GetRunTimes(), WeekDays.GetRunTimes());
+				foreach (var month in Months.Expand())
+				{
+					
+				}
 			}
 			else	//neither is a wildcard so use both
 			{
-				runIntervals = CronUtils.GetCartesianProduct(Months.GetRunTimes(), Days.GetRunTimes());
-				runIntervals.AddRange(Months * WeekDays);
+				throw new NotImplementedException();
 			}
 			runIntervals = CronUtils.GetCartesianProduct(runIntervals, Hours.GetRunTimes());
 			runIntervals = CronUtils.GetCartesianProduct(runIntervals, Minutes.GetRunTimes()); 

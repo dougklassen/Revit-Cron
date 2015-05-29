@@ -138,6 +138,22 @@ namespace DougKlassen.Revit.Cron.Test
 		}
 
 		[TestMethod]
+		public void CanGetWeekDayRunTimes()
+		{
+			#region arrange
+			CronWeekDays expr1 = new CronWeekDays("1-5"); //Monday through Friday
+			#endregion arrange
+
+			#region act
+			var runTimes1 = expr1.GetRunTimes(2015, 1); //April 2015 contains 22 work days (Monday to Friday)
+			#endregion act
+
+			#region assert
+			Assert.AreEqual(5, runTimes1.Count());
+			#endregion assert
+		}
+
+		[TestMethod]
 		public void CanParseCronExpression()
 		{
 			#region arrange

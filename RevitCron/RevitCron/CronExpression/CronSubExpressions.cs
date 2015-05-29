@@ -520,7 +520,7 @@ namespace DougKlassen.Revit.Cron
 	}
 
 	/// <summary>
-	/// A class encapsulating the months term of a CronExpression. Months are expressed from 1 to 12, with 1 representing January.
+	/// A class encapsulating the months term of a CronExpression. Months are numbered from 1 to 12, with 1 representing January.
 	/// </summary>
 	public class CronMonths : CronSubExpression
 	{
@@ -678,8 +678,9 @@ namespace DougKlassen.Revit.Cron
 	}
 
 	/// <summary>
-	/// A class encapsulating the day of the week term of a CronExpression. Weekdays are expressed from 0 to 6, with 0 representing Sunday.
+	/// A class encapsulating the day of the week term of a CronExpression. Weekdays are numbered from 0 to 6, with 0 representing Sunday.
 	/// </summary>
+	/// <remarks>GetRunTimes() is specific to a given month and year</remarks>
 	public class CronWeekDays : CronSubExpression
 	{
 		private UInt16[] runTimes = new UInt16[0];	//initialize as an empty array
@@ -695,7 +696,7 @@ namespace DougKlassen.Revit.Cron
 		public static readonly Regex rangeRegex = new Regex(@"^(?<s>[0-6])-(?<e>[0-6])");
 
 		/// <summary>
-		/// Ctor based on parsing a string representing the minutes term of a Cron expression
+		/// Create an instance of CronWeekDays by parsing the sub term of the Cron expression representing weekdays
 		/// </summary>
 		/// <param name="expr">A string representing the minutes term of a Cron expression</param>
 		public CronWeekDays(String expr)
@@ -742,21 +743,21 @@ namespace DougKlassen.Revit.Cron
 		}
 
 		/// <summary>
-		/// Get the runtimes represented by the task, represented as days past the first of the month for a specific month
+		/// Get the runtimes for the task, represented as timespan past the first of the month for a specific month. Each day within the month matching that day will be returned
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>A collection of TimeSpans representing each day within the specified month that falls on the specified WeekDays</returns>
 		public IEnumerable<TimeSpan> GetRunTimes(Int32 year, Int32 month)
 		{
 			List<TimeSpan> runIntervals = new List<TimeSpan>();
 
 			for (Int32 i = 1; i < DateTime.DaysInMonth(year, month); i++)
 			{
-				DateTime dayToCheck = new DateTime(year, month, i);
-				if (this.Expand().Contains((UInt16)dayToCheck.DayOfWeek))
+				DateTime dayToCheck = new DateTime(year, month, i); //generate a DateTime for each day of the month
+				if (this.Expand().Contains((UInt16)dayToCheck.DayOfWeek)) //if the DayOfWeek for the DateTime is one of the specified WeekDays,
 				{
-					runIntervals.Add(TimeSpan.FromDays(i));
+					runIntervals.Add(TimeSpan.FromDays(i)); //include it in the set
 				}
-			} 
+			}
 
 			return runIntervals;
 		}
