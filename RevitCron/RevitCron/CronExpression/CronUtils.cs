@@ -105,5 +105,29 @@ namespace DougKlassen.Revit.Cron
 			IList<Int64> list = Array.ConvertAll<UInt16, Int64>(runTimes, s => (Int64)s).ToList();
 			return list.GetSeriesCronString();
 		}
+
+		/// <summary>
+		/// Get a TimeSpan representing the span between the beginning of the specified year and the beginning of the current month
+		/// </summary>
+		/// <param name="month">The month for which to calculate the TimeSpan</param>
+		/// <param name="year">The year for which to calculate the TimeSpan</param>
+		/// <returns>The span of time between the beginning of the current year and the beginning of the current month</returns>
+		public static TimeSpan GetMonthTimeSpan(UInt16 month, UInt16 year)
+		{
+			var yearStart = new DateTime(year, 1, 1);
+			var monthStart = new DateTime(year, month, 1);
+
+			return monthStart.Subtract(yearStart);
+		}
+
+		/// <summary>
+		/// Get a TimeSpan representing the span between the beginning of the current year and the beginning of the current month
+		/// </summary>
+		/// <param name="month">The month for which to calculate the TimeSpan</param>
+		/// <returns>The span of time between the beginning of the specified year and the beginning of the month for the specified year</returns>
+		public static TimeSpan GetMonthTimeSpan(UInt16 month)
+		{
+			return GetMonthTimeSpan(month, (UInt16) DateTime.Now.Year);
+		}
 	}
 }

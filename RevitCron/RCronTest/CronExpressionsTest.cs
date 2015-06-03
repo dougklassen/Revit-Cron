@@ -145,11 +145,11 @@ namespace DougKlassen.Revit.Cron.Test
 			#endregion arrange
 
 			#region act
-			var runTimes1 = expr1.GetRunTimes(2015, 1); //April 2015 contains 22 work days (Monday to Friday)
+			var runTimes1 = expr1.GetRunTimes(2015, 6); //April 2015 contains 22 work days (Monday to Friday)
 			#endregion act
 
 			#region assert
-			Assert.AreEqual(5, runTimes1.Count());
+			Assert.AreEqual(22, runTimes1.Count());
 			#endregion assert
 		}
 

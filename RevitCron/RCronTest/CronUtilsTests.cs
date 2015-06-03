@@ -27,5 +27,21 @@ namespace DougKlassen.Revit.Cron.Test
 			Assert.IsTrue(contigEval);
 			#endregion
 		}
+
+		[TestMethod]
+		public void CanGetMonthTimeSpan()
+		{
+			#region arrange
+			TimeSpan januaryTimeSpan;
+			#endregion arrange
+
+			#region act
+			januaryTimeSpan = CronUtils.GetMonthTimeSpan(2); //first of february
+			#endregion act
+
+			#region assert
+			Assert.AreEqual(31, januaryTimeSpan.Days);
+			#endregion assert
+		}
 	}
 }

@@ -92,7 +92,13 @@ namespace DougKlassen.Revit.Cron
 				//runIntervals = CronUtils.GetCartesianProduct(Months.GetRunTimes(), WeekDays.GetRunTimes());
 				foreach (var month in Months.Expand())
 				{
-					
+					var monthInterval = CronUtils.GetMonthTimeSpan(month);
+					var weekDayIntervals = WeekDays.GetRunTimes(DateTime.Now.Year, month);
+
+					foreach (var weekDayInterval in weekDayIntervals)
+					{
+						runIntervals.Add(monthInterval + weekDayInterval);
+					}
 				}
 			}
 			else	//neither is a wildcard so use both

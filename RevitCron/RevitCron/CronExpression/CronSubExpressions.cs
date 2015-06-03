@@ -590,7 +590,7 @@ namespace DougKlassen.Revit.Cron
 		}
 
 		/// <summary>
-		/// Get the runtimes represented by the task, represented as months past every new year
+		/// Get the runtimes represented by the task, represented as months past the start of the current year
 		/// </summary>
 		/// <returns></returns>
 		public override IList<TimeSpan> GetRunTimes()
@@ -599,7 +599,7 @@ namespace DougKlassen.Revit.Cron
 
 			foreach (UInt16 time in this.Expand())
 			{
-				runIntervals.Add(TimeSpan.FromDays(31 * time));
+				runIntervals.Add(CronUtils.GetMonthTimeSpan(time));
 			}
 
 			return runIntervals;
@@ -615,7 +615,7 @@ namespace DougKlassen.Revit.Cron
 
 			if (runTimes == null && denominator == null)	//wildcard
 			{
-				for (UInt16 i = 0; i < 12; i++)
+				for (UInt16 i = 1; i <= 12; i++)
 				{
 					runIntervals.Add(i);
 				}
@@ -629,7 +629,7 @@ namespace DougKlassen.Revit.Cron
 			}
 			else if (runTimes == null && denominator != null)	//denominated
 			{
-				for (UInt16 i = 0; i < 12; i += denominator.Value)
+				for (UInt16 i = 1; i <= 12; i += denominator.Value)
 				{
 					runIntervals.Add(i);
 				}
@@ -750,7 +750,7 @@ namespace DougKlassen.Revit.Cron
 		{
 			List<TimeSpan> runIntervals = new List<TimeSpan>();
 
-			for (Int32 i = 1; i < DateTime.DaysInMonth(year, month); i++)
+			for (Int32 i = 1; i <= DateTime.DaysInMonth(year, month); i++)
 			{
 				DateTime dayToCheck = new DateTime(year, month, i); //generate a DateTime for each day of the month
 				if (this.Expand().Contains((UInt16)dayToCheck.DayOfWeek)) //if the DayOfWeek for the DateTime is one of the specified WeekDays,
