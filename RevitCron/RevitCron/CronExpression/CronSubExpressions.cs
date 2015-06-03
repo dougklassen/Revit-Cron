@@ -457,7 +457,7 @@ namespace DougKlassen.Revit.Cron
 
 			if (runTimes == null && denominator == null)
 			{
-				for (UInt16 i = 0; i < 31; i++)
+				for (UInt16 i = 1; i <= 31; i++)
 				{
 					runIntervals.Add(i);
 				}
@@ -471,7 +471,7 @@ namespace DougKlassen.Revit.Cron
 			}
 			else if (runTimes == null && denominator != null)
 			{
-				for (UInt16 i = 0; i < 31; i += denominator.Value)	//todo: need to prevent adding the 31st if it doesn't exist in month
+				for (UInt16 i = 1; i <= 31; i += denominator.Value)	//todo: need to prevent adding the 29th through 31st if they don't exist in month
 				{
 					runIntervals.Add(i);
 				}

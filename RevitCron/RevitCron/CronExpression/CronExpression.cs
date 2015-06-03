@@ -88,8 +88,6 @@ namespace DougKlassen.Revit.Cron
 			}
 			else if (Days.IsWildCard() && !WeekDays.IsWildCard())
 			{
-				throw new NotImplementedException();
-				//runIntervals = CronUtils.GetCartesianProduct(Months.GetRunTimes(), WeekDays.GetRunTimes());
 				foreach (var month in Months.Expand())
 				{
 					var monthInterval = CronUtils.GetMonthTimeSpan(month);
