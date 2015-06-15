@@ -21,7 +21,7 @@ namespace DougKlassen.Revit.Cron.Models
 		/// The collection of tasks to be run
 		/// </summary>
 		[DataMember(Order = 0)]
-		public ICollection<RCronTask> Tasks	//todo: enforce unique names
+		public ICollection<RCronTask> Tasks
 		{
 			get
 			{

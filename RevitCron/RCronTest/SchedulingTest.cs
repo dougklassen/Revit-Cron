@@ -75,20 +75,6 @@ namespace RCronTest
 		}
 
 		[TestMethod]
-		public void CanUpdateLastRun()
-		{ 
-			throw new NotImplementedException();
-#region arrange
-#endregion arrange
-
-#region act
-#endregion act
-
-#region assert
-#endregion assert
-		}
-
-		[TestMethod]
 		public void CanAddTaskToBatch()
 		{
 			#region arrange

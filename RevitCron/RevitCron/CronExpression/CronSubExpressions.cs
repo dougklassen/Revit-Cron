@@ -755,7 +755,7 @@ namespace DougKlassen.Revit.Cron
 				DateTime dayToCheck = new DateTime(year, month, i); //generate a DateTime for each day of the month
 				if (this.Expand().Contains((UInt16)dayToCheck.DayOfWeek)) //if the DayOfWeek for the DateTime is one of the specified WeekDays,
 				{
-					runIntervals.Add(TimeSpan.FromDays(i)); //include it in the set
+					runIntervals.Add(TimeSpan.FromDays(i - 1)); //include it in the set
 				}
 			}
 
