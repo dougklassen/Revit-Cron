@@ -16,22 +16,32 @@ namespace RCronTest
 		public void CanGetNextRunTime()
 		{
 			#region arrange
-			RCronTask task = new RCronTask()
+			var task1 = new RCronTask()
 			{
-				Name = "task",
+				Name = "task1",
 				Schedule = "0 12 * * *"	//run every day at 1200
 			};
-			DateTime runAtTime = new DateTime(1999, 1, 1, 11, 30, 0);	//simulate a run at 1130
-			DateTime calculatedNextRun;
+			var task2 = new RCronTask()
+			{
+				Name = "task2",
+				Schedule = "0 12 * 6 *" //run every day in June at 1200
+			};
+
+			var runAtTime1 = new DateTime(1999, 1, 1, 11, 30, 0);	//simulate a run at 1130
+			var runAtTime2 = new DateTime(1999, 5, 1, 11, 30, 0); //simulate a run at 1130 on May 1st
+			DateTime calculatedNextRun1, calculatedNextRun2;
 			#endregion arrange
 
 			#region act
-			calculatedNextRun = task.NextRunTime(runAtTime);
+			calculatedNextRun1 = task1.NextRunTime(runAtTime1);
+			calculatedNextRun2 = task2.NextRunTime(runAtTime2);
 			#endregion act
 
 			#region assert
-			DateTime expectedRunTime = new DateTime(1999, 1, 1, 12, 0, 0);
-			Assert.AreEqual(expectedRunTime, calculatedNextRun);
+			var expectedRunTime1 = new DateTime(1999, 1, 1, 12, 0, 0);
+			var expectedRunTime2 = new DateTime(1999, 6, 1, 12, 0, 0);
+			Assert.AreEqual(expectedRunTime1, calculatedNextRun1);
+			Assert.AreEqual(expectedRunTime2, calculatedNextRun2);
 			#endregion assert
 		}
 

@@ -189,7 +189,7 @@ namespace DougKlassen.Revit.Cron.Test
 			TestExpr[] expressions = new TestExpr[]
 			{
 				//new TestExpr() {expr = new CronExpression("0 0 1 1 1"), expectedCount = 5},	//run every Monday and on the 1st of January
-				new TestExpr() {expr = new CronExpression("0 0 * 1 1"), expectedCount = 4},	//run every Monday in January 
+				new TestExpr() {expr = new CronExpression("0 0 * 1 1"), expectedCount = 4},	//run every Monday in January
 				new TestExpr() {expr = new CronExpression("0 0 1 1 *"), expectedCount = 1},	//run on January 1st
 				new TestExpr() {expr = new CronExpression("0 0 1 1-3 *"), expectedCount = 3},	//run on the 1st of the month from January to March
 				new TestExpr() {expr = new CronExpression("0 0 1-3 1-3 *"), expectedCount = 9},	//run on the 1st through the 3rd of the month from January to March

@@ -117,7 +117,7 @@ namespace DougKlassen.Revit.Cron
 			var yearStart = new DateTime(year, 1, 1);
 			var monthStart = new DateTime(year, month, 1);
 
-			return monthStart.Subtract(yearStart);
+			return monthStart.Subtract(yearStart); //convert the difference between the start of the year and the start of the specified month to a timespan
 		}
 
 		/// <summary>

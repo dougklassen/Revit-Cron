@@ -9,14 +9,37 @@ using System.Text;
 
 namespace DougKlassen.Revit.Cron.Models
 {
+	/// <summary>
+	/// A schedule of RCronTasks to be run by RCronD
+	/// </summary>
 	[DataContract]
 	public class RCronSchedule
 	{
+		private ICollection<RCronTask> tasks;
+
+		/// <summary>
+		/// The collection of tasks to be run
+		/// </summary>
 		[DataMember(Order = 0)]
 		public ICollection<RCronTask> Tasks	//todo: enforce unique names
 		{
-			get;
-			set;
+			get
+			{
+				return tasks;
+			}
+
+			set
+			{
+				var distinctNames = value.Select(t => t.Name).Distinct();
+				if (distinctNames.Count() < value.Count()) //make sure there are as many distinct names as there are names total
+				{
+					throw new ArgumentException("Each task must have an unique name");
+				}
+				else
+				{
+					tasks = value;
+				}
+			}
 		}
 
 		/// <summary>

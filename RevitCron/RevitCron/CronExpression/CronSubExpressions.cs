@@ -441,7 +441,7 @@ namespace DougKlassen.Revit.Cron
 
 			foreach (UInt16 time in Expand())
 			{
-				runIntervals.Add(TimeSpan.FromDays(time));
+				runIntervals.Add(TimeSpan.FromDays(time - 1)); //for each day past the beginning of the month, add 24 hours
 			}
 
 			return runIntervals;
@@ -457,7 +457,7 @@ namespace DougKlassen.Revit.Cron
 
 			if (runTimes == null && denominator == null)
 			{
-				for (UInt16 i = 1; i <= 31; i++)
+				for (UInt16 i = 1; i <= 31; i++) //todo: need to prevent adding the 29th through 31st if they don't exist in month
 				{
 					runIntervals.Add(i);
 				}
@@ -777,14 +777,14 @@ namespace DougKlassen.Revit.Cron
 		/// <returns>An array of integers representing days of the week, with 0 equals Sunday</returns>
 		public override IEnumerable<ushort> Expand()
 		{
-			if (null == runTimes)	//wildcard expression
+			if (null == runTimes)	//wildcard expression, return every day
 			{
-				UInt16[] everyDay = new UInt16[31];
+				UInt16[] everyDay = new UInt16[6];
 				for (UInt16 i = 0; i < everyDay.Length; i++)
 				{
 					everyDay[i] = i;
 				}
-				return everyDay;	//return an array specifying every day of the month
+				return everyDay;	//return an array specifying every weekday
 			}
 			else
 			{
