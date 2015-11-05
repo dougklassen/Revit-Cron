@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.UI.Events;
 using System;
 using System.Diagnostics;
+using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Forms;
 using System.Threading;
@@ -256,14 +257,16 @@ namespace DougKlassen.Revit.Automation
 				//MessageBox.Show(msg, "Dialog Showing");
 				if (DialogHandler.HasOverride(args.DialogId))
 				{
+					//var msg = String.Format("DialogId: {0}\nOverride: {1}", args.DialogId, DialogHandler.GetOverride(args.DialogId));
+					//MessageBox.Show(msg, "Overriding Dialog");
 					args.OverrideResult(DialogHandler.GetOverride(args.DialogId));
 				}
 			}
-			else
-			{
-				//todo: add default override
-				//MessageBox.Show("Event Type: " + e.GetType().ToString(), "Dialog Showing");
-			}
+			//else
+			//{
+			//	todo: add default override
+			//	MessageBox.Show("Event Type: " + e.GetType().ToString(), "Dialog Showing");
+			//}
 		}
 	}
 }

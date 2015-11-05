@@ -62,8 +62,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BluebeamPrintDialogHandler.cs" />
-    <Compile Include="Entities\RevitDialogsEnum.cs" />
-    <Compile Include="Entities\DialogResponse.cs" />
+    <Compile Include="RevitDialogsEnum.cs" />
+    <Compile Include="DialogResponse.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RevitHandler.cs" />

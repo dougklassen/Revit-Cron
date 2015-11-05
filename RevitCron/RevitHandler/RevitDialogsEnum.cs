@@ -21,28 +21,6 @@ namespace DougKlassen.Revit.Automation
 		/// </summary>
 		AuditWarning,
 		/// <summary>
-		/// Creating a new local when one already exists for the project
-		/// ==================================
-		/// HelpId: -1
-		/// DialogId: TaskDialog_File_Name_In_Use
-		/// Message: You are trying to create a new local file *** but a file with this name already exists. What do you want to do?
-		///		1001:	Overwrite existing file
-		///		1002:	Append timestamp to existing filename
-		///		2:		Cancel
-		/// </summary>
-		FileNameInUse,
-		/// <summary>
-		/// If the project is not workshared and has unsaved changes
-		/// ==================================
-		/// HelpId: -1
-		/// DialogId: TaskDialog_Save_File
-		/// Message: Do you want to save changes to ***.r**?
-		/// 	6:	Yes
-		/// 	7:	No
-		/// 	2:	Cancel
-		/// </summary>
-		SaveFile,
-		/// <summary>
 		/// If the project is saved but not synchronized
 		/// ==================================
 		/// HelpId: -1
@@ -77,6 +55,15 @@ namespace DougKlassen.Revit.Automation
 		/// </summary>
 		CloseWithoutSaving,
 		/// <summary>
+		/// When the family template file location specified can't be located
+		/// </summary>
+		/// <remarks>
+		/// DialogId: TaskDialog_Default_Family_Template_File_Invalid
+		/// Message: The path you have specified for the default family template file is invalid.
+		///		8:	Close
+		/// </remarks>
+		DefaultFamilyTemplateInvalid,
+		/// <summary>
 		/// When detaching a model from central
 		/// </summary>
 		/// <remarks>
@@ -88,6 +75,17 @@ namespace DougKlassen.Revit.Automation
 		/// </remarks>
 		DetachModel,
 		/// <summary>
+		/// Creating a new local when one already exists for the project
+		/// ==================================
+		/// HelpId: -1
+		/// DialogId: TaskDialog_File_Name_In_Use
+		/// Message: You are trying to create a new local file *** but a file with this name already exists. What do you want to do?
+		///		1001:	Overwrite existing file
+		///		1002:	Append timestamp to existing filename
+		///		2:		Cancel
+		/// </summary>
+		FileNameInUse,
+		/// <summary>
 		/// When project is opened and ActiveX elements were lost on import
 		/// </summary>
 		/// <remarks>
@@ -96,6 +94,17 @@ namespace DougKlassen.Revit.Automation
 		/// 1:	Ok
 		/// </remarks>
 		LostOnImport,
+		/// <summary>
+		/// If the project is not workshared and has unsaved changes
+		/// ==================================
+		/// HelpId: -1
+		/// DialogId: TaskDialog_Save_File
+		/// Message: Do you want to save changes to ***.r**?
+		/// 	6:	Yes
+		/// 	7:	No
+		/// 	2:	Cancel
+		/// </summary>
+		SaveFile,
 		/// <summary>
 		/// When there are unresolved references during project open
 		/// </summary>

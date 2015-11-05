@@ -68,8 +68,8 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			}
 
 			log.AppendLine("  -- number of tasks found: {0}", batch.TaskSpecs.Count());
-
-			revitHandler.AddDialogOverride(RevitDialog.LostOnImport, 1); //respond with Ok
+			revitHandler.AddDialogOverride(RevitDialog.DefaultFamilyTemplateInvalid, 8); //respond with "Close": IDCLOSE = 8 TODO: currently not working
+			revitHandler.AddDialogOverride(RevitDialog.LostOnImport, 2); //respond with Ok: IDOK = 1
 			revitHandler.AddDialogOverride(RevitDialog.UnresolvedReferences, 1002); //respond with "Ignore and continue opening the project"
 			var firstTask = batch.TaskSpecs.Values.First();
 			if (firstTask is RCronAuditCompactTaskSpec) //audit and compact tasks are batched separately and will open their own doc
