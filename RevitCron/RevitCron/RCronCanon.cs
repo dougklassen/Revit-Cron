@@ -15,8 +15,8 @@ namespace DougKlassen.Revit.Cron
 		/// </summary>
 		public static ProcessStartInfo StartInfo = new ProcessStartInfo()
 			{
-				FileName = @"C:\Program Files\Autodesk\Revit 2015\Revit.exe",
-				WorkingDirectory = @"C:\Program Files\Autodesk\Revit 2015\",
+				FileName = @"C:\Program Files\Autodesk\Revit 2016\Revit.exe",
+				WorkingDirectory = @"C:\Program Files\Autodesk\Revit 2016\",
 				Arguments = @"/language ENU"
 			};
 	}
@@ -26,7 +26,7 @@ namespace DougKlassen.Revit.Cron
 	/// </summary>
 	public static class RCronFileLocations
 	{
-		public static readonly String AddInDirectoryPath = @"C:\ProgramData\Autodesk\Revit\Addins\2015\Rotogravure\";
+		public static readonly String AddInDirectoryPath = @"C:\ProgramData\Autodesk\Revit\Addins\2016\Rotogravure\";
 		public static readonly String ResourcesDirectoryPath = AddInDirectoryPath + @"Resources\";
 		public static readonly String OptionsFilePath = AddInDirectoryPath + @"Resources\options.json";
 		public static readonly String BatchFilePath = AddInDirectoryPath + @"Resources\batch.json";
