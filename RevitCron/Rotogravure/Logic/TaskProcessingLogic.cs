@@ -72,7 +72,7 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			revitHandler.AddDialogOverride(RevitDialog.LostOnImport, 2); //respond with Ok: IDOK = 1
 			revitHandler.AddDialogOverride(RevitDialog.UnresolvedReferences, 1002); //respond with "Ignore and continue opening the project"
 			var firstTask = batch.TaskSpecs.Values.First();
-			if (firstTask is RCronAuditCompactTaskSpec) //audit and compact tasks are batched separately and will open their own doc
+			if (firstTask is RCronAuditCompactTaskSpec) //audit and compact tasks are batched separately in their own subbatch
 			{
 				log.AppendLine("\n** running audit and compact task");
 				RunAuditCompactTask(firstTask as RCronAuditCompactTaskSpec, app);
@@ -161,9 +161,9 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 
 			ModelPath docPath;
 
-			/// the try block attempts to create a local file on the assumption that the project is workshared.
-			/// If an exception is thrown when trying to create the local file, the catch block proceeds for a non-workshared project 
-			/// todo: find a test for if(fileIsCentralFile) to replace the try block
+			// the try block attempts to create a local file on the assumption that the project is workshared.
+			// If an exception is thrown when trying to create the local file, the catch block proceeds for a non-workshared project 
+			// todo: find a test for if(fileIsCentralFile) to replace the try block
 			try
 			{
 				var segments = new Uri(auditTask.ProjectFile).Segments;
@@ -189,8 +189,8 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 				}
 				else
 				{
-					log.AppendLine("  !!  unknown exception");
-					log.AppendLine("  !!  message: \"" + exc.Message + "\"");
+					log.AppendLine("  !! unknown exception");
+					log.AppendLine("  !! message: \"" + exc.Message + "\"");
 					log.LogException(exc);
 					return;
 				}
@@ -200,20 +200,28 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 
 			if (isCentralFile)
 			{
-				var transactOpts = new TransactWithCentralOptions();
-				var relinquishOpts = new RelinquishOptions(true); //creates an instance with all options set to true, so that everything will be relinquished
-				var syncOpts = new SynchronizeWithCentralOptions();
-				syncOpts.Comment = "Revit Cron Audit-Compact task run at " + DateTime.Now.ToString();
-				syncOpts.Compact = true;
-				syncOpts.SaveLocalAfter = false;
-				syncOpts.SaveLocalBefore = false;
-				syncOpts.SetRelinquishOptions(relinquishOpts); //documentation implies that this isn't necessary because default behavior already relinquishes everything
-				dbDoc.SynchronizeWithCentral(transactOpts, syncOpts);
-				log.AppendLine("  -- project compacted and synchronized with central");
-				dbDoc.Close(false); //todo: leave open if more tasks are running on the document?
-				String localPath = ModelPathUtils.ConvertModelPathToUserVisiblePath(docPath);
-				File.Delete(localPath); //delete the local file
-				Directory.Delete(localPath.Remove(localPath.Length - 4, 4) + "_backup", true); //delete the backup files created with the local file
+				try
+				{
+					var transactOpts = new TransactWithCentralOptions();
+					var relinquishOpts = new RelinquishOptions(true); //creates an instance with all options set to true, so that everything will be relinquished
+					var syncOpts = new SynchronizeWithCentralOptions();
+					syncOpts.Comment = "Revit Cron Audit-Compact task run at " + DateTime.Now.ToString();
+					syncOpts.Compact = true;
+					syncOpts.SaveLocalAfter = true;
+					syncOpts.SaveLocalBefore = true; //required for server-based models
+					syncOpts.SetRelinquishOptions(relinquishOpts); //documentation implies that this isn't necessary because default behavior already relinquishes everything
+					dbDoc.SynchronizeWithCentral(transactOpts, syncOpts);
+					log.AppendLine("  -- project compacted and synchronized with central");
+					dbDoc.Close(false); //todo: leave open if more tasks are running on the document?
+					String localPath = ModelPathUtils.ConvertModelPathToUserVisiblePath(docPath);
+					File.Delete(localPath); //delete the local file
+					Directory.Delete(localPath.Remove(localPath.Length - 4, 4) + "_backup", true); //delete the backup files created with the local file
+				}
+				catch (Exception exc)
+				{
+					log.AppendLine("  !! exception while attempting to synchronize");
+					log.AppendLine("  !! message: \"" + exc.Message + "\"");
+				}
 			}
 			else
 			{

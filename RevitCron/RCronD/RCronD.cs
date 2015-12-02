@@ -39,7 +39,7 @@ namespace DougKlassen.Revit.Cron.Daemon
 		/// </summary>
 		private RCronBatch batch;
 		/// <summary>
-		/// The wait handle used to pause the CheckSchedule callback while 
+		/// The wait handle used to pause the CheckSchedule callback while Rotogravure runs the batch 
 		/// </summary>
 		private AutoResetEvent runBatchWait = new AutoResetEvent(false);
 
@@ -129,6 +129,7 @@ namespace DougKlassen.Revit.Cron.Daemon
 				var subBatches = GetSubBatches(batch.TaskSpecs.Values);
 
 				TimeSpan timeTillRun = batch.StartTime - DateTime.Now;
+				//Run each subbatch in a separate run of Revit
 				foreach (var subBatch in subBatches)
 				{
 					RCronBatchJsonRepo batchRepo = new RCronBatchJsonRepo(new Uri(RCronFileLocations.BatchFilePath));
@@ -155,6 +156,11 @@ namespace DougKlassen.Revit.Cron.Daemon
 			}
 		}
 
+		/// <summary>
+		/// Callback to launch Revit once a batch is ready to be run
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e">Event arguments</param>
 		private void runBatchTimer_Elapsed(Object sender, ElapsedEventArgs e)
 		{
 			Interlocked.Exchange(ref status, (Int32)DaemonStatus.RunningBatch);
@@ -163,6 +169,7 @@ namespace DougKlassen.Revit.Cron.Daemon
 			Process revit = Process.Start(RevitInstall.StartInfo);
 			revit.WaitForExit();
 
+			////For debugging, pause before continuing with the task
 			//String msg;
 			//msg = String.Format("Started at {0}:{1}\nCompleted at {2}:{3}\nClick Ok to complete",
 			//	start.Hour,
@@ -175,7 +182,7 @@ namespace DougKlassen.Revit.Cron.Daemon
 		}
 
 		/// <summary>
-		/// Break the batches up into sub batches
+		/// Break the batches up into sub batches to faciliate running different types of tasks in separate runs of Revit
 		/// </summary>
 		/// <param name="taskSpecs"></param>
 		/// <returns></returns>
