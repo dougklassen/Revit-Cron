@@ -30,13 +30,6 @@ namespace DougKlassen.Revit.Cron.Models
 		public Int32 Priority { get; set; }
 
 		/// <summary>
-		/// Whether to run the task immediately if it wasn't run at the last scheduled run time.
-		/// Not currently implemented
-		/// </summary>
-		[DataMember(Order = 11)]
-		public Boolean RunIfMissed { get; set; }
-
-		/// <summary>
 		/// A statement of when the task should be run, in Cron format
 		/// </summary>
 		[DataMember(Order = 30)]
