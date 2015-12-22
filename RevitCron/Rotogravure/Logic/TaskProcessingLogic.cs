@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 {
@@ -120,9 +121,9 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 								log.AppendLine("\n** running print task");
 								RunPrintTask(taskSpec as RCronPrintTaskSpec, dbDoc);
 								break;
-							case RCronTaskType.Export:
+							case RCronTaskType.DWGExport:
 								log.AppendLine("\n** running export task");
-								RunExportTask(taskSpec as RCronExportTaskSpec, dbDoc);
+								RunExportTask(taskSpec as RCronDWGExportTaskSpec, dbDoc);
 								break;
 							case RCronTaskType.ETransmit:
 								log.AppendLine("\n** running eTransmit task");
@@ -232,10 +233,51 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 			return;
 		}
 
-		private static void RunExportTask(RCronExportTaskSpec exportTask, Document dbDoc)
+		private static void RunExportTask(RCronDWGExportTaskSpec exportTask, Document dbDoc)
 		{
-			log.AppendLine("\n-- specified path: {0}", dbDoc.PathName);
+			log.AppendLine("-- specified path: {0}", dbDoc.PathName);
+			log.AppendLine("-- loaded path: {0}", dbDoc.PathName);
 
+			var exportSet = new FilteredElementCollector(dbDoc)
+				.OfClass(typeof(ViewSheetSet))
+				.Where(s => s.Name == exportTask.PrintSet)
+				.FirstOrDefault() as ViewSheetSet;
+
+			if (null == exportSet)
+			{
+				log.AppendLine("  !! error: couldn't load PrintSet {0}", exportTask.PrintSet);
+				return;
+			}
+
+			log.AppendLine("  ** exporting {0} views", exportSet.Views.Size);
+			foreach (View v in exportSet.Views)
+			{
+				log.AppendLine("  -- view: \"{0}\"", v.Name);
+			}
+
+			String outputDirectoryPath = exportTask.OutputDirectory + RCronCanon.TimeStamp + '\\';
+			if (!Directory.Exists(outputDirectoryPath))
+			{
+				Directory.CreateDirectory(outputDirectoryPath);
+			}
+
+			using(Transaction t = new Transaction(dbDoc, "Rotogravure Export to CAD"))
+			{
+				t.Start();
+
+				var exportOptions = new DWGExportOptions();
+				exportOptions.FileVersion = ACADVersion.R2013;
+				exportOptions.SharedCoords = true;
+
+				var viewList = new List<ElementId>();
+				foreach (View v in exportSet.Views)
+				{
+					viewList.Add(v.Id);
+				}
+				dbDoc.Export(outputDirectoryPath, exportTask.PrintSet, viewList, exportOptions);
+
+				t.Commit();
+			}
 			//todo: create export task
 			//dbDoc.Export
 
@@ -265,11 +307,11 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 
 			if (null == printSet)
 			{
-				log.AppendLine("  !! error: couldn't load printset {0}", printTask.PrintSet);
+				log.AppendLine("  !! error: couldn't load PrintSet {0}", printTask.PrintSet);
 				return;
 			}
 
-			log.AppendLine("  ** printing {0} views", printSet.Views.Size.ToString());
+			log.AppendLine("  ** printing {0} views", printSet.Views.Size);
 			foreach (View v in printSet.Views)
 			{
 				log.AppendLine("  -- view: \"{0}\"", v.Name);
@@ -321,9 +363,9 @@ namespace DougKlassen.Revit.Cron.Rotogravure.Logic
 				pm.CombinedFile = true;
 				pm.PrintToFileName = outputDirectoryPath + printTask.OutputFileName; //this value isn't used but SubmitPrint() thows an exception if it isn't set
 				log.AppendLine("  ** Setting output destination");
-				log.AppendLine("		-- PrintToFileName: {0}", pm.PrintToFileName);
-				log.AppendLine("		-- OutputFileName: {0}", printTask.OutputFileName);
-				log.AppendLine("		-- outputDirectoryPath: {0}", outputDirectoryPath);
+				log.AppendLine("    -- PrintToFileName: {0}", pm.PrintToFileName);
+				log.AppendLine("    -- OutputFileName: {0}", printTask.OutputFileName);
+				log.AppendLine("    -- outputDirectoryPath: {0}", outputDirectoryPath);
 				pm.SubmitPrint();
 				t.Commit();
 			}

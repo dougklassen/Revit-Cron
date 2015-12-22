@@ -81,12 +81,11 @@ namespace DougKlassen.Revit.Cron
         LastRun = new DateTime(),
         Schedule = "0 0 * * *",
 				Priority = 1,
-        TaskSpec = new RCronExportTaskSpec()
+        TaskSpec = new RCronDWGExportTaskSpec()
         {
           ProjectFile = @"C:\Users\dklassen\Source\Repos\Revit-Cron\playpen\rcron-playpen.rvt",
           OutputDirectory = @"C:\ProgramData\Autodesk\Revit\Addins\2016\Rotogravure\Test Output\",
-          PrintSet = "test",
-          ExportSetup = "test"
+          PrintSet = "test"
         }
       },
       new RCronTask()

@@ -101,6 +101,6 @@ namespace DougKlassen.Revit.Cron
 	/// </summary>
 	public enum RCronTaskType
 	{
-		Print, Export, ETransmit, Command, Test, AuditCompact
+		Print, DWGExport, ETransmit, Command, Test, AuditCompact
 	}
 }

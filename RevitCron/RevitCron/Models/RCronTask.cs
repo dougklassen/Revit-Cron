@@ -9,7 +9,7 @@ namespace DougKlassen.Revit.Cron.Models
 {
 	[DataContract]
 	[KnownType(typeof(RCronPrintTaskSpec))]
-	[KnownType(typeof(RCronExportTaskSpec))]
+	[KnownType(typeof(RCronDWGExportTaskSpec))]
 	[KnownType(typeof(RCronETransmitTaskSpec))]
 	[KnownType(typeof(RCronCommandTaskSpec))]
 	[KnownType(typeof(RCronTestTaskSpec))]
@@ -112,17 +112,14 @@ namespace DougKlassen.Revit.Cron.Models
 	}
 
 	[DataContract]
-	public class RCronExportTaskSpec : RCronTaskSpec
+	public class RCronDWGExportTaskSpec : RCronTaskSpec
 	{
 		[DataMember(Order = 10)]
 		public String PrintSet { get; set; }
 
-		[DataMember(Order = 11)]
-		public String ExportSetup { get; set; }
-
-		public RCronExportTaskSpec()
+		public RCronDWGExportTaskSpec()
 		{
-			TaskType = RCronTaskType.Export;
+			TaskType = RCronTaskType.DWGExport;
 		}
 	}
 

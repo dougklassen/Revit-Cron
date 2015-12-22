@@ -64,15 +64,13 @@ namespace DougKlassen.Revit.Cron.Repositories
 					printTask.OutputFileName = reader.ReadAsString();
 					reader.Read();
 					return printTask;
-				case "Export":
-					var exportTask = new RCronExportTaskSpec();
+				case "DWGExport":
+					var exportTask = new RCronDWGExportTaskSpec();
 					exportTask.ProjectFile = reader.ReadAsString();
 					reader.Read();
 					exportTask.OutputDirectory = reader.ReadAsString();
 					reader.Read();
 					exportTask.PrintSet = reader.ReadAsString();
-					reader.Read();
-					exportTask.ExportSetup = reader.ReadAsString();
 					reader.Read();
 					return exportTask;
 				case "ETransmit":

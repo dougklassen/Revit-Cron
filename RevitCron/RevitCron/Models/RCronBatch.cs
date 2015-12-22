@@ -8,7 +8,7 @@ namespace DougKlassen.Revit.Cron.Models
 {
 	[DataContract]
 	[KnownType(typeof(RCronPrintTaskSpec))]
-	[KnownType(typeof(RCronExportTaskSpec))]
+	[KnownType(typeof(RCronDWGExportTaskSpec))]
 	[KnownType(typeof(RCronETransmitTaskSpec))]
 	[KnownType(typeof(RCronCommandTaskSpec))]
 	[KnownType(typeof(RCronTestTaskSpec))]
